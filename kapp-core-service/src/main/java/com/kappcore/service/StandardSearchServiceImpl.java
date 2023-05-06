@@ -2,7 +2,7 @@ package com.kappcore.service;
 
 import com.kappcore.domain.dto.ComplexSearchDTO;
 import com.kappcore.domain.map.ComplexSearchResult;
-import com.kappcore.manager.main.Searcher;
+import com.kappcore.search.core.Searcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
