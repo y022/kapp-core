@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 
 @Data
 public class ComplexSearchContext extends AbsSearchContext {
-
+    private boolean highlight;
 
     @Override
     public String tag() {
@@ -13,8 +13,8 @@ public class ComplexSearchContext extends AbsSearchContext {
     }
 
     @Override
-    public boolean highlight(boolean highlight) {
-        return false;
+    public boolean highlight() {
+        return highlight;
     }
 
     @Override

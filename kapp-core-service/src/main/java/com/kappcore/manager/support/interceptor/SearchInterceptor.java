@@ -1,4 +1,4 @@
-package com.kappcore.manager.intercept;
+package com.kappcore.manager.support.interceptor;
 
 import com.kappcore.manager.context.SearchContext;
 import com.kappcore.manager.model.SearchTip;
@@ -16,5 +16,6 @@ public interface SearchInterceptor {
         }
         return null;
     }
+
 
 }
