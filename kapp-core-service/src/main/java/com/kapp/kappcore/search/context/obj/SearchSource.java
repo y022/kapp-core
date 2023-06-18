@@ -1,15 +1,12 @@
-package com.kapp.kappcore.web.vo.response;
+package com.kapp.kappcore.search.context.obj;
 
 import lombok.Data;
 
 @Data
-public class SearchResultVo {
-    private String docId;
+public class SearchSource {
     private String title;
-    private String[] body;
+    private String body;
     private String tag;
     private String saveDate;
     private String owner;
-
-
 }

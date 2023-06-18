@@ -11,6 +11,9 @@
     <artifactId>kapp-core-web</artifactId>
     <name>kapp-core-web</name>
     <description>web 模块，对应 MVC 的 V 概念，存放视图层的逻辑</description>
+
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -44,6 +47,11 @@
         <dependency>
             <groupId>com.kapp</groupId>
             <artifactId>kapp-core-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
+            <version>1.5.2</version>
         </dependency>
     </dependencies>
 
