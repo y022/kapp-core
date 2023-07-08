@@ -5,24 +5,18 @@
     <parent>
         <groupId>com.kapp</groupId>
         <artifactId>kapp-core</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>v1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>kapp-core-start</artifactId>
+
     <name>kapp-core-start</name>
-    <description>入口模块，引导工程启动以及基础配置</description>
+    <artifactId>kapp-core-start</artifactId>
+
+
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>com.kapp</groupId>
+            <artifactId>kapp-core-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.kapp</groupId>
@@ -30,24 +24,7 @@
         </dependency>
         <dependency>
             <groupId>com.kapp</groupId>
-            <artifactId>kapp-core-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>kapp-core-model</artifactId>
         </dependency>
     </dependencies>
 

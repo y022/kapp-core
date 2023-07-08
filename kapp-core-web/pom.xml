@@ -5,44 +5,20 @@
     <parent>
         <groupId>com.kapp</groupId>
         <artifactId>kapp-core</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>v1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
+
     <artifactId>kapp-core-web</artifactId>
     <name>kapp-core-web</name>
-    <description>web 模块，对应 MVC 的 V 概念，存放视图层的逻辑</description>
 
 
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.kapp</groupId>
@@ -51,7 +27,6 @@
         <dependency>
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
-            <version>1.5.2</version>
         </dependency>
     </dependencies>
 
@@ -70,7 +45,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.3.12.RELEASE</version>
+                <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.kapp.kappcore.KappCoreApplication</mainClass>
                     <excludes>
