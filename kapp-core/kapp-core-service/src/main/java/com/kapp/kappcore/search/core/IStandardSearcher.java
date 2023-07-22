@@ -44,9 +44,7 @@ public class IStandardSearcher implements StandardSearcher {
 
         SearchRequest request = requestConstructor.get(context);
 
-        IndexRequest index = tagIndexChooser.index(context.tag());
-
-        request.indices(index.index());
+        request.indices(tagIndexChooser.index(context.tag()).indices());
 
         SearchResponse searchResponse;
 

@@ -15,8 +15,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class DefaultSearchIInterceptor implements IInterceptor {
-
-    private Set<SearchInterceptor> interceptors = new HashSet<>(12);
+    private final Set<SearchInterceptor> interceptors = new HashSet<>(12);
 
     public DefaultSearchIInterceptor(@Nullable SearchInterceptor... existedInterceptors) {
         if (existedInterceptors != null) CollectionUtils.mergeArrayIntoCollection(existedInterceptors, interceptors);

@@ -41,9 +41,8 @@ public class StandardSearchServiceImpl implements StandardSearchService {
 
         //这里忽略一些检索结果细节参数，只返回具有业务含义的结果
         return result.body().stream().map(item -> {
-            String body = item.getBody();
             try {
-                return objectMapper.readValue(body, ComplexSearchResultDTO.class);
+                return objectMapper.readValue(item.getBody(), ComplexSearchResultDTO.class);
             } catch (JsonProcessingException e) {
                 log.error("search result disSer error", e);
                 throw new SearchException(ExCode.search_result_get_error, "获取检索结果失败!");

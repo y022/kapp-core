@@ -38,6 +38,7 @@ public enum TagIndex implements EnumAware {
         throw new SearchException(ExCode.index_error, "不存在的tag!");
     }
 
+    @SuppressWarnings("unchecked")
     public static String getTag(String index) {
         for (TagIndex value : values()) {
             if (Objects.equals(value.index, index)) {
