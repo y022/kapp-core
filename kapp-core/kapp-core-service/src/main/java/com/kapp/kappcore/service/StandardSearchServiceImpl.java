@@ -32,11 +32,8 @@ public class StandardSearchServiceImpl implements StandardSearchService {
 
         ComplexSearchContext searchContext = new ComplexSearchContext();
 
-        SearchSource searchSource = new SearchSource();
-        mapperFacade.map(searchDTO, searchSource);
+        searchContext.setSource(mapperFacade.map(searchDTO, SearchSource.class));
 
-
-        searchContext.setSource(searchSource);
         SearchResult result = iStandardSearcher.search(searchContext);
 
         //这里忽略一些检索结果细节参数，只返回具有业务含义的结果
