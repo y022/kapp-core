@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.kapp</groupId>
     <artifactId>kapp-core</artifactId>
-    <version>${kapp-core.version}</version>
+    <version>v1.0</version>
     <packaging>pom</packaging>
     <name>kapp-core</name>
 
