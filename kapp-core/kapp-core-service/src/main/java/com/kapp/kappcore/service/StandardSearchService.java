@@ -1,6 +1,6 @@
 package com.kapp.kappcore.service;
 
-import com.kapp.kappcore.domain.dto.ComplexSearchDTO;
+import com.kapp.kappcore.api.standarnd.ComplexSearchDTO;
 import com.kapp.kappcore.domain.dto.ComplexSearchResultDTO;
 
 import java.util.List;

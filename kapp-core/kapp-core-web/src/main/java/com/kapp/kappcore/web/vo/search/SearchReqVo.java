@@ -1,4 +1,4 @@
-package com.kapp.kappcore.web.vo;
+package com.kapp.kappcore.web.vo.search;
 
 import lombok.Data;
 

@@ -1,8 +1,8 @@
 package com.kapp.kappcore.web.search;
 
-import com.kapp.kappcore.web.vo.SearchReqVo;
-import com.kapp.kappcore.web.vo.response.SearchResultVo;
-import com.kapp.kappcore.domain.dto.ComplexSearchDTO;
+import com.kapp.kappcore.web.vo.search.SearchReqVo;
+import com.kapp.kappcore.web.vo.search.response.SearchResultVo;
+import com.kapp.kappcore.api.standarnd.ComplexSearchDTO;
 import com.kapp.kappcore.service.StandardSearchService;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;

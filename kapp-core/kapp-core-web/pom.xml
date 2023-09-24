@@ -28,6 +28,10 @@
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.kapp</groupId>
+            <artifactId>kapp-core-model</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

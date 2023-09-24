@@ -3,7 +3,7 @@ package com.kapp.kappcore.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kapp.kappcore.constant.ExCode;
-import com.kapp.kappcore.domain.dto.ComplexSearchDTO;
+import com.kapp.kappcore.api.standarnd.ComplexSearchDTO;
 import com.kapp.kappcore.domain.dto.ComplexSearchResultDTO;
 import com.kapp.kappcore.exception.SearchException;
 import com.kapp.kappcore.search.context.ComplexSearchContext;

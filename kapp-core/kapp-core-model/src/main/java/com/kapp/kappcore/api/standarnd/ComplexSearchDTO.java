@@ -1,4 +1,4 @@
-package com.kapp.kappcore.domain.dto;
+package com.kapp.kappcore.api.standarnd;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
