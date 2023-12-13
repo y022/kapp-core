@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/kapp-core.iml" filepath="$PROJECT_DIR$/.idea/kapp-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kapp-core/kapp-core.iml" filepath="$PROJECT_DIR$/kapp-core/kapp-core.iml" />
     </modules>
   </component>
 </project>
