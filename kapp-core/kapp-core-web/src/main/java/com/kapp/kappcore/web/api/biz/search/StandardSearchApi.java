@@ -1,4 +1,4 @@
-package com.kapp.kappcore.web.api.search;
+package com.kapp.kappcore.web.api.biz.search;
 
 import com.kapp.kappcore.web.vo.SearchReqVo;
 import com.kapp.kappcore.web.vo.response.SearchResultVo;
