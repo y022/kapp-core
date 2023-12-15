@@ -15,5 +15,6 @@ public interface ExcelDataSupport<T extends ExcelModel> {
 
     void export(String no, HttpServletResponse response) throws IOException, IllegalAccessException;
 
+    ExportResult export(String no);
 
 }

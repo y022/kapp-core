@@ -3,7 +3,7 @@ package com.kapp.kappcore.biz.ext;
 
 import com.alibaba.excel.EasyExcel;
 import com.kapp.kappcore.annotaion.ExcelPosition;
-import com.kapp.kappcore.biz.ext.wtt.excel.read.EasyExcelReadListener;
+import com.kapp.kappcore.biz.ext.wtt.excel.read.ControlValvesReadListener;
 import com.kapp.kappcore.wtt.ControlValves;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,7 +26,7 @@ public class ExcelReadTest {
     public void read() {
         File file = new File("C:\\Users\\y0225\\Desktop\\2D规格书-调节阀1.xls");
         HashMap<String, ControlValves> excelResult = new HashMap<>();
-        EasyExcel.read(file, ControlValves.class, new EasyExcelReadListener(excelResult)).sheet(1).doRead();
+        EasyExcel.read(file, ControlValves.class, new ControlValvesReadListener(excelResult)).sheet(1).doRead();
     }
 
     @Test
@@ -34,7 +34,7 @@ public class ExcelReadTest {
         //先读数据文件
         File file = new File("C:\\Users\\y0225\\Desktop\\2D规格书-调节阀1.xls");
         HashMap<String, ControlValves> excelResult = new HashMap<>();
-        EasyExcel.read(file, ControlValves.class, new EasyExcelReadListener(excelResult)).sheet(1).doRead();
+        EasyExcel.read(file, ControlValves.class, new ControlValvesReadListener(excelResult)).sheet(1).doRead();
 
 
         //读模板文件
@@ -76,7 +76,7 @@ public class ExcelReadTest {
         //先读数据文件
         File file = new File("C:\\Users\\y0225\\Desktop\\2D规格书-调节阀1.xls");
         HashMap<String, ControlValves> excelResult = new HashMap<>();
-        EasyExcel.read(file, ControlValves.class, new EasyExcelReadListener(excelResult)).sheet(1).doRead();
+        EasyExcel.read(file, ControlValves.class, new ControlValvesReadListener(excelResult)).sheet(1).doRead();
 
 
         //读模板文件
