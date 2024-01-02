@@ -4,17 +4,22 @@ import com.kapp.kappcore.wtt.ExcelDataTag;
 import com.kapp.kappcore.wtt.ExcelModel;
 import com.kapp.kappcore.wtt.ExportResult;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ExcelDataSupport<T extends ExcelModel> {
     boolean support(ExcelDataTag tag);
+
     Map<String, T> get();
 
-    void export(String no, HttpServletResponse response) throws IOException, IllegalAccessException;
+    void save();
+
+    void save(T t);
 
     ExportResult export(String no);
+
+    ExportResult batchExport(List<String> no);
 
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+<table class="layui-hide" id="test"></table>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+</script>
+
+<script src="../layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+
+<script>
+    layui.use('table', function () {
+
+        var table = layui.table;
+
+        table.render({
+            defaultToolbar: ['filter', 'print', 'exports', {
+                title: '提示' //标题
+                ,layEvent: 'LAYTABLE_TIPS' //事件名，用于 toolbar 事件中使用
+                ,icon: 'layui-icon-tips' //图标类名
+            }]
+            ,toolbar: '#toolbarDemo'
+            ,
+            elem: '#test'
+            // ,skin:"row"
+            , url: 'http://127.0.0.1:9622/wtt/excel/query'
+            , method: 'post'
+            , contentType: 'application/json'
+            , request: {
+                pageName: 'index' //页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            }
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , response: {
+                statusCode: '000000'
+            }
+            , autoSort: false
+            , cols: [[
+                {field: 'id', width: 200, title: 'ID', sort: true, hide: true}
+                , {field: 'controlValveNo', width: 160, title: '位号'}
+                , {field: 'size', width: 80, title: '数量', sort: true}
+                , {field: 'purpose', width: 280, title: '用途'}
+                , {field: 'pipelineNo', title: '管道编号', width: 280} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                , {field: 'pipelineMaterial', title: '管道材质', width: 150}
+                , {field: 'score', title: '评分', sort: true}
+                , {field: 'classify', title: '职业'}
+                , {field: 'wealth', width: 137, title: '财富', sort: true}
+            ]]
+        });
+    });
+</script>
+
+</body>
+</html>

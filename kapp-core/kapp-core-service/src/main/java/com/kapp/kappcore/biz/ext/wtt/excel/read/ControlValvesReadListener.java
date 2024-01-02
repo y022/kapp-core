@@ -2,23 +2,23 @@ package com.kapp.kappcore.biz.ext.wtt.excel.read;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.read.listener.ReadListener;
-import com.kapp.kappcore.wtt.ControlValves;
+import com.kapp.kappcore.wtt.ControlValve;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
 @Slf4j
-public class ControlValvesReadListener implements ReadListener<ControlValves> {
+public class ControlValvesReadListener implements ReadListener<ControlValve> {
 
-    private Map<String, ControlValves> controlValvesList;
+    private Map<String, ControlValve> controlValvesList;
 
-    public ControlValvesReadListener(Map<String, ControlValves> controlValvesList) {
+    public ControlValvesReadListener(Map<String, ControlValve> controlValvesList) {
         this.controlValvesList = controlValvesList;
     }
 
     @Override
-    public void invoke(ControlValves controlValves, AnalysisContext analysisContext) {
-        controlValvesList.putIfAbsent(controlValves.getControlValvesNo(), controlValves);
+    public void invoke(ControlValve controlValve, AnalysisContext analysisContext) {
+        controlValvesList.putIfAbsent(controlValve.getControlValveNo(), controlValve);
     }
 
     @Override
