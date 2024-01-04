@@ -35,16 +35,16 @@ public class ExcelHelper {
      * @param targetWorkBook
      * @param sourceSheet
      * @param targetSheet
-     * @param k
+     * @param sheetIndex
      */
-    private static void moveSourceSheetIntoTargetSheet(Workbook targetWorkBook, Sheet sourceSheet, Sheet targetSheet, int k) {
+    private static void moveSourceSheetIntoTargetSheet(Workbook targetWorkBook, Sheet sourceSheet, Sheet targetSheet, int sheetIndex) {
 
         if (sourceSheet == null) {
             return;
         }
 
         // 获取目标sheet最后一行的下一行
-        int targetRowNums = k * 55;
+        int targetRowNums = sheetIndex * 55;
         // 移动源sheet页中的合并单元格区域 到目标sheet页中
         moveSourceSheetAllMergedRegionToTargetSheet(sourceSheet, targetSheet, targetRowNums);
         for (int i = 0; i <= 55; i++) {
@@ -107,13 +107,13 @@ public class ExcelHelper {
         CellStyle targetCellStyle = targetWorkBook.createCellStyle();
         targetCellStyle.cloneStyleFrom(sourceCellStyle);
         targetCell.setCellStyle(targetCellStyle);
-        CellType cellTypeEnum = sourceCell.getCellTypeEnum();
+        CellType cellTypeEnum = sourceCell.getCellType();
         switch (cellTypeEnum) {
             case STRING:
                 targetCell.setCellValue(sourceCell.getStringCellValue());
                 break;
             case NUMERIC:
-                    targetCell.setCellValue(sourceCell.getNumericCellValue());
+                targetCell.setCellValue(sourceCell.getNumericCellValue());
                 break;
             case BOOLEAN:
                 targetCell.setCellValue(sourceCell.getBooleanCellValue());
@@ -138,9 +138,9 @@ public class ExcelHelper {
      * 合并sheet页中，处理源sheet页中可能存在的 合并单元格部分；
      * 当源sheet页在合并单元格的时候可能去掉表头，所以也需去掉表头的合并单元格部分
      *
-     * @param sourceSheet       源sheet
-     * @param targetSheet       目标sheet
-     * @param targetRowNums     目标sheet的最后一行（源合并单元格的位置，需要变化到目标单元格区域，需要提供一个位置角标）
+     * @param sourceSheet   源sheet
+     * @param targetSheet   目标sheet
+     * @param targetRowNums 目标sheet的最后一行（源合并单元格的位置，需要变化到目标单元格区域，需要提供一个位置角标）
      */
     private static void moveSourceSheetAllMergedRegionToTargetSheet(Sheet sourceSheet, Sheet targetSheet, int targetRowNums) {
 
@@ -150,7 +150,6 @@ public class ExcelHelper {
             CellRangeAddress mergedRegion = sourceSheet.getMergedRegion(i);
 
             int firstRow = mergedRegion.getFirstRow();
-
 
 
             int lastRow = mergedRegion.getLastRow();
