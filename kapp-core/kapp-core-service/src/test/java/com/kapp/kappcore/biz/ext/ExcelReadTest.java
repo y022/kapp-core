@@ -2,7 +2,7 @@ package com.kapp.kappcore.biz.ext;
 
 
 import com.alibaba.excel.EasyExcel;
-import com.kapp.kappcore.annotaion.ExcelPosition;
+import com.kapp.kappcore.annotaion.CellPosition;
 import com.kapp.kappcore.biz.ext.wtt.excel.read.ControlValvesReadListener;
 import com.kapp.kappcore.wtt.ControlValve;
 import org.apache.poi.ss.usermodel.Cell;
@@ -98,7 +98,7 @@ public class ExcelReadTest {
         Class<? extends ControlValve> clz = controlValve.getClass();
         for (Field declaredField : clz.getDeclaredFields()) {
             declaredField.setAccessible(true);
-            ExcelPosition annotation = declaredField.getAnnotation(ExcelPosition.class);
+            CellPosition annotation = declaredField.getAnnotation(CellPosition.class);
             if (annotation == null) {
                 continue;
             }

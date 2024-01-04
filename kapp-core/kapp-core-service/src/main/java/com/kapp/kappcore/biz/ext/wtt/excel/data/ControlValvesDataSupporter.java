@@ -1,6 +1,7 @@
 package com.kapp.kappcore.biz.ext.wtt.excel.data;
 
-import com.kapp.kappcore.annotaion.ExcelPosition;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kapp.kappcore.annotaion.CellPosition;
 import com.kapp.kappcore.biz.ext.wtt.excel.write.ExcelHelper;
 import com.kapp.kappcore.domain.repository.ControlValveRepository;
 import com.kapp.kappcore.wtt.ControlValve;
@@ -8,6 +9,7 @@ import com.kapp.kappcore.wtt.ExcelDataTag;
 import com.kapp.kappcore.wtt.ExportResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -16,6 +18,7 @@ import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -31,6 +35,7 @@ import java.util.concurrent.CountDownLatch;
 public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve> {
 
     private static final Map<String, ControlValve> MAP = new HashMap<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final ControlValveRepository controlValveRepository;
     private static final String CONTROL_VALVE_TEMPLATE_LOCATION = "/template/调节阀导出模板.xlsx";
 
@@ -97,7 +102,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
                 try {
                     ControlValve controlValve = controlValveRepository.findByControlValveNo(controlValveNo);
                     workbooks.add(getWorkbook(controlValve, controlValveNo));
-                }finally {
+                } finally {
                     countDownLatch.countDown();
                 }
 
@@ -129,6 +134,31 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
         return exportResult;
     }
 
+    @Override
+    public void importData(List<ControlValve> t) {
+        controlValveRepository.saveAll(t);
+        log.info("导入数据成功,位号:" + t.stream().map(ControlValve::getControlValveNo).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void importData(ByteArrayInputStream inputStream) {
+        ControlValve controlValve;
+        byte[] bytes = inputStream.readAllBytes();
+        try {
+            controlValve = objectMapper.readValue(bytes, ControlValve.class);
+        } catch (IOException e) {
+            log.error("", e);
+            throw new RuntimeException("读取文件数据失败!");
+        }finally {
+            try {
+                IOUtils.close(inputStream);
+            } catch (IOException e) {
+            }
+        }
+        controlValveRepository.save(controlValve);
+        log.info("导入数据成功,位号:" + controlValve.getControlValveNo());
+    }
+
     private Workbook getWorkbook(ControlValve controlValve, String sheetName) {
         ClassPathResource classPathResource = new ClassPathResource(CONTROL_VALVE_TEMPLATE_LOCATION);
         try (InputStream templateFileInputStream = classPathResource.getInputStream();) {
@@ -138,7 +168,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
             Class<? extends ControlValve> clz = controlValve.getClass();
             for (Field declaredField : clz.getDeclaredFields()) {
                 declaredField.setAccessible(true);
-                ExcelPosition annotation = declaredField.getAnnotation(ExcelPosition.class);
+                CellPosition annotation = declaredField.getAnnotation(CellPosition.class);
                 if (annotation == null) {
                     continue;
                 }
