@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 kapp-core.iml
+qodana.yaml
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
