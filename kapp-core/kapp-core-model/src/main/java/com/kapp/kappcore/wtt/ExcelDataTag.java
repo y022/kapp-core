@@ -12,6 +12,6 @@ public enum ExcelDataTag {
         this.msg = msg;
     }
 
-    private String tag;
-    private String msg;
+    private final String tag;
+    private final String msg;
 }

@@ -7,9 +7,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ExcelPosition {
+public @interface CellPosition {
     int row() default 0;
     int column() default 0;
-
     String cellRef() default "A1";
 }
