@@ -1,7 +1,7 @@
 package com.kapp.kappcore.biz.ext.wtt.excel.data;
 
 import com.kapp.kappcore.annotaion.ExcelPosition;
-import com.kapp.kappcore.biz.ext.wtt.excel.write.ExcelHelper;
+import com.kapp.kappcore.biz.ext.wtt.excel.write.ControlValveExcelHelper;
 import com.kapp.kappcore.domain.repository.ControlValveRepository;
 import com.kapp.kappcore.wtt.ControlValve;
 import com.kapp.kappcore.wtt.ExcelDataTag;
@@ -97,7 +97,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
                 try {
                     ControlValve controlValve = controlValveRepository.findByControlValveNo(controlValveNo);
                     workbooks.add(getWorkbook(controlValve, controlValveNo));
-                }finally {
+                } finally {
                     countDownLatch.countDown();
                 }
 
@@ -111,7 +111,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
             throw new RuntimeException(e);
         }
 
-        Workbook mergedWorkbook = ExcelHelper.mergeSheet(workbooks, "控制阀");
+        Workbook mergedWorkbook = ControlValveExcelHelper.mergeSheet(workbooks, "控制阀");
         ExportResult exportResult = new ExportResult();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {

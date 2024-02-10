@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script src="../layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+
+        //温馨提示：默认由前端自动合计当前行数据。从 layui 2.5.6 开始： 若接口直接返回了合计行数据，则优先读取接口合计行数据。
+        //详见：https://www.layui.com/doc/modules/table.html#totalRow
+        table.render({
+            elem: '#test'
+            , toolbar: '#toolbarDemo'
+            , title: '用户数据表'
+            , totalRow: true
+            , url: 'http://127.0.0.1:9622/wtt/excel/query'
+            , method: 'post'
+            , contentType: 'application/json'
+            , request: {
+                pageName: 'index' //页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            }
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , parseData: function (res) { //res 即为原始返回的数据
+                return {
+                    "code": res.code, //解析接口状态
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.data //解析数据列表
+                };
+            }
+            , response: {
+                statusCode: '000000'
+            }
+            , autoSort: false
+            , cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', width: 200, title: 'ID', sort: true, hide: true}
+                , {field: 'controlValveNo', width: 160, title: '位号'}
+                , {field: 'size', width: 80, title: '数量', sort: true}
+                , {field: 'purpose', width: 280, title: '用途'}
+                , {field: 'pipelineNo', title: '管道编号', width: 280} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                , {field: 'pipelineMaterial', title: '管道材质', width: 150}
+                , {field: 'pipelineSpecifications', title: '管道规格', width: 150}
+                , {field: 'mediaName', title: '操作条件-流体名称', width: 150}
+                , {field: 'mediaStatus', title: '操作条件-流体状态', width: 150}
+                , {field: 'maxOpsTemperature', title: '操作条件-最大操作温度', width: 150}
+                , {field: 'normalOpsTemperature', title: '操作条件-正常操作温度', width: 150}
+                , {field: 'minOpsTemperature', title: '操作条件-最小操作温度', width: 150}
+                , {field: 'flowUnit', title: '操作条件-流量单位', width: 150}
+                , {field: 'maxFlow', title: '操作条件-最大流量', width: 150}
+                , {field: 'normalFlow', title: '操作条件-正常流量', width: 150}
+                , {field: 'pressureUnit', title: '操作条件-压力单位', width: 150}
+                , {field: 'maxValveFrontPressure', title: '操作条件-最大阀前压力', width: 150}
+                , {field: 'normalValveFrontPressure', title: '操作条件-正常阀前压力', width: 150}
+                , {field: 'minValveFrontPressure', title: '操作条件-最小阀前压力', width: 150}
+                , {field: 'maxValvePostPressure', title: '操作条件-最大阀后压力', width: 150}
+                , {field: 'normalValvePostPressure', title: '操作条件-正常阀后压力', width: 150}
+                , {field: 'minValvePostPressure', title: '操作条件-最小阀后压力', width: 150}
+                , {field: 'maxPressureDiff', title: '操作条件-最大压差', width: 150}
+                , {field: 'normalPressureDiff', title: '操作条件-正常压差', width: 150}
+                , {field: 'minPressureDiff', title: '操作条件-最小压差', width: 150}
+                , {field: 'closePressure', title: '操作条件-关闭压力', width: 150}
+                , {field: 'opsDensity', title: '操作条件-操作密度', width: 150}
+                , {field: 'standardDensity', title: '操作条件-标准密度', width: 150}
+                , {field: 'proportion', title: '操作条件-比重', width: 150}
+                , {field: 'dynamicViscosity', title: '操作条件-动力粘度', width: 150}
+                , {field: 'pressureRecoveryCoefficient', title: '操作条件-压力恢复系数', width: 150}
+                , {field: 'vaporizationPressure', title: '操作条件-汽化压力', width: 150}
+                , {field: 'criticalPressure', title: '操作条件-临界压力', width: 150}
+                , {field: 'maxCalculateCValue', title: '操作条件-最大计算CV值', width: 150}
+                , {field: 'normalCalculateCValue', title: '操作条件-正常计算CV值', width: 150}
+                , {field: 'minCalculateCValue', title: '操作条件-最小计算CV值', width: 150}
+                , {field: 'noise', title: '操作条件-噪音', width: 150}
+                , {field: 'valvePositionDuringAirSourceFailure', title: '操作条件-气源故障时阀位', width: 150}
+                , {field: 'valveBodyModel', title: '阀体组件-型号', width: 150}
+                , {field: 'type', title: '阀体组件-型式', width: 150}
+                , {field: 'nominalDiameter', title: '阀体组件-公称通径', width: 150}
+                , {field: 'valveSeatDiameter', title: '阀体组件-阀座直径', width: 150}
+                , {field: 'ratedCVValue', title: '阀体组件-额定CV值', width: 150}
+                , {field: 'maxOpeningDegree', title: '阀体组件-最大开度', width: 150}
+                , {field: 'normalOpeningDegree', title: '阀体组件-正常开度', width: 150}
+                , {field: 'minOpeningDegree', title: '阀体组件-最小开度', width: 150}
+                , {field: 'nominalPressure', title: '阀体组件-公称压力', width: 150}
+                , {field: 'flangeType', title: '阀体组件-法兰型式', width: 150}
+                , {field: 'valveBodyMaterial', title: '阀体组件-阀体材质', width: 150}
+                , {field: 'valveCoreMaterial', title: '阀体组件-阀芯材质', width: 150}
+                , {field: 'valveSeatMaterial', title: '阀体组件-阀座材质', width: 150}
+                , {field: 'leakageLevel', title: '阀体组件-泄漏等级', width: 150}
+                , {field: 'flowCharacteristics', title: '阀体组件-流量特性', width: 150}
+                , {field: 'upperCoverType', title: '阀体组件-上盖型式', width: 150}
+                , {field: 'filler', title: '阀体组件-填料', width: 150}
+                , {field: 'typeOfAction', title: '阀体组件-作用型式', width: 150}
+                , {field: 'opsInstType', title: '执行机构-型式', width: 150}
+                , {field: 'opsInstModel', title: '执行机构-型号', width: 150}
+                , {field: 'opsInstGasSupplyPressure', title: '执行机构-供气压力', width: 150}
+                , {field: 'springRange', title: '执行机构-弹簧范围', width: 150}
+                , {field: 'handWheelMechanism', title: '执行机构-手轮机构', width: 150}
+                , {field: 'closePressureDiff', title: '执行机构-关闭压差', width: 150}
+                , {field: 'locatorModel', title: '定位器-型号', width: 150}
+                , {field: 'locatorGasSupplyPressure', title: '定位器-供气压力', width: 150}
+                , {field: 'inputSignal', title: '定位器-输入信号', width: 150}
+                , {field: 'explosionProofLevel', title: '定位器-防爆等级', width: 150}
+                , {field: 'airConnection', title: '定位器-气源接口', width: 150}
+                , {field: 'pressureReducingValve', title: '附件-减压阀', width: 150}
+                , {field: 'electromagneticValveModel', title: '附件-电磁阀型号', width: 150}
+                , {field: 'electromagneticValveVoltage', title: '附件-电磁阀电压', width: 150}
+                , {field: 'note', title: '附件-备注', width: 150}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+            ]]
+            , page: true
+        });
+
+        //工具栏事件
+        table.on('toolbar(test)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    break;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

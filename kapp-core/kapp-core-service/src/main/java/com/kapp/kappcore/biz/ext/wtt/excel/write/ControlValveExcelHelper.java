@@ -7,17 +7,21 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class ExcelHelper {
+public class ControlValveExcelHelper {
+
 
     public static Workbook mergeSheet(List<Workbook> workbooks, String mergeSheetName) {
 
         SXSSFWorkbook targetWorkbook = new SXSSFWorkbook();
         SXSSFSheet targetSheet = targetWorkbook.createSheet(mergeSheetName);
+        Map<String, CellStyle> cellStyleMap = new ConcurrentHashMap<>();
         for (int i = 0; i < workbooks.size(); i++) {
             Workbook sourceWorkbook = workbooks.get(i);
             Sheet sourceSheet = sourceWorkbook.getSheetAt(0);
-            moveSourceSheetIntoTargetSheet(targetWorkbook, sourceSheet, targetSheet, i);
+            moveSourceSheetIntoTargetSheet(targetWorkbook, sourceSheet, targetSheet, i, cellStyleMap);
             try {
                 sourceWorkbook.close();
             } catch (IOException e) {
@@ -37,22 +41,21 @@ public class ExcelHelper {
      * @param targetSheet
      * @param sheetIndex
      */
-    private static void moveSourceSheetIntoTargetSheet(Workbook targetWorkBook, Sheet sourceSheet, Sheet targetSheet, int sheetIndex) {
+    private static void moveSourceSheetIntoTargetSheet(Workbook targetWorkBook, Sheet sourceSheet, Sheet targetSheet, int sheetIndex, Map<String, CellStyle> cellStyleMap) {
 
         if (sourceSheet == null) {
             return;
         }
-
         // 获取目标sheet最后一行的下一行
         int targetRowNums = sheetIndex * 55;
         // 移动源sheet页中的合并单元格区域 到目标sheet页中
         moveSourceSheetAllMergedRegionToTargetSheet(sourceSheet, targetSheet, targetRowNums);
-        for (int i = 0; i <= 55; i++) {
+        for (int rowNum = 0; rowNum <= 55; rowNum++) {
             int targetRowNumNo = targetRowNums++;
             Row targetRow = targetSheet.createRow(targetRowNumNo);
-            Row sourceRow = sourceSheet.getRow(i);
+            Row sourceRow = sourceSheet.getRow(rowNum);
             // 复制行
-            copySourceRowToTargetRow(targetWorkBook, sourceRow, targetRow);
+            copySourceRowToTargetRow(targetWorkBook, sourceRow, targetRow, rowNum, cellStyleMap);
         }
     }
 
@@ -63,7 +66,7 @@ public class ExcelHelper {
      * @param sourceRow      源行
      * @param targetRow      目标行
      */
-    private static void copySourceRowToTargetRow(Workbook targetWorkBook, Row sourceRow, Row targetRow) {
+    private static void copySourceRowToTargetRow(Workbook targetWorkBook, Row sourceRow, Row targetRow, int rowNum, Map<String, CellStyle> cellStyleMap) {
 
         if (sourceRow == null) {
             return;
@@ -71,16 +74,22 @@ public class ExcelHelper {
 
         // 行高
         targetRow.setHeight(sourceRow.getHeight());
-
         int sourceCellNums = sourceRow.getLastCellNum();
         for (int i = 0; i < sourceCellNums; i++) {
-
             Cell targetCell = targetRow.createCell(i);
             Cell sourceCell = sourceRow.getCell(i);
-
+            CellStyle currentTargetCellStyle;
+            String cellStyleKey = rowNum + "#" + i;
+            if (!cellStyleMap.containsKey(cellStyleKey)) {
+                CellStyle sourceCellStyle = sourceCell.getCellStyle();
+                currentTargetCellStyle = targetWorkBook.createCellStyle();
+                currentTargetCellStyle.cloneStyleFrom(sourceCellStyle);
+                cellStyleMap.put(cellStyleKey, currentTargetCellStyle);
+            } else {
+                currentTargetCellStyle = cellStyleMap.get(cellStyleKey);
+            }
             // 复制单元格
-            copySourceCellToTargetCell(targetWorkBook, targetCell, sourceCell);
-
+            copySourceCellToTargetCell(targetWorkBook, targetCell, sourceCell, currentTargetCellStyle);
         }
 
     }
@@ -92,20 +101,17 @@ public class ExcelHelper {
      * @param targetCell     目标单元格
      * @param sourceCell     源单元格
      */
-    private static void copySourceCellToTargetCell(Workbook targetWorkBook, Cell targetCell, Cell sourceCell) {
+    private static void copySourceCellToTargetCell(Workbook targetWorkBook, Cell targetCell, Cell sourceCell, CellStyle targetCellStyle) {
 
         if (sourceCell == null) {
             return;
         }
 
         // 将源单元格的格式 赋值到 目标单元格中
-        CellStyle sourceCellStyle = sourceCell.getCellStyle();
         /*
             此处由于是新建了workbook对象，只能新建 CellStyle对象，然后clone，再赋值；
             直接赋值 源CellStyle对象 会报不是同源异常
         */
-        CellStyle targetCellStyle = targetWorkBook.createCellStyle();
-        targetCellStyle.cloneStyleFrom(sourceCellStyle);
         targetCell.setCellStyle(targetCellStyle);
         CellType cellTypeEnum = sourceCell.getCellType();
         switch (cellTypeEnum) {
