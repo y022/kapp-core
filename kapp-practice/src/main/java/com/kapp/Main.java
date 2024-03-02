@@ -1,4 +1,4 @@
-package org.example;
+package com.kapp;
 
 public class Main {
 

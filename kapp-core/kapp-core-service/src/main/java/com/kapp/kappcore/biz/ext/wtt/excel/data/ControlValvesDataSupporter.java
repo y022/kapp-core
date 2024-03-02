@@ -1,6 +1,7 @@
 package com.kapp.kappcore.biz.ext.wtt.excel.data;
 
-import com.kapp.kappcore.annotaion.ExcelPosition;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kapp.kappcore.annotaion.CellPosition;
 import com.kapp.kappcore.biz.ext.wtt.excel.write.ControlValveExcelHelper;
 import com.kapp.kappcore.domain.repository.ControlValveRepository;
 import com.kapp.kappcore.wtt.ControlValve;
@@ -16,6 +17,7 @@ import org.apache.poi.ss.util.CellReference;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +35,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
     private static final Map<String, ControlValve> MAP = new HashMap<>();
     private final ControlValveRepository controlValveRepository;
     private static final String CONTROL_VALVE_TEMPLATE_LOCATION = "/template/调节阀导出模板.xlsx";
+    private static final ObjectMapper ob = new ObjectMapper();
 
     @Override
     public boolean support(ExcelDataTag tag) {
@@ -129,6 +132,22 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
         return exportResult;
     }
 
+    @Override
+    public void importData(List<ControlValve> t) {
+
+    }
+
+    @Override
+    public void importData(ByteArrayInputStream inputStream) {
+        try {
+            ControlValve controlValve = ob.readValue(inputStream, ControlValve.class);
+            controlValveRepository.save(controlValve);
+        } catch (IOException e) {
+            log.error("数据解析错误", e);
+            throw new RuntimeException();
+        }
+    }
+
     private Workbook getWorkbook(ControlValve controlValve, String sheetName) {
         ClassPathResource classPathResource = new ClassPathResource(CONTROL_VALVE_TEMPLATE_LOCATION);
         try (InputStream templateFileInputStream = classPathResource.getInputStream();) {
@@ -138,7 +157,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
             Class<? extends ControlValve> clz = controlValve.getClass();
             for (Field declaredField : clz.getDeclaredFields()) {
                 declaredField.setAccessible(true);
-                ExcelPosition annotation = declaredField.getAnnotation(ExcelPosition.class);
+                CellPosition annotation = declaredField.getAnnotation(CellPosition.class);
                 if (annotation == null) {
                     continue;
                 }
@@ -152,6 +171,7 @@ public class ControlValvesDataSupporter implements ExcelDataSupport<ControlValve
         } catch (IOException ioException) {
             throw new RuntimeException("io异常");
         } catch (IllegalAccessException illegalAccessException) {
+            log.error("illegalAccessException",illegalAccessException);
             throw new RuntimeException("illegalAccessException!");
         }
     }
