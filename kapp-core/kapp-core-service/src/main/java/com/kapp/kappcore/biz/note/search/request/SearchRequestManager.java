@@ -2,6 +2,7 @@ package com.kapp.kappcore.biz.note.search.request;
 
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.biz.note.search.context.obj.SearchSource;
+import com.kapp.kappcore.constant.SearchVal;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -27,7 +28,7 @@ public class SearchRequestManager extends AbstractRequestConstructor {
         SearchSourceBuilder newSourceBuilder = new SearchSourceBuilder();
         SearchSource source = searchContext.source();
         if (StringUtils.hasText(source.getBody())) {
-            MatchQueryBuilder body = QueryBuilders.matchQuery("body", source.getBody());
+            MatchQueryBuilder body = QueryBuilders.matchQuery(SearchVal.SEARCH_BODY, source.getBody());
             newSourceBuilder.query(body);
         }
 

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Getter
 public enum TagIndex implements EnumAware {
-    IT_NOTE("IT_NOTE", "it_note_index", "计算机笔记"),
+    IT_NOTE("IT_NOTE", "it_note", "计算机笔记"),
     KNOWLEDGE("KNOWLEDGE", "knowledge", "知识"),
 
 

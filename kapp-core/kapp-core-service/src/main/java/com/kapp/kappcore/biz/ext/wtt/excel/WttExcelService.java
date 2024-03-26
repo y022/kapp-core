@@ -6,24 +6,17 @@ import com.kapp.kappcore.wtt.ExcelModel;
 import com.kapp.kappcore.wtt.ExportResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.SetUtils;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.HttpHead;
 import org.apache.xmlbeans.impl.common.IOUtil;
-import org.elasticsearch.core.internal.io.IOUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +27,7 @@ public class WttExcelService {
 
     private final List<ExcelDataSupport> dataSupporters = new ArrayList<>();
     private final ApplicationContext applicationContext;
+    private final ThreadPoolTaskExecutor taskExecutor;
 
     @PostConstruct
     private void init() {

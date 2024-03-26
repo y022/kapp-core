@@ -4,7 +4,7 @@ import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.biz.note.search.request.RequestConstructor;
 import com.kapp.kappcore.biz.note.search.support.interceptor.register.IInterceptor;
 import com.kapp.kappcore.biz.note.search.support.result.SearchResult;
-import com.kapp.kappcore.biz.note.search.support.result.SearchResultCollector;
+import com.kapp.kappcore.biz.note.search.support.result.SearchResponseCollector;
 import com.kapp.kappcore.constant.ExCode;
 import com.kapp.kappcore.exception.SearchException;
 import com.kapp.kappcore.biz.note.search.request.index.TagIndexChooser;
@@ -49,9 +49,9 @@ public class IStandardSearcher implements StandardSearcher {
             searchResponse = restHighLevelClient.search(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             log.error("search server exception!", e);
-            throw new SearchException(ExCode.search_server_error, "检索服务异常!");
+            throw new SearchException(ExCode.search_server_error, "检索异常!");
         }
-        return SearchResultCollector.doCollect(searchResponse,context);
+        return SearchResponseCollector.doCollect(searchResponse,context);
     }
 
     @Override

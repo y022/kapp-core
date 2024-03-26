@@ -1,16 +1,9 @@
 package com.kapp.io.net;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -33,9 +26,9 @@ public class BioPracticeV2 {
                     }
                 });
             } catch (IOException e) {
+                serverSocket.close();
                 throw new RuntimeException(e);
             }
-
         }
     }
 

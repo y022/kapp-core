@@ -23,6 +23,7 @@ public class StandardSearchApi {
 
     @PostMapping("/complex")
     List<SearchResultVo> complexSearch(@RequestBody SearchReqVo reqVo) {
+        System.out.println("xxxxx");
         return mapperFacade.mapAsList(standardSearchService.complexSearch(new ComplexSearchDTO(reqVo.getTitle(), reqVo.getBody(), reqVo.getTag(), reqVo.getSaveDate(), reqVo.getOwner())),
                 SearchResultVo.class);
     }
