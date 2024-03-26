@@ -58,7 +58,7 @@
                         </exclude>
                     </excludes>
 <!--                    <outputDirectory>${project.basedir}/jar</outputDirectory>-->
-                    <outputDirectory>../../jar</outputDirectory>
+                    <outputDirectory>../jar</outputDirectory>
                     <finalName>kapp-core-${version}</finalName>
                 </configuration>
                 <executions>
