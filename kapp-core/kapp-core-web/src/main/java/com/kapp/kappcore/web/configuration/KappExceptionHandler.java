@@ -26,6 +26,6 @@ public class KappExceptionHandler {
         return ApiResponse
                 .builder()
                 .code(exception.getExceptionCode())
-                .message(exception.getExceptionCode()).build();
+                .message(exception.getMessage()).build();
     }
 }
