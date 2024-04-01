@@ -28,4 +28,13 @@ public class KappExceptionHandler {
                 .code(exception.getExceptionCode())
                 .message(exception.getMessage()).build();
     }
+
+    @ExceptionHandler(Exception.class)
+    public Object exceptionHandler(Exception exception) {
+        log.error("searchException", exception);
+        return ApiResponse
+                .builder()
+                .code(ExCode.error)
+                .message("系统错误").build();
+    }
 }
