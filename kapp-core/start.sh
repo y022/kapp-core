@@ -1,6 +1,6 @@
 git pull
 mvn  clean package
-echo "=================================================================package success=========================================================="
+echo "==============================package success====================================="
 #cd -
 #if test -e kapp-core*.jar; then
  # rm kapp-core*.jar
