@@ -1,5 +1,6 @@
 FROM openjdk:11.0-jre-buster
-ENV TZ=Asia/Shanghai
+ENV TZ=Asia/Shanghaii \
+       JAVA_OPTS=""
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-COPY ./jar/kapp-core-v1.0.jar /kapp-core-v1.0.jar
-ENTRYPOINT ["java","-jar","/kapp-core-v1.0.jar"]
+COPY ./kapp-core-v1.0.jar /kapp-core-v1.0.jar
+ENTRYPOINT ["sh","-c","java -jar $JAVA_OPTS kapp-core-v1.0.jar"]
