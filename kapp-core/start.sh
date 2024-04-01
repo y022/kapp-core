@@ -1,4 +1,3 @@
-git pull
 mvn  clean package
 echo "==============================package success====================================="
 #cd -
