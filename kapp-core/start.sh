@@ -1,22 +1,23 @@
-mvn  clean package
-echo "==============================package success====================================="
-#cd -
-#if test -e kapp-core*.jar; then
- # rm kapp-core*.jar
-#fi
-#cp /home/y022/code/kapp-core/kapp-core/jar/kapp-core-*.jar ./
+#!/bin/bash
 
-if docker container inspect kapp-core &>/dev/null; then
+process_name="kapp-core" # 替换为你要检查的进程名
 
-if docker container inspect --format '{{.State.Running}}' kapp-core | grep -q '^true$'; then
- echo "当前已有同名容器服务正在运行，尝试停止！！！"
- docker stop kapp-core
+# 使用pgrep查找进程ID
+pid=$(pgrep -f $process_name)
+
+# 检查进程是否存在
+if [ -n "$pid" ]; then
+    echo "Process $process_name is running with PID: $pid"
+    kill $pid
+    if kill -0 $pid > /dev/null 2>&1; then
+        echo "Process $process_name is still running"
+        # 尝试更强制的方式杀死进程
+        kill -9 $pid
+    else
+        echo "Process $process_name has been killed"
+    fi
+else
+    echo "Process $process_name is not running"
 fi
 
- docker rm kapp-core
- docker rmi kapp-core
-
-fi
-
-docker build -t kapp-core ./
-docker run -d --name kapp-core -p 9622:9622 -e JAVA_OPTS="-Xms256m -Xmx512m"  kapp-core
+java -jar -Xms256 -Xmx 512m kapp-core-v1.0.jar

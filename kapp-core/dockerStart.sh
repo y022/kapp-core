@@ -1,3 +1,4 @@
+mvn  clean package
 echo "==============================package success====================================="
 #cd -
 #if test -e kapp-core*.jar; then
