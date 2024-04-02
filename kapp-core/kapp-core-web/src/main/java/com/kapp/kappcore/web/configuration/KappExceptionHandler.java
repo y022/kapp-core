@@ -31,7 +31,7 @@ public class KappExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Object exceptionHandler(Exception exception) {
-        log.error("searchException", exception);
+        log.error("exception", exception);
         return ApiResponse
                 .builder()
                 .code(ExCode.error)

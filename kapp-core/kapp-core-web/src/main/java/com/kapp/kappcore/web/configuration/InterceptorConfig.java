@@ -44,16 +44,5 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		cors.maxAge(3600);
 	}
 
-	// 简写形式
-//	@Override
-//	public void addCorsMappings(CorsRegistry registry) {
-//		registry.addMapping("/**")
-//				.allowedOrigins("*")
-//				//.allowCredentials(true)
-//				//.allowedOriginPatterns("*")
-//				.allowedHeaders("*")
-//				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-//				.maxAge(3600);
-//	}
 
 }
