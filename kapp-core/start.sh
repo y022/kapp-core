@@ -1,17 +1,15 @@
-#!/bin/bash
+process_name="kapp-core"
 
-process_name="kapp-core" # 替换为你要检查的进程名
 # 使用pgrep查找进程ID
-pid=$(pgrep -f $process_name)
+Pid=$(pgrep -f $process_name)
 
 # 检查进程是否存在
-if [ -n "$pid" ]; then
-    echo "Process $process_name is running with PID: $pid"
-    kill $pid
-    if kill -0 $pid > /dev/null 2>&1; then
+if [ -n "$Pid" ]; then
+    echo "Process $process_name is running with Pid: Pid"
+    kill Pid
+    if kill -0 $Pid > /dev/null 2>&1; then
         echo "Process $process_name is still running"
-        # 尝试更强制的方式杀死进程
-        kill -9 $pid
+        kill -9 Pid
     else
         echo "Process $process_name has been killed"
     fi
@@ -19,4 +17,4 @@ else
     echo "Process $process_name is not running"
 fi
 
-java -jar -Xms256 -Xmx 512m kapp-core-v1.0.jar
+nohup /home/app/jdk-11.0.19/bin/java -jar -Xms512m -Xmx512m /home/app/jar/kapp-core-v1.0.jar >> /home/logs/kapp_core_log.txt  2>1 &
