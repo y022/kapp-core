@@ -1,7 +1,6 @@
 #!/bin/bash
 
 process_name="kapp-core" # 替换为你要检查的进程名
-
 # 使用pgrep查找进程ID
 pid=$(pgrep -f $process_name)
 
