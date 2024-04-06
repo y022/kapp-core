@@ -9,7 +9,7 @@ triggers:
         - master
 stages:
   - name: stage-847b35eb
-    displayName: 未命名
+    displayName: compile
     strategy: naturally
     trigger: auto
     executor: []
