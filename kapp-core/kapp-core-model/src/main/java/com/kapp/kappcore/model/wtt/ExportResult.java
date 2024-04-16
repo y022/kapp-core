@@ -1,4 +1,4 @@
-package com.kapp.kappcore.wtt;
+package com.kapp.kappcore.model.wtt;
 
 import lombok.Data;
 

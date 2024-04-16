@@ -1,7 +1,7 @@
 package com.kapp.kappcore.task.support.produce;
 
-import com.kapp.kappcore.entity.ExecuteItem;
-import com.kapp.kappcore.entity.LineMsItem;
+import com.kapp.kappcore.model.entity.ExecuteItem;
+import com.kapp.kappcore.model.entity.LineMsItem;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;

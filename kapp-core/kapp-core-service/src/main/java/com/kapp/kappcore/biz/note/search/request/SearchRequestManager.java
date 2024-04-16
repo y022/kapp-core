@@ -2,7 +2,7 @@ package com.kapp.kappcore.biz.note.search.request;
 
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.biz.note.search.context.obj.SearchSource;
-import com.kapp.kappcore.constant.SearchVal;
+import com.kapp.kappcore.model.constant.SearchVal;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;

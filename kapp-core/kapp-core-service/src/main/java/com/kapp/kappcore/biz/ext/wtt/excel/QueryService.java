@@ -1,9 +1,9 @@
 package com.kapp.kappcore.biz.ext.wtt.excel;
 
-import com.kapp.kappcore.wtt.ControlValve;
-import com.kapp.kappcore.wtt.QControlValve;
-import com.kapp.kappcore.wtt.query.ControlValveQueryReq;
-import com.kapp.kappcore.wtt.query.ControlValveQueryResp;
+import com.kapp.kappcore.model.wtt.ControlValve;
+import com.kapp.kappcore.model.wtt.query.ControlValveQueryReq;
+import com.kapp.kappcore.model.wtt.query.ControlValveQueryResp;
+import com.kapp.kappcore.model.wtt.QControlValve;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

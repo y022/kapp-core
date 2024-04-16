@@ -1,4 +1,4 @@
-package com.kapp.kappcore.constant;
+package com.kapp.kappcore.model.constant;
 
 public interface ExCode {
     String index_error = "01";

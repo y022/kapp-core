@@ -1,4 +1,4 @@
-package com.kapp.kappcore.exception;
+package com.kapp.kappcore.model.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -2,8 +2,8 @@ package com.kapp.kappcore.web.api.biz.ext.wtt;
 
 import com.kapp.kappcore.biz.ext.wtt.excel.QueryService;
 import com.kapp.kappcore.biz.ext.wtt.excel.WttExcelService;
-import com.kapp.kappcore.wtt.query.ControlValveQueryReq;
-import com.kapp.kappcore.wtt.query.ControlValveQueryResp;
+import com.kapp.kappcore.model.wtt.query.ControlValveQueryReq;
+import com.kapp.kappcore.model.wtt.query.ControlValveQueryResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

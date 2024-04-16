@@ -1,7 +1,8 @@
-package com.kapp.kappcore.wtt.query;
+package com.kapp.kappcore.model.wtt.query;
 
-import com.kapp.kappcore.wtt.ControlValve;
 import lombok.Data;
+
+import com.kapp.kappcore.model.wtt.ControlValve;
 
 import java.util.List;
 

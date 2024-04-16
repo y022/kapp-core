@@ -1,4 +1,4 @@
-package com.kapp.kappcore.entity;
+package com.kapp.kappcore.model.entity;
 
 import lombok.Data;
 

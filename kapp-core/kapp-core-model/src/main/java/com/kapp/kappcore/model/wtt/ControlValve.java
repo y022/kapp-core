@@ -1,7 +1,7 @@
-package com.kapp.kappcore.wtt;
+package com.kapp.kappcore.model.wtt;
 
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.kapp.kappcore.annotaion.CellPosition;
+import com.kapp.kappcore.model.annotaion.CellPosition;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.GenericGenerator;

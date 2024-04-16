@@ -1,7 +1,7 @@
 package com.kapp.kappcore.web.configuration;
 
-import com.kapp.kappcore.ApiResponse;
-import com.kapp.kappcore.constant.ExCode;
+import com.kapp.kappcore.model.ApiResponse;
+import com.kapp.kappcore.model.constant.ExCode;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;

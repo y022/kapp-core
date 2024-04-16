@@ -1,8 +1,8 @@
 package com.kapp.kappcore.biz.ext.wtt.excel.data;
 
-import com.kapp.kappcore.wtt.ExcelDataTag;
-import com.kapp.kappcore.wtt.ExcelModel;
-import com.kapp.kappcore.wtt.ExportResult;
+import com.kapp.kappcore.model.wtt.ExcelDataTag;
+import com.kapp.kappcore.model.wtt.ExcelModel;
+import com.kapp.kappcore.model.wtt.ExportResult;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;

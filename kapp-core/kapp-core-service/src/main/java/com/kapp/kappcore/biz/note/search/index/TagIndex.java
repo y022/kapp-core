@@ -1,7 +1,7 @@
 package com.kapp.kappcore.biz.note.search.index;
 
-import com.kapp.kappcore.constant.ExCode;
-import com.kapp.kappcore.exception.SearchException;
+import com.kapp.kappcore.model.constant.ExCode;
+import com.kapp.kappcore.model.exception.SearchException;
 import lombok.Getter;
 
 import java.util.Objects;

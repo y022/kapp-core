@@ -1,4 +1,4 @@
-package com.kapp.kappcore;
+package com.kapp.kappcore.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
