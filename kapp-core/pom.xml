@@ -13,6 +13,7 @@
         <module>kapp-core-web</module>
         <module>kapp-core-service</module>
         <module>kapp-core-model</module>
+        <module>kapp-core-task</module>
     </modules>
 
     <properties>
