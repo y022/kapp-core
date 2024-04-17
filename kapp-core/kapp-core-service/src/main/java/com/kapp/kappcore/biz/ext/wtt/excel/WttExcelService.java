@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.xmlbeans.impl.common.IOUtil;
 import org.springframework.context.ApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -27,7 +26,6 @@ public class WttExcelService {
 
     private final List<ExcelDataSupport> dataSupporters = new ArrayList<>();
     private final ApplicationContext applicationContext;
-    private final ThreadPoolTaskExecutor taskExecutor;
 
     @PostConstruct
     private void init() {

@@ -9,6 +9,10 @@ public interface Producer<T extends ExecuteItem> {
 
     List<T> produce(int capacity);
 
-    default void prepare() {
+    /**
+     * 准备所需元素
+     */
+    default void prepareItem() {
+        throw new UnsupportedOperationException();
     }
 }

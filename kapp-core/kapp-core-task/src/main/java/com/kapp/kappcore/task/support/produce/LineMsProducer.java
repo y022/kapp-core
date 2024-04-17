@@ -4,10 +4,8 @@ import com.kapp.kappcore.model.entity.ExecuteItem;
 import com.kapp.kappcore.model.entity.LineMsItem;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,12 +18,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class LineMsProducer extends AbstractProducer {
     private final Path path;
     private final Queue<LineMsItem> queue;
-    private final String version = UUID.randomUUID().toString();
+    private final String version = Long.toString(System.currentTimeMillis());
 
     public LineMsProducer(String path) {
         Objects.requireNonNull(path);
         this.path = Paths.get(path);
-        this.queue = new ArrayBlockingQueue<>(10000, false);
+        this.queue = new ArrayBlockingQueue<>(100000000, false);
     }
 
     @Override
@@ -34,7 +32,7 @@ public class LineMsProducer extends AbstractProducer {
     }
 
     @Override
-    public void prepare() {
+    public void prepareItem() {
         try {
             read();
         } catch (Exception e) {
@@ -45,13 +43,14 @@ public class LineMsProducer extends AbstractProducer {
     @Override
     public List<ExecuteItem> produce(int capacity) {
         List<ExecuteItem> items = new ArrayList<>();
-        if (queue.isEmpty() || capacity <= 0) {
+        if (queue.isEmpty()) {
             return items;
         }
-        for (int i = 0; i < capacity; i++) {
+        int k = capacity < 0 ? queue.size() : Math.min(capacity, queue.size());
+        for (int i = 0; i < k; i++) {
             items.add(queue.poll());
         }
-        return null;
+        return items;
     }
 
     private void read() throws IOException {
@@ -62,27 +61,18 @@ public class LineMsProducer extends AbstractProducer {
 
             reader.lines().forEach(line -> {
                 LineMsItem lineMsItem = new LineMsItem();
-
                 String id = UUID.randomUUID().toString();
-
                 lineMsItem.setId(id);
-
                 lineMsItem.setNo("No." + id);
-
-                lineMsItem.setContent(line);
-
+                String content = new String(line.getBytes(), StandardCharsets.UTF_8);
+                lineMsItem.setContent(content);
+                lineMsItem.setVersion(version);
                 lineMsItem.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
                 queue.offer(lineMsItem);
             });
-
-
+        } else {
+            throw new FileNotFoundException(path + "is not found");
         }
     }
 
-    public static void main(String[] args) {
-        LocalDateTime now = LocalDateTime.now();
-        String format = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        System.out.println("format = " + format);
-    }
 }

@@ -52,6 +52,11 @@
                 <version>${kapp-core.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.kapp</groupId>
+                <artifactId>kapp-core-task</artifactId>
+                <version>${kapp-core.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>ma.glasnost.orika</groupId>
                 <artifactId>orika-core</artifactId>
                 <version>1.5.2</version>

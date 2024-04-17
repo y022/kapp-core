@@ -25,6 +25,10 @@
             <artifactId>kapp-core-service</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.kapp</groupId>
+            <artifactId>kapp-core-task</artifactId>
+        </dependency>
+        <dependency>
             <groupId>ma.glasnost.orika</groupId>
             <artifactId>orika-core</artifactId>
         </dependency>
