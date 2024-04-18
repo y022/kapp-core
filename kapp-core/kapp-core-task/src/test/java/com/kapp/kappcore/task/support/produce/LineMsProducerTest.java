@@ -12,7 +12,7 @@ class LineMsProducerTest {
     @Test
     void prepare() {
         LineMsProducer lineMsProducer = new LineMsProducer("/Users/y022/Downloads/fbcfc7b1474e9b34833f538f28b380d5.txt");
-        lineMsProducer.prepareItem();
+        lineMsProducer.prepareItem("fr");
         List<ExecuteItem> res = lineMsProducer.produce(10);
         System.out.println("res = " + res);
     }

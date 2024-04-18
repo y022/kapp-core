@@ -12,8 +12,6 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class SearchRequestManager extends AbstractRequestConstructor {
-
-
     @Override
     public SearchRequest get(SearchContext searchContext) {
 
@@ -24,12 +22,18 @@ public class SearchRequestManager extends AbstractRequestConstructor {
             return searchRequest;
         }
 
-
         SearchSourceBuilder newSourceBuilder = new SearchSourceBuilder();
+
         SearchSource source = searchContext.source();
+
         if (StringUtils.hasText(source.getBody())) {
             MatchQueryBuilder body = QueryBuilders.matchQuery(SearchVal.SEARCH_BODY, source.getBody());
             newSourceBuilder.query(body);
+        }
+
+        if (StringUtils.hasText(source.getBody())) {
+            MatchQueryBuilder title = QueryBuilders.matchQuery(SearchVal.SEARCH_TITLE, source.getTitle());
+            newSourceBuilder.query(title);
         }
 
         searchRequest.source(newSourceBuilder);

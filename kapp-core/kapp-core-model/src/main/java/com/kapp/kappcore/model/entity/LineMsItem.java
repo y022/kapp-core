@@ -18,4 +18,5 @@ public class LineMsItem extends ExecuteItem {
     private String content;
     private String version;
     private String date;
+    private String tag;
 }

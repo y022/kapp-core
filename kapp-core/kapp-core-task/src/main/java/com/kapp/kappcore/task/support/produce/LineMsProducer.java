@@ -32,9 +32,9 @@ public class LineMsProducer extends AbstractProducer {
     }
 
     @Override
-    public void prepareItem() {
+    public void prepareItem(String tag) {
         try {
-            read();
+            read(tag);
         } catch (Exception e) {
             log.error("lineMsProducer prepare error", e);
         }
@@ -53,7 +53,7 @@ public class LineMsProducer extends AbstractProducer {
         return items;
     }
 
-    private void read() throws IOException {
+    private void read(String tag) throws IOException {
         boolean exists = Files.exists(path);
         if (exists) {
             File file = path.toFile();
@@ -67,7 +67,8 @@ public class LineMsProducer extends AbstractProducer {
                 String content = new String(line.getBytes(), StandardCharsets.UTF_8);
                 lineMsItem.setContent(content);
                 lineMsItem.setVersion(version);
-                lineMsItem.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                lineMsItem.setTag(tag);
+                lineMsItem.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS")));
                 queue.offer(lineMsItem);
             });
         } else {
