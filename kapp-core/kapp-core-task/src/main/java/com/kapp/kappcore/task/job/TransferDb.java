@@ -36,7 +36,9 @@ public class TransferDb {
     }
 
     public void start(String tag) {
+        log.info("开始准备读取数据....");
         lineMsProducer.prepareItem(tag);
+        log.info("数据读取完毕....");
 
         List<ExecuteItem> items = lineMsProducer.produce(-1);
 
