@@ -1,4 +1,4 @@
-package com.kapp.kappcore.web.configuration;
+package com.kapp.kappcore.web.configuration.web;
 
 import org.springframework.core.annotation.Order;
 
@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Order(1)
 @WebFilter(filterName = "corsFilter", urlPatterns = {"/*"})
-public class CORSFilter implements Filter {
+public class WebCorsFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

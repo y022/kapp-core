@@ -1,4 +1,4 @@
-package com.kapp.kappcore.web.configuration;
+package com.kapp.kappcore.web.configuration.response;
 
 import com.kapp.kappcore.model.ApiResponse;
 import com.kapp.kappcore.model.constant.ExCode;
