@@ -54,11 +54,9 @@ public class LineMsProducer extends AbstractProducer {
     }
 
     private void read(String tag) throws IOException {
-        boolean exists = Files.exists(path);
-        if (exists) {
+        if (Files.exists(path)) {
             File file = path.toFile();
             BufferedReader reader = new BufferedReader(new FileReader(file));
-
             reader.lines().forEach(line -> {
                 LineMsItem lineMsItem = new LineMsItem();
                 String id = UUID.randomUUID().toString();

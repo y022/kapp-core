@@ -2,8 +2,6 @@ package com.kapp.kappcore.task.job;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
-import com.kapp.kappcore.biz.note.dto.ComplexSearchResultDTO;
 import com.kapp.kappcore.biz.note.search.index.TagIndex;
 import com.kapp.kappcore.domain.repository.LineMsItemRepository;
 import com.kapp.kappcore.model.dto.LineMsDTO;
@@ -15,7 +13,6 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,22 +31,22 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TransferElasticSearch {
     private final LineMsItemRepository lineMsItemRepository;
-    private final AsyncTaskExecutor asyncTaskExecutor;
     private final RestHighLevelClient restHighLevelClient;
     private final ObjectMapper objectMapper;
+    private static final DateTimeFormatter DTF =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS") ;
 
-    public TransferElasticSearch(LineMsItemRepository lineMsItemRepository, AsyncTaskExecutor asyncTaskExecutor, RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) throws IOException {
+    public TransferElasticSearch(LineMsItemRepository lineMsItemRepository, RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) throws IOException {
         this.lineMsItemRepository = lineMsItemRepository;
-        this.asyncTaskExecutor = asyncTaskExecutor;
         this.restHighLevelClient = restHighLevelClient;
         this.objectMapper = objectMapper;
-        asyncTaskExecutor.execute(() -> {
+
+        ((Runnable) () -> {
             try {
 //                start();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        });
+        }).run();
     }
 
 
@@ -131,7 +128,7 @@ public class TransferElasticSearch {
 
                 lineMsDTO.setOwner("yiyi");
 
-                lineMsDTO.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS")));
+                lineMsDTO.setDate(LocalDateTime.now().format(DTF));
 
                 lineMsDTO.setDocId(item.getId());
 
