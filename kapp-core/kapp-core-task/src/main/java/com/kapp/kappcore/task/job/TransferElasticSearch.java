@@ -33,20 +33,13 @@ public class TransferElasticSearch {
     private final LineMsItemRepository lineMsItemRepository;
     private final RestHighLevelClient restHighLevelClient;
     private final ObjectMapper objectMapper;
-    private static final DateTimeFormatter DTF =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS") ;
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
 
     public TransferElasticSearch(LineMsItemRepository lineMsItemRepository, RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) throws IOException {
         this.lineMsItemRepository = lineMsItemRepository;
         this.restHighLevelClient = restHighLevelClient;
         this.objectMapper = objectMapper;
 
-        ((Runnable) () -> {
-            try {
-//                start();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).run();
     }
 
 
@@ -95,70 +88,6 @@ public class TransferElasticSearch {
             log.error("error occur," + bulk.buildFailureMessage());
         } else {
             log.info("一批数据成功处理完毕，数量：" + data.size());
-        }
-    }
-
-
-    public void start() throws Exception {
-        Sort sort = Sort.by("id");
-        long count = lineMsItemRepository.count();
-
-        long chunk = count / 200;
-
-        for (int i = 1; i <= chunk; i++) {
-            PageRequest pageRequest = PageRequest.of(i, 200, sort);
-            Page<LineMsItem> all = lineMsItemRepository.findAll(pageRequest);
-
-
-            Map<String, LineMsDTO> data = all.stream().map(item -> {
-
-
-                LineMsDTO lineMsDTO = new LineMsDTO();
-                lineMsDTO.setTag("FR");
-                String originContent = item.getContent();
-
-
-                if (originContent.length() >= 4) {
-                    originContent = originContent.substring(3);
-                }
-
-                String content = originContent.replace(" ", "");
-
-                lineMsDTO.setTitle(content.length() > 4 ? content.substring(0, 3) : content);
-
-                lineMsDTO.setOwner("yiyi");
-
-                lineMsDTO.setDate(LocalDateTime.now().format(DTF));
-
-                lineMsDTO.setDocId(item.getId());
-
-                lineMsDTO.setBody(Arrays.stream(content.split("。")).toArray(String[]::new));
-
-                lineMsDTO.setBodyLength(originContent.length());
-                lineMsDTO.setVersion(item.getVersion());
-
-                return lineMsDTO;
-            }).collect(Collectors.toMap(LineMsDTO::getDocId, Function.identity()));
-
-
-            BulkRequest bulkRequest = new BulkRequest();
-
-            data.forEach((k, v) -> {
-                IndexRequest indexRequest = new IndexRequest(TagIndex.FR.getIndex(), "_doc");
-                try {
-                    IndexRequest source = indexRequest.source(objectMapper.writeValueAsString(v).getBytes(), XContentType.JSON);
-                    bulkRequest.add(source);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            BulkResponse bulk = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
-            if (bulk.hasFailures()) {
-                log.error("error occur," + bulk.buildFailureMessage());
-            } else {
-                log.info("一批数据成功处理完毕，数量：" + data.size());
-            }
         }
     }
 

@@ -79,5 +79,6 @@ public class TransferDb {
 
         log.info("数据插入完毕,插入耗时:" + stopWatch.getLastTaskTimeMillis());
         log.info("任务总耗时:" + stopWatch.getTotalTimeMillis());
+        log.info(stopWatch.prettyPrint());
     }
 }
