@@ -8,10 +8,11 @@ import com.kapp.kappcore.task.support.ExecutePoint;
 import com.kapp.kappcore.task.support.produce.LineMsProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.util.StopWatch;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 public class TransferDb {
@@ -20,6 +21,7 @@ public class TransferDb {
     private final LineMsProducer lineMsProducer;
     private final LineMsItemRepository lineMsItemRepository;
     private final TransferElasticSearch transferElasticSearch;
+
     private final ExecutePoint<List<LineMsItem>> executePoint = new ExecutePoint<>() {
         @Override
         public void execute(List<LineMsItem> t) {
@@ -36,27 +38,46 @@ public class TransferDb {
     }
 
     public void start(String tag) {
+        StopWatch stopWatch = new StopWatch("transfer" + tag);
+        stopWatch.start("read");
         log.info("开始准备读取数据....");
         lineMsProducer.prepareItem(tag);
-        log.info("数据读取完毕....");
+        stopWatch.stop();
+        log.info("数据读取完毕,读取耗时:" + stopWatch.getLastTaskTimeMillis());
+
+
+        stopWatch.start("write");
 
         List<ExecuteItem> items = lineMsProducer.produce(-1);
 
-        for (List<ExecuteItem> executeItems : ListUtil.split(items, 2000)) {
+        List<List<ExecuteItem>> coll = ListUtil.split(items, 1000);
+
+        CountDownLatch cdl = new CountDownLatch(coll.size());
+
+        for (List<ExecuteItem> executeItems : coll) {
             asyncTaskExecutor.execute(() -> {
                 ArrayList<LineMsItem> m = new ArrayList<>();
                 executeItems.forEach(v -> m.add((LineMsItem) v));
                 try {
                     executePoint.execute(m);
-                } catch (Exception e) {
-                    log.error("error", e);
-                }
-                try {
                     transferElasticSearch.transfer(m);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    log.error("error:", e);
+                } finally {
+                    cdl.countDown();
                 }
             });
         }
+
+        try {
+            cdl.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        stopWatch.stop();
+
+        log.info("数据插入完毕,插入耗时:" + stopWatch.getLastTaskTimeMillis());
+        log.info("任务总耗时:" + stopWatch.getTotalTimeMillis());
     }
 }
