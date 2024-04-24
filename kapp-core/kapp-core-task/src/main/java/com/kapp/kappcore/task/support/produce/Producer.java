@@ -1,6 +1,7 @@
 package com.kapp.kappcore.task.support.produce;
 
 import com.kapp.kappcore.model.entity.ExecuteItem;
+import com.kapp.kappcore.model.entity.LineMsItem;
 
 import java.util.List;
 

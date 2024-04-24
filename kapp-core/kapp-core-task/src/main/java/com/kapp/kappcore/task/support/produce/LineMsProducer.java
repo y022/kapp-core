@@ -2,6 +2,7 @@ package com.kapp.kappcore.task.support.produce;
 
 import com.kapp.kappcore.model.entity.ExecuteItem;
 import com.kapp.kappcore.model.entity.LineMsItem;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -17,6 +18,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 @Slf4j
 public class LineMsProducer extends AbstractProducer {
     private final Path path;
+    @Getter
     private final Queue<LineMsItem> queue;
     private final String version = Long.toString(System.currentTimeMillis());
 
@@ -52,6 +54,24 @@ public class LineMsProducer extends AbstractProducer {
         }
         return items;
     }
+
+    public List<LineMsItem> produceByType(int capacity) {
+
+        List<LineMsItem> items = new ArrayList<>();
+        return getLineMsItems(capacity, items);
+    }
+
+    private List<LineMsItem> getLineMsItems(int capacity, List<LineMsItem> items) {
+        if (queue.isEmpty()) {
+            return items;
+        }
+        int k = capacity < 0 ? queue.size() : Math.min(capacity, queue.size());
+        for (int i = 0; i < k; i++) {
+            items.add(queue.poll());
+        }
+        return items;
+    }
+
 
     private void read(String tag) throws IOException {
         if (Files.exists(path)) {

@@ -15,29 +15,19 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 @Slf4j
-public class TransferDb {
-
-    private final AsyncTaskExecutor asyncTaskExecutor;
-    private final LineMsProducer lineMsProducer;
-    private final LineMsItemRepository lineMsItemRepository;
-    private final TransferElasticSearch transferElasticSearch;
-
-    private final ExecutePoint<List<LineMsItem>> executePoint = new ExecutePoint<>() {
-        @Override
-        public void execute(List<LineMsItem> t) {
-            lineMsItemRepository.saveAll(t);
-        }
-    };
+public class TransferDbV1 extends AbstractTransferDb {
 
 
-    public TransferDb(AsyncTaskExecutor asyncTaskExecutor, LineMsProducer lineMsProducer, LineMsItemRepository lineMsItemRepository, TransferElasticSearch transferElasticSearch) {
-        this.asyncTaskExecutor = asyncTaskExecutor;
-        this.lineMsProducer = lineMsProducer;
-        this.lineMsItemRepository = lineMsItemRepository;
-        this.transferElasticSearch = transferElasticSearch;
+    private final ExecutePoint<List<LineMsItem>> executePoint = lineMsItemRepository::saveAll;
+
+
+    public TransferDbV1(AsyncTaskExecutor asyncTaskExecutor, LineMsProducer lineMsProducer,
+                        LineMsItemRepository lineMsItemRepository, TransferElasticSearch transferElasticSearch) {
+        super(asyncTaskExecutor, lineMsProducer, lineMsItemRepository, transferElasticSearch);
     }
 
-    public void start(String tag) {
+    @Override
+    public void transfer(String tag) {
         StopWatch stopWatch = new StopWatch("transfer" + tag);
         stopWatch.start("read");
         log.info("开始准备读取数据....");
@@ -81,4 +71,5 @@ public class TransferDb {
         log.info("任务总耗时:" + stopWatch.getTotalTimeMillis());
         log.info(stopWatch.prettyPrint());
     }
+
 }
