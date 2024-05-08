@@ -13,17 +13,14 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,7 +30,8 @@ public class TransferElasticSearch {
     private final LineMsItemRepository lineMsItemRepository;
     private final RestHighLevelClient restHighLevelClient;
     private final ObjectMapper objectMapper;
-    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
+    private static final AtomicLong TOTAL = new AtomicLong();
+    private static final AtomicLong COUNTER = new AtomicLong();
 
     public TransferElasticSearch(LineMsItemRepository lineMsItemRepository, RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) throws IOException {
         this.lineMsItemRepository = lineMsItemRepository;
@@ -44,6 +42,7 @@ public class TransferElasticSearch {
 
 
     public void transfer(List<LineMsItem> items) throws IOException {
+        long start = System.currentTimeMillis();
         Map<String, LineMsDTO> data = items.stream().map(item -> {
             LineMsDTO lineMsDTO = new LineMsDTO();
             lineMsDTO.setTag(item.getTag());
@@ -88,6 +87,26 @@ public class TransferElasticSearch {
             log.error("error occur," + bulk.buildFailureMessage());
         } else {
             log.info("一批数据成功处理完毕，数量：" + data.size());
+        }
+        add(start);
+    }
+
+    private static void add(long start) {
+        synchronized ("sa") {
+            log.info("total" + TOTAL.addAndGet(System.currentTimeMillis() - start));
+            log.info("counter" + COUNTER.incrementAndGet());
+        }
+    }
+
+    public void computeTime() {
+        log.info("es插入总耗时:" + TOTAL + "ms");
+        log.info("es插入平均耗时:" + TOTAL.get() / COUNTER.get() + "ms");
+    }
+
+    public void reset() {
+        synchronized ("x") {
+            TOTAL.set(0);
+            COUNTER.set(0);
         }
     }
 

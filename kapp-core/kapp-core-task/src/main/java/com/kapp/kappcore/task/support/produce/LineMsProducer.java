@@ -21,6 +21,7 @@ public class LineMsProducer extends AbstractProducer {
     @Getter
     private final Queue<LineMsItem> queue;
     private final String version = Long.toString(System.currentTimeMillis());
+    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
 
     public LineMsProducer(String path) {
         Objects.requireNonNull(path);
@@ -86,7 +87,7 @@ public class LineMsProducer extends AbstractProducer {
                 lineMsItem.setContent(content);
                 lineMsItem.setVersion(version);
                 lineMsItem.setTag(tag);
-                lineMsItem.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS")));
+                lineMsItem.setDate(LocalDateTime.now().format(DTF));
                 queue.offer(lineMsItem);
             });
         } else {

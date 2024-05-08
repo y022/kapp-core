@@ -25,30 +25,24 @@ public class TransferDbV2 extends AbstractTransferDb {
         lineMsProducer.prepareItem(tag);
         log.info("读取数据完毕....");
 
-
         StopWatch stopWatch = new StopWatch("transfer" + tag);
 
         stopWatch.start("write");
 
         Queue<LineMsItem> queue = lineMsProducer.getQueue();
 
-        AtomicBoolean ab = new AtomicBoolean(false);
+        AtomicBoolean sync = new AtomicBoolean(false);
 
         CountDownLatch cdl = new CountDownLatch(16);
-
+        transferElasticSearch.reset();
         for (int i = 0; i < 16; i++) {
             asyncTaskExecutor.execute(() -> {
                 try {
                     while (!queue.isEmpty()) {
-                        if (ab.compareAndExchange(false, true)) {
-                            List<LineMsItem> m = lineMsProducer.produceByType(2000);
-                            ab.compareAndExchange(true, false);
-                            try {
-                                lineMsItemRepository.saveAll(m);
-                                transferElasticSearch.transfer(m);
-                            } catch (Exception e) {
-                                log.error("error:", e);
-                            }
+                        if (sync.compareAndExchange(false, true)) {
+                            List<LineMsItem> m = lineMsProducer.produceByType(BATCH_SIZE);
+                            sync.compareAndExchange(true, false);
+                            save(m);
                         }
                     }
                 } finally {
@@ -63,10 +57,9 @@ public class TransferDbV2 extends AbstractTransferDb {
             log.error("InterruptedException:", e);
         }
 
-        stopWatch.stop();
-
-        log.info("数据插入完毕,插入耗时:" + stopWatch.getLastTaskTimeMillis());
-        log.info("任务总耗时:" + stopWatch.getTotalTimeMillis());
-        log.info(stopWatch.prettyPrint());
+        print(stopWatch);
+        transferElasticSearch.computeTime();
     }
+
+
 }
