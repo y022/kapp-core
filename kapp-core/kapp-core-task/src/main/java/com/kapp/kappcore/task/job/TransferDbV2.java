@@ -26,47 +26,47 @@ public class TransferDbV2 extends AbstractTransferDb {
         log.info("读取数据完毕....");
 
 
-        StopWatch stopWatch = new StopWatch("transfer" + tag);
-
-        stopWatch.start("write");
-
-        Queue<LineMsItem> queue = lineMsProducer.getQueue();
-
-        AtomicBoolean ab = new AtomicBoolean(false);
-
-        CountDownLatch cdl = new CountDownLatch(16);
-
-        for (int i = 0; i < 16; i++) {
-            asyncTaskExecutor.execute(() -> {
-                try {
-                    while (!queue.isEmpty()) {
-                        if (ab.compareAndExchange(false, true)) {
-                            List<LineMsItem> m = lineMsProducer.produceByType(2000);
-                            ab.compareAndExchange(true, false);
-                            try {
-                                lineMsItemRepository.saveAll(m);
-                                transferElasticSearch.transfer(m);
-                            } catch (Exception e) {
-                                log.error("error:", e);
-                            }
-                        }
-                    }
-                } finally {
-                    cdl.countDown();
-                }
-            });
-        }
-
-        try {
-            cdl.await();
-        } catch (InterruptedException e) {
-            log.error("InterruptedException:", e);
-        }
-
-        stopWatch.stop();
-
-        log.info("数据插入完毕,插入耗时:" + stopWatch.getLastTaskTimeMillis());
-        log.info("任务总耗时:" + stopWatch.getTotalTimeMillis());
-        log.info(stopWatch.prettyPrint());
+//        StopWatch stopWatch = new StopWatch("transfer" + tag);
+//
+//        stopWatch.start("write");
+//
+//        Queue<LineMsItem> queue = lineMsProducer.getQueue();
+//
+//        AtomicBoolean ab = new AtomicBoolean(false);
+//
+//        CountDownLatch cdl = new CountDownLatch(16);
+//
+//        for (int i = 0; i < 16; i++) {
+//            asyncTaskExecutor.execute(() -> {
+//                try {
+//                    while (!queue.isEmpty()) {
+//                        if (ab.compareAndExchange(false, true)) {
+//                            List<LineMsItem> m = lineMsProducer.produceByType(2000);
+//                            ab.compareAndExchange(true, false);
+//                            try {
+//                                lineMsItemRepository.saveAll(m);
+//                                transferElasticSearch.transfer(m);
+//                            } catch (Exception e) {
+//                                log.error("error:", e);
+//                            }
+//                        }
+//                    }
+//                } finally {
+//                    cdl.countDown();
+//                }
+//            });
+//        }
+//
+//        try {
+//            cdl.await();
+//        } catch (InterruptedException e) {
+//            log.error("InterruptedException:", e);
+//        }
+//
+//        stopWatch.stop();
+//
+//        log.info("数据插入完毕,插入耗时:" + stopWatch.getLastTaskTimeMillis());
+//        log.info("任务总耗时:" + stopWatch.getTotalTimeMillis());
+//        log.info(stopWatch.prettyPrint());
     }
 }
