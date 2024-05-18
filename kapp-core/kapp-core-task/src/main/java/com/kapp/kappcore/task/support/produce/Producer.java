@@ -14,6 +14,6 @@ public interface Producer<T extends ExecuteItem> {
      * 准备所需元素
      */
     default void prepareItem(String tag) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("UnsupportedOperationException!");
     }
 }

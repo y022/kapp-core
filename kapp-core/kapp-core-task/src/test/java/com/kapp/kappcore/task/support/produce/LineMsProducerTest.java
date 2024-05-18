@@ -7,6 +7,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
@@ -23,9 +24,15 @@ public class LineMsProducerTest {
         lineMsProducer.prepareItem("mtj");
 
     }
+
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder().include(LineMsProducerTest.class.getSimpleName()) // 要导入的测试类
                 .build();
         new Runner(opt).run(); // 执行测试
+    }
+
+    @Test
+    public void test() {
+        InputStream resourceAsStream = ClassLoader.getSystemClassLoader().getResourceAsStream("static/frxxz.txt");
     }
 }

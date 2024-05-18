@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -26,12 +25,11 @@ public class LineMsProducer extends AbstractProducer {
     private final Queue<LineMsItem> queue;
     private final String version = Long.toString(System.currentTimeMillis());
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
-    private static final Object OBJ = new Object();
 
     public LineMsProducer(String path) {
         Objects.requireNonNull(path);
         this.path = Paths.get(path);
-        this.queue = new ArrayDeque<>(100000000);
+        this.queue = new ArrayBlockingQueue<>(100000000);
     }
 
     @Override
@@ -62,7 +60,6 @@ public class LineMsProducer extends AbstractProducer {
     }
 
     public List<LineMsItem> produceByType(int capacity) {
-
         List<LineMsItem> items = new ArrayList<>();
         return getLineMsItems(capacity, items);
     }
@@ -78,52 +75,9 @@ public class LineMsProducer extends AbstractProducer {
         return items;
     }
 
-
-    private void read(String tag) throws IOException {
-        if (Files.exists(path)) {
-            BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
-            reader.lines().forEach(line -> {
-                LineMsItem lineMsItem = new LineMsItem();
-                String id = UUID.randomUUID().toString();
-                lineMsItem.setId(id);
-                lineMsItem.setNo("No." + id);
-                String content = new String(line.getBytes(), StandardCharsets.UTF_8);
-                lineMsItem.setContent(content);
-                lineMsItem.setVersion(version);
-                lineMsItem.setTag(tag);
-                lineMsItem.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS")));
-                queue.offer(lineMsItem);
-            });
-        } else {
-            throw new FileNotFoundException(path + "is not found");
-        }
-    }
-
-    private void read1(String tag) throws IOException {
-        if (Files.exists(path)) {
-//            String date = LocalDateTime.now().format(df);
-            BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
-            reader.lines().forEach(line -> {
-                LineMsItem lineMsItem = new LineMsItem();
-//                String id = UUID.randomUUID().toString();
-//                lineMsItem.setId(id);
-//                lineMsItem.setNo("No." + id);
-//                String content = new String(line.getBytes(), StandardCharsets.UTF_8);
-//                lineMsItem.setContent(content);
-//                lineMsItem.setVersion(version);
-//                lineMsItem.setTag(tag);
-//                lineMsItem.setDate(date);
-                queue.offer(lineMsItem);
-            });
-        } else {
-            throw new FileNotFoundException(path + "is not found");
-        }
-    }
-
     private void read2(String tag) throws IOException {
-        ReentrantLock reentrantLock = new ReentrantLock();
         if (Files.exists(path)) {
-
+            FileDescriptor fileDescriptor = new FileDescriptor();
             RandomAccessFile file = new RandomAccessFile(path.toFile(), "r");
             FileChannel fileChannel = file.getChannel();
             // 映射文件到ByteBuffer，这里映射整个文件
@@ -145,9 +99,6 @@ public class LineMsProducer extends AbstractProducer {
                 lineMsItem.setVersion(version);
                 lineMsItem.setTag(tag);
                 lineMsItem.setDate(LocalDateTime.now().format(df));
-                synchronized (OBJ) {
-                    queue.offer(lineMsItem);
-                }
             });
             log.info("共读取数据条数：" + queue.size());
             fileChannel.close();
@@ -156,4 +107,7 @@ public class LineMsProducer extends AbstractProducer {
             throw new FileNotFoundException(path + "is not found");
         }
     }
+
+
+
 }
