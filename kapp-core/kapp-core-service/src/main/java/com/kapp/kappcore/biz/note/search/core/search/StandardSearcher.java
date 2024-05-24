@@ -2,7 +2,7 @@ package com.kapp.kappcore.biz.note.search.core.search;
 
 import com.kapp.kappcore.biz.note.SearchControl;
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
-import com.kapp.kappcore.model.biz.SearchResult;
+import com.kapp.kappcore.model.biz.domain.search.SearchResult;
 
 /**
  * 标准检索器

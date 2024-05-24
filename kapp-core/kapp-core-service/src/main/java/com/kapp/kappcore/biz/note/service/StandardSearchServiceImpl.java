@@ -9,7 +9,7 @@ import com.kapp.kappcore.biz.note.search.context.GroupSearchContext;
 import com.kapp.kappcore.biz.note.search.context.obj.SearchSource;
 import com.kapp.kappcore.biz.note.search.core.search.KappStandardSearcher;
 import com.kapp.kappcore.biz.note.search.support.convert.Converter;
-import com.kapp.kappcore.model.biz.SearchResult;
+import com.kapp.kappcore.model.biz.domain.search.SearchResult;
 import com.kapp.kappcore.model.biz.request.SearchRequestDTO;
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.constant.SearchVal;

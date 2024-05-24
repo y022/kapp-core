@@ -1,4 +1,6 @@
-package com.kapp.kappcore.model.biz;
+package com.kapp.kappcore.model.biz.domain.search;
+
+import com.kapp.kappcore.model.biz.Sch;
 
 import java.util.List;
 

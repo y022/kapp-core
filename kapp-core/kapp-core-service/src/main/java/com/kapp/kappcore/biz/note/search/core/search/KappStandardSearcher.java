@@ -4,7 +4,7 @@ import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.biz.note.search.request.RequestConstructor;
 import com.kapp.kappcore.biz.note.search.support.interceptor.register.SearchInterceptManager;
 import com.kapp.kappcore.biz.note.search.support.result.SearchResponseCollector;
-import com.kapp.kappcore.model.biz.SearchResult;
+import com.kapp.kappcore.model.biz.domain.search.SearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;

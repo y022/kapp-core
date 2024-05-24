@@ -1,4 +1,4 @@
-package com.kapp.kappcore.model.biz.domain;
+package com.kapp.kappcore.model.biz.domain.search;
 
 import com.kapp.kappcore.model.biz.Sch;
 import lombok.Data;
