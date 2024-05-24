@@ -1,7 +1,8 @@
-package com.kapp.kappcore.biz.note.search.core;
+package com.kapp.kappcore.biz.note.search.core.search;
 
+import com.kapp.kappcore.biz.note.SearchControl;
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
-import com.kapp.kappcore.biz.note.search.support.result.SearchResult;
+import com.kapp.kappcore.model.biz.SearchResult;
 
 /**
  * 标准检索器
@@ -13,6 +14,7 @@ public interface StandardSearcher extends SearchControl {
      * @param context 检索上下文
      * @return 检索结果
      */
-    SearchResult search(SearchContext context);
+    SearchResult<?> search(SearchContext context);
 
+    SearchResult<?> group(SearchContext context);
 }

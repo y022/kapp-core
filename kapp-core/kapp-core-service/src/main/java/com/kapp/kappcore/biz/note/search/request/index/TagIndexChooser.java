@@ -4,12 +4,10 @@ import com.kapp.kappcore.biz.note.search.index.TagIndex;
 import org.elasticsearch.action.index.IndexRequest;
 import org.springframework.stereotype.Component;
 
-@Component
-public class TagIndexChooser implements IndexChoose {
+public class TagIndexChooser {
 
 
-    @Override
-    public IndexRequest index(String tag) {
+    public static IndexRequest index(String tag) {
         IndexRequest indexRequest = new IndexRequest();
         if (tag != null) {
             String index = TagIndex.getIndex(tag);
@@ -20,5 +18,12 @@ public class TagIndexChooser implements IndexChoose {
 
         return indexRequest;
 
+    }
+
+    public static String indexName(String tag) {
+        if (tag != null) {
+            return TagIndex.getIndex(tag);
+        }
+        return null;
     }
 }

@@ -3,9 +3,9 @@ package com.kapp.kappcore.model.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SearchException extends RuntimeException{
+@EqualsAndHashCode(callSuper = true)
+public class SearchException extends RuntimeException {
     private String exceptionCode;
     private String message;
 

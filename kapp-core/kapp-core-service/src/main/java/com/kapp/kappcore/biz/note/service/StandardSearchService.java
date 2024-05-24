@@ -1,16 +1,18 @@
 package com.kapp.kappcore.biz.note.service;
 
-import com.kapp.kappcore.biz.note.dto.ComplexSearchDTO;
 import com.kapp.kappcore.biz.note.dto.ComplexSearchResultDTO;
+import com.kapp.kappcore.biz.note.dto.GroupSearchDTO;
+import com.kapp.kappcore.biz.note.dto.GroupSearchResultDTO;
+import com.kapp.kappcore.model.biz.request.SearchRequestDTO;
 
-import java.util.List;
-
-public interface  StandardSearchService {
+public interface StandardSearchService {
     /**
      * 提供复杂的检索方式
      *
      * @param searchDTO 检索实体
      * @return 检索结果
      */
-    List<ComplexSearchResultDTO> complexSearch(ComplexSearchDTO searchDTO);
+    ComplexSearchResultDTO normalSearch(SearchRequestDTO searchDTO);
+
+    GroupSearchResultDTO groupSearch(GroupSearchDTO searchDTO);
 }

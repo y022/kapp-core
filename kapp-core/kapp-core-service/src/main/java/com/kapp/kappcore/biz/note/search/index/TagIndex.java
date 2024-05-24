@@ -36,7 +36,7 @@ public enum TagIndex implements EnumAware {
                 return value.index;
             }
         }
-        throw new SearchException(ExCode.index_error, "不存在的tag!");
+        throw null;
     }
 
     public static String getTag(String index) {

@@ -3,10 +3,11 @@ package com.kapp.kappcore.web.vo;
 import lombok.Data;
 
 @Data
-public class SearchReqVo {
+public class SearchRequestVo {
     private String title;
     private String body;
     private String tag;
-    private String saveDate;
-    private String owner;
+    private boolean highlight;
+    private int searchSize;
+    private int searchPage;
 }

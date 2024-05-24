@@ -9,4 +9,5 @@ public class SearchSource {
     private String tag;
     private String saveDate;
     private String owner;
+    private boolean highlight;
 }

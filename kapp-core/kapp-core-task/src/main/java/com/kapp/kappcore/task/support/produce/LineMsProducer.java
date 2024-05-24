@@ -4,6 +4,7 @@ import com.kapp.kappcore.model.entity.ExecuteItem;
 import com.kapp.kappcore.model.entity.LineMsItem;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;
@@ -77,7 +78,6 @@ public class LineMsProducer extends AbstractProducer {
 
     private void read2(String tag) throws IOException {
         if (Files.exists(path)) {
-            FileDescriptor fileDescriptor = new FileDescriptor();
             RandomAccessFile file = new RandomAccessFile(path.toFile(), "r");
             FileChannel fileChannel = file.getChannel();
             // 映射文件到ByteBuffer，这里映射整个文件
@@ -86,28 +86,31 @@ public class LineMsProducer extends AbstractProducer {
             byte[] bytes = new byte[(int) fileChannel.size()];
             mappedByteBuffer.get(bytes); // 将ByteBuffer中的数据读取到字节数组中
             // 将字节数组转换为字符串，以便打印或进一步处理
-
             String content = new String(bytes, StandardCharsets.UTF_8);
+            Pattern pattern = Pattern.compile("\n");
 
-            Pattern pattern = Pattern.compile("\r\n");
-            Arrays.stream(pattern.split(content)).parallel().forEach(str -> {
+            Arrays.stream(pattern.split(content)).parallel().filter(StringUtils::hasText).forEach(str -> {
                 LineMsItem lineMsItem = new LineMsItem();
                 String id = UUID.randomUUID().toString();
                 lineMsItem.setId(id);
                 lineMsItem.setNo("No." + id);
-                lineMsItem.setContent(str);
+                str = str.trim();
+                lineMsItem.setContent(str.length() > 1024 ? str.substring(0, 1024) : str);
                 lineMsItem.setVersion(version);
                 lineMsItem.setTag(tag);
                 lineMsItem.setDate(LocalDateTime.now().format(df));
+                queue.add(lineMsItem);
             });
+
             log.info("共读取数据条数：" + queue.size());
+
             fileChannel.close();
+
             file.close();
         } else {
-            throw new FileNotFoundException(path + "is not found");
+            throw new FileNotFoundException(path + " is not found");
         }
     }
-
 
 
 }

@@ -1,4 +1,4 @@
-package com.kapp.kappcore.biz.note.search.core;
+package com.kapp.kappcore.biz.note;
 
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import org.elasticsearch.action.search.SearchResponse;
@@ -14,7 +14,7 @@ public interface SearchControl {
     /**
      * 检索完成之后
      *
-     * @param context search response
+     * @param response search response
      */
-    void after(SearchResponse context);
+    void after(SearchResponse response);
 }

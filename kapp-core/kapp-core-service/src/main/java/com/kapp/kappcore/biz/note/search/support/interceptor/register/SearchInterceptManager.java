@@ -5,7 +5,7 @@ import com.kapp.kappcore.biz.note.search.support.interceptor.SearchInterceptor;
 
 import java.util.Set;
 
-public interface IInterceptor {
+public interface SearchInterceptManager {
     /**
      * 将返回一个不可操作的拦截器集合
      *
@@ -15,7 +15,8 @@ public interface IInterceptor {
 
     /**
      * 执行拦截
+     *
      * @param searchContext
      */
-    void  intercept(SearchContext searchContext);
+    void doIntercept(SearchContext searchContext) throws Exception;
 }

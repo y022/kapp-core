@@ -2,8 +2,6 @@ package com.kapp.kappcore.biz.note.search.support.interceptor.register;
 
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.biz.note.search.support.interceptor.SearchInterceptor;
-import com.kapp.kappcore.biz.note.search.model.SearchTip;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -13,15 +11,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
-public class DefaultSearchIInterceptor implements IInterceptor {
+public class DefaultSearchInterceptManager implements SearchInterceptManager {
 
-    private Set<SearchInterceptor> interceptors = new HashSet<>(12);
+    private static final Set<SearchInterceptor> interceptors = new HashSet<>(12);
 
-    public DefaultSearchIInterceptor(@Nullable SearchInterceptor... existedInterceptors) {
+    public DefaultSearchInterceptManager(@Nullable SearchInterceptor... existedInterceptors) {
         if (existedInterceptors != null) CollectionUtils.mergeArrayIntoCollection(existedInterceptors, interceptors);
     }
-
 
     @Override
     public Set<SearchInterceptor> getInterceptor() {
@@ -29,14 +25,10 @@ public class DefaultSearchIInterceptor implements IInterceptor {
     }
 
     @Override
-    public void intercept(SearchContext searchContext) {
-        for (SearchInterceptor interceptor : interceptors) {
-            SearchTip tip = interceptor.intercept(searchContext);
-            if (tip.exception()) {
-                throw new IllegalArgumentException(tip.getTip());
-            }
+    public void doIntercept(SearchContext searchContext) throws Exception {
+        for (SearchInterceptor interceptor : getInterceptor()) {
+            interceptor.intercept(searchContext);
         }
     }
-
 
 }

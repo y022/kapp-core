@@ -1,53 +1,64 @@
 package com.kapp.kappcore.biz.note.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kapp.kappcore.biz.note.dto.ComplexSearchDTO;
 import com.kapp.kappcore.biz.note.dto.ComplexSearchResultDTO;
-import com.kapp.kappcore.model.constant.ExCode;
-import com.kapp.kappcore.model.exception.SearchException;
-import com.kapp.kappcore.biz.note.search.context.ComplexSearchContext;
+import com.kapp.kappcore.biz.note.dto.GroupSearchDTO;
+import com.kapp.kappcore.biz.note.dto.GroupSearchResultDTO;
+import com.kapp.kappcore.biz.note.search.context.DocSearchContext;
+import com.kapp.kappcore.biz.note.search.context.GroupSearchContext;
 import com.kapp.kappcore.biz.note.search.context.obj.SearchSource;
-import com.kapp.kappcore.biz.note.search.core.IStandardSearcher;
-import com.kapp.kappcore.biz.note.search.support.result.SearchResult;
+import com.kapp.kappcore.biz.note.search.core.search.KappStandardSearcher;
+import com.kapp.kappcore.biz.note.search.support.convert.Converter;
+import com.kapp.kappcore.model.biz.SearchResult;
+import com.kapp.kappcore.model.biz.request.SearchRequestDTO;
+import com.kapp.kappcore.model.constant.ExCode;
+import com.kapp.kappcore.model.constant.SearchVal;
+import com.kapp.kappcore.model.exception.SearchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class StandardSearchServiceImpl implements StandardSearchService {
-
-    private final IStandardSearcher iStandardSearcher;
+    private final KappStandardSearcher iStandardSearcher;
     private final MapperFacade mapperFacade;
     private final ObjectMapper objectMapper;
 
     @Override
-    public List<ComplexSearchResultDTO> complexSearch(ComplexSearchDTO searchDTO) {
-
-        ComplexSearchContext searchContext = new ComplexSearchContext();
-
-        SearchSource searchSource = new SearchSource();
-        mapperFacade.map(searchDTO, searchSource);
-
-
-        searchContext.setSource(searchSource);
-        SearchResult result = iStandardSearcher.search(searchContext);
-
-        //这里忽略一些检索结果细节参数，只返回具有业务含义的结果
-        return result.body().stream().map(item -> {
-            String body = item.getBody();
+    public ComplexSearchResultDTO normalSearch(SearchRequestDTO request) {
+        DocSearchContext searchContext = new DocSearchContext();
+        SearchSource searchSource = mapperFacade.map(request, SearchSource.class);
+        searchContext.wireSearchVal(searchSource, request.getSearchPage(), request.getSearchSize(), SearchVal.SEARCH_TITLE, SearchVal.SEARCH_BODY);
+        SearchResult<?> searchResult = iStandardSearcher.search(searchContext);
+        List<ComplexSearchResultDTO.ComplexSearchDTO> contents = searchResult.searchBody().stream().map(item -> {
+            String body = item.body();
             try {
-                return objectMapper.readValue(body, ComplexSearchResultDTO.class);
-            } catch (JsonProcessingException e) {
+                ComplexSearchResultDTO.ComplexSearchDTO resultDTO = objectMapper.readValue(body, ComplexSearchResultDTO.ComplexSearchDTO.class);
+                Map<String, Object> highlightContent = item.highlightContent();
+                Class<? extends ComplexSearchResultDTO.ComplexSearchDTO> clz = resultDTO.getClass();
+                searchContext.getHighlightFields().forEach(highlight -> Converter.convertHighlight(highlight, highlightContent, clz, resultDTO));
+                return resultDTO;
+            } catch (Exception e) {
                 log.error("search result disSer error", e);
                 throw new SearchException(ExCode.search_result_get_error, "获取检索结果失败!");
             }
         }).collect(Collectors.toList());
+        return new ComplexSearchResultDTO(searchResult.getTotal(), searchResult.getTook(), contents);
+    }
+
+    @Override
+    public GroupSearchResultDTO groupSearch(GroupSearchDTO request) {
+        GroupSearchContext context = mapperFacade.map(request, GroupSearchContext.class);
+        context.onlyTag(request.getTag());
+        SearchResult<?> group = iStandardSearcher.group(context);
+
+        return null;
     }
 }

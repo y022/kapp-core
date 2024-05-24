@@ -2,36 +2,75 @@ package com.kapp.kappcore.biz.note.search.support.result;
 
 import com.kapp.kappcore.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.biz.note.search.index.TagIndex;
+import com.kapp.kappcore.model.biz.Sch;
+import com.kapp.kappcore.model.biz.SearchResult;
+import com.kapp.kappcore.model.biz.domain.SearchBody;
+import com.kapp.kappcore.model.biz.domain.group.GroupBody;
+import com.kapp.kappcore.model.biz.domain.group.SearchGroup;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SearchResponseCollector {
 
-
-    public static SearchResult doCollect(SearchResponse response, SearchContext context) {
-
-        ComplexSearchResult result = new ComplexSearchResult();
-        result.setTook(response.getTook().getMillis());
-
+    @SuppressWarnings("all")
+    public static SearchResult<Sch> doCollectSearch(SearchResponse response, SearchContext context) {
         SearchHits hits = response.getHits();
-        result.setTotal(hits.getTotalHits().value);
-        result.setSearchPage(context.searchPage());
-        result.setSearchPageSize(context.searchSize());
-
-        List<ISearchBody> bodyList = Arrays.stream(hits.getHits()).parallel().map(hitItem -> {
-            ISearchBody body = new ISearchBody();
-            body.setDocId(hitItem.getId());
+        List<SearchBody> body = Arrays.stream(hits.getHits()).parallel().map(hitItem -> {
+            SearchBody bodyItem = new SearchBody();
+            bodyItem.setDocId(hitItem.getId());
             TagIndex.getTag(hitItem.getIndex());
-            body.setBody(hitItem.getSourceAsString());
-            return body;
+            bodyItem.setBody(hitItem.getSourceAsString());
+            HashMap<String, Object> highlightMap = new HashMap<>();
+            if (context.requireHighlight()) {
+                Set<String> requireHighlightFields = context.highlightFields();
+                Map<String, HighlightField> highlightFields = hitItem.getHighlightFields();
+                for (String requireHighlightField : requireHighlightFields) {
+                    HighlightField highlightField = highlightFields.get(requireHighlightField);
+                    if (highlightField != null) {
+                        StringBuilder sb = new StringBuilder();
+                        for (Text fragment : highlightField.fragments()) {
+                            sb.append(fragment.toString());
+                        }
+                        highlightMap.put(requireHighlightField, sb.toString());
+                    }
+                }
+            }
+            bodyItem.setHighlightContent(highlightMap);
+            return bodyItem;
         }).collect(Collectors.toList());
-
-        result.setBody(bodyList);
-
-        return result;
+        SearchResult<SearchBody> result = new SearchResult<>(response.getTook().millis(), hits.getTotalHits().value);
+        result.warp(body);
+        return (SearchResult) result;
     }
+
+
+    public static SearchResult<?> doCollectGroup(SearchResponse response, SearchContext context) {
+//        Aggregations aggregations = response.getAggregations();
+//        SearchGroup searchGroup = new SearchGroup();
+//
+//        for (Aggregation aggregation : aggregations) {
+//            List<? extends Terms.Bucket> buckets = ((ParsedStringTerms) aggregation).getBuckets();
+//            searchGroup.setCount(buckets.size());
+//            List<GroupBody> group = buckets.stream().map(bucket -> {
+//                GroupBody groupBody = new GroupBody();
+//                groupBody.setDocCount(bucket.getDocCount());
+//                groupBody.setGroupField(bucket.getKeyAsString());
+//                return groupBody;
+//            }).collect(Collectors.toList());
+//            searchGroup.setContent(group);
+//        }
+//        SearchResult<SearchGroup> searchResult = new SearchResult<>();
+        return null;
+    }
+
+
 }
