@@ -33,6 +33,5 @@ public class JdbcV1 {
             System.out.println(resultSet.getString("id"));
         }
 
-
     }
 }

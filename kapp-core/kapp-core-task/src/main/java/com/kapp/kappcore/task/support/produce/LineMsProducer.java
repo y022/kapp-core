@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +28,7 @@ public class LineMsProducer extends AbstractProducer {
     private final Queue<LineMsItem> queue;
     private final String version = Long.toString(System.currentTimeMillis());
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss SSS");
+    private static final Pattern pattern = Pattern.compile("\n");
 
     public LineMsProducer(String path) {
         Objects.requireNonNull(path);
@@ -80,15 +83,10 @@ public class LineMsProducer extends AbstractProducer {
         if (Files.exists(path)) {
             RandomAccessFile file = new RandomAccessFile(path.toFile(), "r");
             FileChannel fileChannel = file.getChannel();
-            // 映射文件到ByteBuffer，这里映射整个文件
             MappedByteBuffer mappedByteBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, 0, fileChannel.size());
-            // 读取文件内容
             byte[] bytes = new byte[(int) fileChannel.size()];
-            mappedByteBuffer.get(bytes); // 将ByteBuffer中的数据读取到字节数组中
-            // 将字节数组转换为字符串，以便打印或进一步处理
+            mappedByteBuffer.get(bytes);
             String content = new String(bytes, StandardCharsets.UTF_8);
-            Pattern pattern = Pattern.compile("\n");
-
             Arrays.stream(pattern.split(content)).parallel().filter(StringUtils::hasText).forEach(str -> {
                 LineMsItem lineMsItem = new LineMsItem();
                 String id = UUID.randomUUID().toString();
@@ -101,11 +99,8 @@ public class LineMsProducer extends AbstractProducer {
                 lineMsItem.setDate(LocalDateTime.now().format(df));
                 queue.add(lineMsItem);
             });
-
             log.info("共读取数据条数：" + queue.size());
-
             fileChannel.close();
-
             file.close();
         } else {
             throw new FileNotFoundException(path + " is not found");

@@ -4,9 +4,6 @@ import com.kapp.kappcore.biz.note.search.context.obj.SearchSource;
 import com.kapp.kappcore.biz.note.search.context.obj.SearchTarget;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 public abstract class AbstractSearchContext implements SearchContext {
     protected SearchSource source;

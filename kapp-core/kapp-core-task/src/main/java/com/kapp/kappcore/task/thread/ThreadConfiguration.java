@@ -16,9 +16,7 @@ public class ThreadConfiguration {
 
     //    @Bean
     public AsyncTaskExecutor asyncTaskExecutor(TaskExecutorBuilder taskExecutorBuilder) {
-
         SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
-
         executor.setThreadFactory(Thread::new);
         executor.setTaskDecorator(runnable -> runnable);
         return executor;

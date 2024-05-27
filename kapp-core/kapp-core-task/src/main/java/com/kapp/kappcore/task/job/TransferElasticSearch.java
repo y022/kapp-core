@@ -32,7 +32,6 @@ public class TransferElasticSearch {
     public TransferElasticSearch(RestHighLevelClient restHighLevelClient, ObjectMapper objectMapper) throws IOException {
         this.restHighLevelClient = restHighLevelClient;
         this.objectMapper = objectMapper;
-
     }
 
 
