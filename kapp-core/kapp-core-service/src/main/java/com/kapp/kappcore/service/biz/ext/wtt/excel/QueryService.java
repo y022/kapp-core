@@ -1,0 +1,28 @@
+package com.kapp.kappcore.service.biz.ext.wtt.excel;
+
+import com.kapp.kappcore.model.wtt.ControlValve;
+import com.kapp.kappcore.model.wtt.query.ControlValveQueryReq;
+import com.kapp.kappcore.model.wtt.query.ControlValveQueryResp;
+import com.kapp.kappcore.model.wtt.QControlValve;
+import com.querydsl.core.QueryResults;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class QueryService {
+    private final JPAQueryFactory queryFactory;
+
+    public ControlValveQueryResp query(ControlValveQueryReq query) {
+        QControlValve qc = QControlValve.controlValve;
+
+        QueryResults<ControlValve> controlValveQueryResults = queryFactory
+                .selectFrom(qc).orderBy(qc.controlValveNo.asc())
+                .offset((long) (query.getIndex() - 1) * query.getSize())
+                .limit(query.getSize()).fetchResults();
+        return ControlValveQueryResp.of(controlValveQueryResults.getResults(), controlValveQueryResults.getTotal());
+    }
+}

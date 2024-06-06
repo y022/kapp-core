@@ -1,6 +1,6 @@
 package com.kapp.kappcore.web.api.task;
 
-import com.kapp.kappcore.domain.repository.LineMsItemRepository;
+import com.kapp.kappcore.service.domain.repository.LineMsItemRepository;
 import com.kapp.kappcore.task.job.TransferDbV1;
 import com.kapp.kappcore.task.job.TransferDbV2;
 import com.kapp.kappcore.task.job.TransferElasticSearch;

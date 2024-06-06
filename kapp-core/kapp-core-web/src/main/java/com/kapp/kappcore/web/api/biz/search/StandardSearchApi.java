@@ -1,10 +1,10 @@
 package com.kapp.kappcore.web.api.biz.search;
 
-import com.kapp.kappcore.biz.note.dto.ComplexSearchResultDTO;
-import com.kapp.kappcore.biz.note.dto.GroupSearchDTO;
-import com.kapp.kappcore.biz.note.dto.GroupSearchResultDTO;
-import com.kapp.kappcore.biz.note.service.StandardSearchService;
 import com.kapp.kappcore.model.biz.request.SearchRequestDTO;
+import com.kapp.kappcore.service.biz.note.dto.ComplexSearchResultDTO;
+import com.kapp.kappcore.service.biz.note.dto.GroupSearchDTO;
+import com.kapp.kappcore.service.biz.note.dto.GroupSearchResultDTO;
+import com.kapp.kappcore.service.biz.note.service.StandardSearchService;
 import com.kapp.kappcore.web.vo.SearchGroupRequestVo;
 import com.kapp.kappcore.web.vo.response.SearchGroupResponseVo;
 import com.kapp.kappcore.web.vo.SearchRequestVo;

@@ -1,7 +1,7 @@
 package com.kapp.kappcore.web.api.base;
 
-import com.kapp.kappcore.base.auth.AuthContext;
-import com.kapp.kappcore.base.auth.AuthManager;
+import com.kapp.kappcore.service.base.auth.AuthContext;
+import com.kapp.kappcore.service.base.auth.AuthManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

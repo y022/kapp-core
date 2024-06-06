@@ -14,6 +14,7 @@
         <module>kapp-core-service</module>
         <module>kapp-core-model</module>
         <module>kapp-core-task</module>
+        <module>kapp-core-support</module>
     </modules>
 
     <properties>
@@ -24,6 +25,7 @@
         <kapp-core.version>v1.0</kapp-core.version>
         <orika-core.version>1.5.2</orika-core.version>
         <easyexcel.version>3.3.3</easyexcel.version>
+        <redisson.version>3.12.03</redisson.version>
     </properties>
 
 
@@ -64,6 +66,11 @@
             <dependency>
                 <groupId>com.kapp</groupId>
                 <artifactId>kapp-core-model</artifactId>
+                <version>${kapp-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.kapp.kappcore.support</groupId>
+                <artifactId>kapp-core-support</artifactId>
                 <version>${kapp-core.version}</version>
             </dependency>
             <dependency>

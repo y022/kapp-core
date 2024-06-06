@@ -5,10 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SearchException extends RuntimeException {
-    private String exceptionCode;
-    private String message;
-
+public class SearchException extends KappException {
     public SearchException(String exceptionCode, String message) {
         this.exceptionCode = exceptionCode;
         this.message = message;

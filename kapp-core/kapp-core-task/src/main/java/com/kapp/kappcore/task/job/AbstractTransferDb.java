@@ -1,6 +1,6 @@
 package com.kapp.kappcore.task.job;
 
-import com.kapp.kappcore.domain.repository.LineMsItemRepository;
+import com.kapp.kappcore.service.domain.repository.LineMsItemRepository;
 import com.kapp.kappcore.task.support.produce.LineMsProducer;
 import org.springframework.core.task.AsyncTaskExecutor;
 

@@ -2,9 +2,9 @@ package com.kapp.kappcore.task.job;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kapp.kappcore.biz.note.search.index.TagIndex;
 import com.kapp.kappcore.model.dto.LineMsDTO;
 import com.kapp.kappcore.model.entity.LineMsItem;
+import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.bulk.BulkRequest;
