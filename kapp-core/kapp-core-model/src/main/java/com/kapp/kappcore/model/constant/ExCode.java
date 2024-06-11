@@ -8,4 +8,6 @@ public interface ExCode {
 
     String error = "S99999";
     String success = "000000";
+
+    String DATE_BLANK="S99991";
 }

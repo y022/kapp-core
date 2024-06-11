@@ -2,6 +2,7 @@ package com.kapp.kappcore.model.entity.share;
 
 import com.kapp.kappcore.model.dto.share.pay.PayStatus;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +12,8 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Table(name = "tb_order_info", schema = "work_station")
-public class WSOrder {
+@EqualsAndHashCode(callSuper = true)
+public class WSOrder extends RepositoryBean {
     @Id
     private String orderId;
     private String orderCode;
@@ -28,8 +30,6 @@ public class WSOrder {
 
     private String businessCode;
     private String userId;
-    private String createTime;
-    private String updateTime;
     private BigDecimal reduce;
 
     public void initOrder(String orderId, String orderCode, String name, String businessCode, String now, String userId) {

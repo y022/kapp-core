@@ -4,14 +4,16 @@ import com.kapp.kappcore.support.mq.MqRouteMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
-@Component
+@Configuration
+@ConditionalOnBean(RabbitAdmin.class)
 public class RabbitMqInit {
 
     public RabbitMqInit(RabbitAdmin rabbitAdmin) {
@@ -22,6 +24,7 @@ public class RabbitMqInit {
 
     /**
      * init queue mapping
+     *
      * @param rabbitAdmin ad
      */
     private void init(RabbitAdmin rabbitAdmin) {

@@ -5,7 +5,7 @@ import com.kapp.kappcore.model.dto.share.PriceComputeDTO;
 import com.kapp.kappcore.model.dto.share.WSOrderAdd;
 import com.kapp.kappcore.model.dto.share.WSOrderQueryDTO;
 import com.kapp.kappcore.model.dto.share.WSOrderQueryResult;
-import com.kapp.kappcore.model.dto.share.message.TimeMessage;
+import com.kapp.kappcore.model.dto.share.message.impl.TimeKappMessage;
 import com.kapp.kappcore.model.entity.share.WS;
 import com.kapp.kappcore.model.entity.share.WSOrder;
 import com.kapp.kappcore.model.exception.BizException;
@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -76,8 +78,12 @@ public class WSOrderService {
                     flag.set(true);
                     wsRepository.save(ws);
                     wsOrderRepository.save(wsOrder);
-                    TransactionUtil.commitedCallBack(() ->
-                            wsOrderMessageCenter.addOrderMessage(TimeMessage.builder().id(wsOrder.getOrderId()).unit(TimeUnit.MINUTES).EffectiveTime(10).build()));
+                    TransactionUtil.committedCallback(() ->
+                            wsOrderMessageCenter.addOrderMessage(TimeKappMessage.builder()
+                                    .id(wsOrder.getOrderId())
+                                    //set up order wait pay time
+                                    .duration(Duration.of(30, ChronoUnit.MILLENNIA))
+                                    .build()));
                 }
                 cycleCount++;
             } while (!flag.get() && cycleCount < 5);

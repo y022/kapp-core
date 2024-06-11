@@ -32,7 +32,8 @@ public class WSService {
         String id = IdTool.getId();
         String code = IdTool.getCode();
         String now = DateTool.now();
-        WS ws = WS.builder().wsId(id).wsCode(code).name(request.getName()).description(request.getDescription()).unitPrice(request.getUnitPrice()).createTime(now).updateTime(now).inventory(request.getInventory()).build();
+        WS ws = WS.builder().wsId(id).wsCode(code).name(request.getName()).description(request.getDescription()).unitPrice(request.getUnitPrice()).inventory(request.getInventory()).build();
+        ws.time(now, now);
         wsRepository.save(ws);
     }
 

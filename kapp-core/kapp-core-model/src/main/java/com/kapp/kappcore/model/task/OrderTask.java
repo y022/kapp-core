@@ -7,20 +7,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderTask implements Task {
+public class OrderTask {
+    /**
+     * 任务Id
+     */
     private String taskId;
-    private String orderId;
-    private String taskStartTime;
-    private TimeDefinition timeDefinition;
+    private String bizId;
+    /**
+     * millis 单位毫秒,存储两个时间点的差值
+     */
+    private Long expireTime;
+    private String createTime;
+    private String updateTime;
 
-    @Override
-    public String taskId() {
-        return getTaskId();
-    }
-
-    @Override
-    public TimeDefinition timeDefinition() {
-        return getTimeDefinition();
-    }
 
 }

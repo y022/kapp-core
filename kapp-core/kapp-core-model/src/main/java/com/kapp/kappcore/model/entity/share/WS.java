@@ -1,9 +1,6 @@
 package com.kapp.kappcore.model.entity.share;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,10 +10,11 @@ import java.math.BigDecimal;
 @Data
 @Entity
 @Builder
-@Table(name = "tb_ws_info", schema = "work_station")
-@AllArgsConstructor
 @NoArgsConstructor
-public class WS {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "tb_ws_info", schema = "work_station")
+public class WS extends RepositoryBean {
     /**
      * 工位ID
      */
@@ -39,14 +37,6 @@ public class WS {
      */
     private Long inventory;
     /**
-     * 创建时间
-     */
-    private String createTime;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
-    /**
      * 描述
      */
     private String description;
@@ -55,7 +45,7 @@ public class WS {
      */
     private String businessId;
 
-    public void deduceInventory(Long inventory,String updateTime) {
+    public void deduceInventory(Long inventory, String updateTime) {
         setInventory(this.inventory - inventory);
         setUpdateTime(updateTime);
     }

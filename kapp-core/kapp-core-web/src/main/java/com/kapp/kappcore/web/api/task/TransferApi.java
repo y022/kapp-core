@@ -6,6 +6,7 @@ import com.kapp.kappcore.task.job.TransferDbV2;
 import com.kapp.kappcore.task.job.TransferElasticSearch;
 import com.kapp.kappcore.task.support.produce.LineMsProducer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

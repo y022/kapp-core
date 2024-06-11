@@ -1,6 +1,6 @@
 package com.kapp.kappcore.model.dto.share.message;
 
-public interface Message {
+public interface KappMessage {
     String messageId();
-
+    MessageType messageType();
 }
