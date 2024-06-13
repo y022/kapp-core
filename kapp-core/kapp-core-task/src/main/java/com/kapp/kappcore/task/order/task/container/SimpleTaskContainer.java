@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,11 +24,11 @@ public class SimpleTaskContainer implements TaskContainer<Task> {
     private final TaskRepository repository;
 
     @Override
-    public List<Task> fetchTask(TaskType taskType) {
-        return repository.findAll(Example.of(new Task() {{
-                                                 setTaskType(TaskType.SCHEDULED.name());
-                                             }},
-                ExampleMatcher.matching().withMatcher("task_type", ExampleMatcher.GenericPropertyMatchers.exact())));
+    public List<Task> fetchTask(TaskType taskType, int count) {
+        Page<Task> result = repository.findAll(Example.of(new Task() {{
+            setTaskType(TaskType.SCHEDULED.name());
+        }}, ExampleMatcher.matching().withMatcher("task_type", ExampleMatcher.GenericPropertyMatchers.exact())), PageRequest.of(1, count));
+        return result.toList();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class TimingTaskExecutor {
     @Scheduled(fixedDelay = 5 * 60 * 1000, initialDelay = 10000)
     public void execute() {
         log.info("timing task start...");
-        List<Task> tasks = taskContainer.fetchTask(TaskType.SCHEDULED);
+        List<Task> tasks = taskContainer.fetchTask(TaskType.SCHEDULED, 200);
         try {
             for (Task task : tasks) {
                 String taskType = task.getTaskType();

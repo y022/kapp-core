@@ -9,7 +9,8 @@ import java.util.List;
  * Date: 2024/6/11 16:10
  */
 public interface TaskContainer<T> {
-    List<T> fetchTask(TaskType taskType);
+    List<T> fetchTask(TaskType taskType, int count);
+
     void updateTask(List<T> ts);
 
 }
