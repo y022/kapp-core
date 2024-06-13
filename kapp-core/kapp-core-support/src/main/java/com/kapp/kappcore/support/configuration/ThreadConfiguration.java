@@ -10,36 +10,3 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
-
-@EnableAsync
-@Configuration
-public class ThreadConfiguration implements AsyncConfigurer {
-    @Data
-    @Configuration
-    @ConfigurationProperties("spring.task.execution.pool")
-    public static class CustomizePoolProperties {
-        private int queueCapacity;
-        private int coreSize;
-        private int maxSize;
-        private String threadNamePrefix = "Async-Task-";
-    }
-
-    @Bean
-    public ThreadPoolTaskScheduler taskScheduler(CustomizePoolProperties properties) {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(properties.getCoreSize());
-        scheduler.setThreadNamePrefix(properties.getThreadNamePrefix());
-        scheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        scheduler.setWaitForTasksToCompleteOnShutdown(true);
-        scheduler.setAwaitTerminationSeconds(60);
-        scheduler.initialize();
-        return scheduler;
-    }
-
-    @Bean
-    public Executor asyncExecutor(ThreadPoolTaskScheduler scheduler) {
-        return scheduler;
-    }
-
-
-}

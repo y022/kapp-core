@@ -7,8 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 @Data
 @Builder
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public class TimeKappMessage implements KappMessage {
     private String id;
-    private Duration duration;
+    private Long duration;
     private MessageType messageType;
 
     @Override

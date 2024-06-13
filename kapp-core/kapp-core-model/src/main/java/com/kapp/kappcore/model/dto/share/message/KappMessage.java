@@ -1,6 +1,8 @@
 package com.kapp.kappcore.model.dto.share.message;
 
-public interface KappMessage {
+import java.io.Serializable;
+
+public interface KappMessage extends Serializable {
     String messageId();
     MessageType messageType();
 }

@@ -22,8 +22,8 @@ public class DateTool {
             throw new BizException(ExCode.DATE_BLANK, "timeTxt or duration is not blank");
         }
         //compute expire time
-        LocalDateTime expireTime = LocalDateTime.parse(timeTxt, DF).plus(duration);
-        return _now().isAfter(expireTime);
+        LocalDateTime expireTimePoint = LocalDateTime.parse(timeTxt, DF).plus(duration);
+        return _now().isAfter(expireTimePoint);
     }
 
     private static LocalDateTime _now() {

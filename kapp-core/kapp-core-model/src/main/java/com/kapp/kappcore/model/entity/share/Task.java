@@ -43,13 +43,20 @@ public class Task extends RepositoryBean {
     @Column(length = 64)
     private String taskType;
 
-    public void init(String taskId, String bizId, Long expireTime, Integer scanTimes,String taskType) {
-        Task task = new Task();
-        task.setTaskId(taskId);
-        task.setBizId(bizId);
-        task.setExpireTime(expireTime);
-        task.setScanTimes(scanTimes);
+    public void init(String taskId, String bizId, Long expireTime, Integer scanTimes, String taskType) {
+        setTaskId(taskId);
+        setBizId(bizId);
+        setExpireTime(expireTime);
+        setScanTimes(scanTimes);
         setTaskType(taskType);
+    }
+
+    public void incrScanTimes(String updateTime) {
+        if (scanTimes == null) {
+            scanTimes = 0;
+        }
+        scanTimes++;
+        updateTime(null, updateTime);
     }
 
 }

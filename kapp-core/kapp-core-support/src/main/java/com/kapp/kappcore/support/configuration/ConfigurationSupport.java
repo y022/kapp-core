@@ -1,6 +1,7 @@
 package com.kapp.kappcore.support.configuration;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.Data;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -8,18 +9,17 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.task.TaskExecutorBuilder;
+import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import javax.persistence.EntityManager;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * set up beans
@@ -37,34 +37,68 @@ public class ConfigurationSupport {
     }
 
     @Configuration
-    @ConditionalOnBean(ConnectionFactory.class)
+//    @ConditionalOnBean(ConnectionFactory.class)
     public static class MqConfiguration {
+        @Bean
+        public MessageConverter jsonMessageConverter() {
+            return new Jackson2JsonMessageConverter();
+        }
+
         @Bean
         public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
             return new RabbitAdmin(connectionFactory);
         }
 
         @Bean
-        public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
             final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-            rabbitTemplate.setMessageConverter(jsonMessageConverter());
+            rabbitTemplate.setMessageConverter(messageConverter);
             return rabbitTemplate;
         }
 
         @Bean
-        public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
+        public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
             SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
             factory.setConnectionFactory(connectionFactory);
-            factory.setMessageConverter(jsonMessageConverter());
+            factory.setMessageConverter(messageConverter);
             return factory;
         }
 
-        private Jackson2JsonMessageConverter jsonMessageConverter() {
-            return new Jackson2JsonMessageConverter();
-        }
 
     }
 
 
+    @EnableAsync
+    @Configuration
+    public static class ThreadConfiguration implements AsyncConfigurer {
+        @Data
+        @Configuration
+        @ConfigurationProperties("spring.task.execution.pool")
+        public static class CustomizePoolProperties {
+            private int queueCapacity;
+            private int coreSize;
+            private int maxSize;
+            private String threadNamePrefix = "Async-Task-";
+        }
+
+        @Bean
+        public ThreadPoolTaskScheduler taskScheduler(CustomizePoolProperties properties) {
+            ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+            scheduler.setPoolSize(properties.getCoreSize());
+            scheduler.setThreadNamePrefix(properties.getThreadNamePrefix());
+            scheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+            scheduler.setWaitForTasksToCompleteOnShutdown(true);
+            scheduler.setAwaitTerminationSeconds(60);
+            scheduler.initialize();
+            return scheduler;
+        }
+
+        @Bean
+        public Executor asyncExecutor(ThreadPoolTaskScheduler scheduler) {
+            return scheduler;
+        }
+
+
+    }
 
 }

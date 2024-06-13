@@ -5,6 +5,7 @@ import com.kapp.kappcore.model.dto.share.PriceComputeDTO;
 import com.kapp.kappcore.model.dto.share.WSOrderAdd;
 import com.kapp.kappcore.model.dto.share.WSOrderQueryDTO;
 import com.kapp.kappcore.model.dto.share.WSOrderQueryResult;
+import com.kapp.kappcore.model.dto.share.message.MessageType;
 import com.kapp.kappcore.model.dto.share.message.impl.TimeKappMessage;
 import com.kapp.kappcore.model.entity.share.WS;
 import com.kapp.kappcore.model.entity.share.WSOrder;
@@ -60,14 +61,13 @@ public class WSOrderService {
 
 
         WSOrder wsOrder = new WSOrder();
-        wsOrder.initOrder(IdTool.getId(), IdTool.getCode(), ws.getName(), "xx", now, wsOrderAdd.getUserId());
+        wsOrder.init(IdTool.getId(), IdTool.getCode(), ws.getName(), ws.getWsId(), now, wsOrderAdd.getUserId());
         wsOrder.setCouponCode(wsOrderAdd.getCouponCode());
         wsOrder.setPrice(priceComputeDTO.getTotal());
         wsOrder.setUnitPrice(priceComputeDTO.getUnitPrice());
         wsOrder.setQuantity(priceComputeDTO.getQuantity());
         wsOrder.setReduce(priceComputeDTO.getCouponPrice());
         wsOrder.setProductCode(ws.getWsCode());
-
         //do update ops
         ws.deduceInventory(Long.valueOf(wsOrder.getQuantity()), now);
         AtomicBoolean flag = new AtomicBoolean(false);
@@ -82,7 +82,8 @@ public class WSOrderService {
                             wsOrderMessageCenter.addOrderMessage(TimeKappMessage.builder()
                                     .id(wsOrder.getOrderId())
                                     //set up order wait pay time
-                                    .duration(Duration.of(30, ChronoUnit.MILLENNIA))
+                                    .duration(Duration.of(2, ChronoUnit.MINUTES).toMillis())
+                                    .messageType(MessageType.TIME)
                                     .build()));
                 }
                 cycleCount++;

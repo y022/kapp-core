@@ -18,15 +18,19 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SimpleTaskContainer implements TaskContainer {
+public class SimpleTaskContainer implements TaskContainer<Task> {
     private final TaskRepository repository;
 
     @Override
     public List<Task> fetchTask(TaskType taskType) {
-        Task task = new Task();
-        task.setTaskType(TaskType.SCHEDULED.name());
-        return repository.findAll(Example.of(task,
-                ExampleMatcher.matching()
-                        .withMatcher("task_type", ExampleMatcher.GenericPropertyMatchers.exact())));
+        return repository.findAll(Example.of(new Task() {{
+                                                 setTaskType(TaskType.SCHEDULED.name());
+                                             }},
+                ExampleMatcher.matching().withMatcher("task_type", ExampleMatcher.GenericPropertyMatchers.exact())));
+    }
+
+    @Override
+    public void updateTask(List<Task> task) {
+        repository.saveAll(task);
     }
 }

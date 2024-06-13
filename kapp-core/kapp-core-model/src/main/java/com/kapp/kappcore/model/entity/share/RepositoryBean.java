@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Author:Heping
  * Date: 2024/6/7 16:49
  */
 @Data
+@MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 public class RepositoryBean {
@@ -19,7 +21,7 @@ public class RepositoryBean {
     @Column(length = 32)
     protected String updateTime;
 
-    public void time(String createTime, String updateTime) {
+    public void updateTime(String createTime, String updateTime) {
         if (createTime != null && !createTime.isEmpty()) {
             setCreateTime(createTime);
         }
