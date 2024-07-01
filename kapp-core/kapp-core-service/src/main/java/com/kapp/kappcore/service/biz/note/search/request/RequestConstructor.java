@@ -1,5 +1,6 @@
 package com.kapp.kappcore.service.biz.note.search.request;
 
+import com.kapp.kappcore.model.biz.domain.group.GroupType;
 import com.kapp.kappcore.model.constant.SearchVal;
 import com.kapp.kappcore.service.biz.note.search.context.GroupSearchContext;
 import com.kapp.kappcore.service.biz.note.search.context.SearchContext;
@@ -8,6 +9,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+
+import java.util.List;
 
 public class RequestConstructor extends AbstractRequestConstructor {
 
@@ -36,16 +39,18 @@ public class RequestConstructor extends AbstractRequestConstructor {
     }
 
 
-    public SearchRequest group(SearchContext searchContext) {
-        SearchRequest searchRequest = init(searchContext.tag());
+    public SearchRequest group(GroupSearchContext groupContext) {
+        SearchRequest searchRequest = init(groupContext.tag());
         SearchSourceBuilder searchSourceBuilder = searchSourceBuilder();
-        GroupSearchContext groupContext = (GroupSearchContext) searchContext;
-
-        TermsAggregationBuilder agg = groupContext.getGroupFields() != null && !groupContext.getGroupFields().isEmpty() ?
-                agg(groupContext.getGroupFields()) : agg(groupContext.getGroupField());
-        searchSourceBuilder.aggregation(agg);
+        List<TermsAggregationBuilder> allTb = aggByBuckets(groupContext.getGroupFields(), groupContext.getSubGroupFields());
+        if (!isEmpty(allTb)) {
+            for (TermsAggregationBuilder tb : allTb) {
+                searchSourceBuilder.aggregation(tb);
+            }
+        }
+        //The first 100 buckets are selected by default
+        searchSourceBuilder.size(GroupType.COUNT.equals(groupContext.getGroupType()) ? 0 : 100);
         searchRequest.source(searchSourceBuilder);
         return searchRequest;
     }
-
 }

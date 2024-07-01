@@ -45,7 +45,7 @@ public class OrderMessageWatcher extends AbstractMessageWatcher<TimeKappMessage>
                 return;
             }
             Task task = new Task();
-            task.init(ws.getOrderId(), ws.getOrderId(), message.getDuration(), 0,TaskType.SCHEDULED.name());
+            task.init(ws.getOrderId(), ws.getOrderId(), message.getDuration(),  TaskType.SCHEDULED.name(), DateTool.now());
             String now = DateTool.now();
             task.updateTime(now, now);
             taskRepository.save(task);

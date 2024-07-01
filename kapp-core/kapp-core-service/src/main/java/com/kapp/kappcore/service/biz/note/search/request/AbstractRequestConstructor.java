@@ -28,6 +28,12 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractRequestConstructor {
 
+    /**
+     * set up search index
+     *
+     * @param tag tag
+     * @return
+     */
     public SearchRequest init(String tag) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(TagIndexChooser.indexName(tag));
@@ -71,23 +77,6 @@ public abstract class AbstractRequestConstructor {
             default:
                 throw new IllegalArgumentException("boolCondition not supported: " + boolCondition);
         }
-    }
-
-    public TermsAggregationBuilder agg(String groupField) {
-        return AggregationBuilders.terms(groupField).field(groupField + ".keyword");
-    }
-
-    public TermsAggregationBuilder agg(Set<String> groupFields) {
-        List<String> fields = new ArrayList<>(groupFields);
-        String mainAggField = fields.get(0);
-        TermsAggregationBuilder mainTermAgg = AggregationBuilders.terms(mainAggField).field(mainAggField + ".keyword");
-        fields.remove(mainAggField);
-        for (String field : fields) {
-            TermsAggregationBuilder subTermAgg = AggregationBuilders.terms(field).field(field + ".keyword");
-            mainTermAgg.subAggregation(subTermAgg);
-
-        }
-        return mainTermAgg;
     }
 
     public void highlight(String preTag, String postTag, SearchSourceBuilder sourceBuilder, String... fields) {
@@ -135,10 +124,22 @@ public abstract class AbstractRequestConstructor {
         });
     }
 
+    public List<TermsAggregationBuilder> aggByBuckets(Set<String> aggKeys, Map<String, Set<String>> subAggKeys) {
+        return Agg.buckets(aggKeys, subAggKeys);
+    }
+
     public Map<String, Object> convertMap(Object o) {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(o, new TypeReference<Map<String, Object>>() {
         });
+    }
+
+    public static boolean isEmpty(Collection<?> collection) {
+        return collection == null || collection.isEmpty();
+    }
+
+    public static boolean isEmpty(Map<?, ?> map) {
+        return map == null || map.isEmpty();
     }
 
     protected static class Query {
@@ -164,6 +165,50 @@ public abstract class AbstractRequestConstructor {
             return QueryBuilders.matchQuery(searchField, searchVal);
         }
 
+    }
+
+    /**
+     * for agg
+     */
+    protected static class Agg {
+        private static List<TermsAggregationBuilder> buckets(Set<String> aggKeys, Map<String, Set<String>> subAggKeyMap) {
+            if (isEmpty(aggKeys)) {
+                return Collections.emptyList();
+            }
+            boolean ifSubBucket = !isEmpty(subAggKeyMap);
+            return aggKeys.stream().map(key -> {
+                TermsAggregationBuilder tb = bucket(key);
+                return subBucket(tb, ifSubBucket ? subAggKeyMap.get(key) : null);
+            }).collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Do not set the order of the bucket
+     *
+     * @param aggKey key for bucket
+     * @return tb
+     */
+    private static TermsAggregationBuilder bucket(String aggKey) {
+        return AggregationBuilders.terms(aggKey).field(aggKey + ".keyword");
+    }
+
+    /**
+     * set up sub bucket
+     *
+     * @param mainTb     mainTb
+     * @param subAggKeys subTb's key
+     * @return mainTb
+     */
+    private static TermsAggregationBuilder subBucket(TermsAggregationBuilder mainTb, Set<String> subAggKeys) {
+        if (isEmpty(subAggKeys)) {
+            return mainTb;
+        }
+        for (String subAggKey : subAggKeys) {
+            TermsAggregationBuilder subTb = bucket(subAggKey);
+            mainTb.subAggregation(subTb);
+        }
+        return mainTb;
     }
 
     protected static class Update {

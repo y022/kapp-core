@@ -2,6 +2,7 @@ package com.kapp.kappcore.service.biz.note.search.core.search;
 
 import com.kapp.kappcore.model.biz.domain.search.SearchResult;
 import com.kapp.kappcore.service.biz.note.SearchControl;
+import com.kapp.kappcore.service.biz.note.search.context.GroupSearchContext;
 import com.kapp.kappcore.service.biz.note.search.context.SearchContext;
 
 /**
@@ -16,5 +17,5 @@ public interface StandardSearcher extends SearchControl {
      */
     SearchResult<?> search(SearchContext context);
 
-    SearchResult<?> group(SearchContext context);
+    SearchResult<?> group(GroupSearchContext context);
 }

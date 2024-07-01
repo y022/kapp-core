@@ -51,12 +51,22 @@ public class Task extends RepositoryBean {
         setTaskType(taskType);
     }
 
+    public void init(String taskId, String bizId, Long expireTime, String taskType, String now) {
+        setScanTimes(0);
+        setTaskId(taskId);
+        setBizId(bizId);
+        setExpireTime(expireTime);
+        setScanTimes(scanTimes);
+        setTaskType(taskType);
+        updateTime(now, now);
+    }
+
     public void incrScanTimes(String updateTime) {
         if (scanTimes == null) {
             scanTimes = 0;
         }
         scanTimes++;
-        updateTime(null, updateTime);
+        updateTime(updateTime);
     }
 
 }

@@ -10,7 +10,6 @@ import java.util.List;
  */
 public interface TaskContainer<T> {
     List<T> fetchTask(TaskType taskType, int count);
-
     void updateTask(List<T> ts);
 
 }

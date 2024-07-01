@@ -6,6 +6,7 @@ import com.kapp.kappcore.model.dto.share.WSOrderQueryResult;
 import com.kapp.kappcore.model.entity.share.QWSOrder;
 import com.kapp.kappcore.model.entity.share.WSOrder;
 import com.kapp.kappcore.model.page.PageAndSort;
+import com.kapp.kappcore.service.domain.mapper.OrderQueryMapper;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.Objects;
 public class WSOrderQuerySupporter {
     private final JPAQueryFactory queryFactory;
     private final MapperFacade mapperFacade;
+    private final OrderQueryMapper queryMapper;
 
     /**
      * support ws order query
@@ -52,6 +55,11 @@ public class WSOrderQuerySupporter {
         QueryResults<WSOrder> results = jpaQuery.fetchResults();
         return new WSOrderQueryResult(mapperFacade.mapAsList(results.getResults(), WSOrderDTO.class), pageAndSort.wireTotal(results.getTotal()));
     }
+
+//    public WSOrderQueryResult batchQueryOrder() {
+//        List<WSOrder> query = queryMapper.query();
+//        return new WSOrderQueryResult(mapperFacade.mapAsList(query, WSOrderDTO.class), PageAndSort.defaultOrder());
+//    }
 
     public WSOrder queryByCode(String orderCode) {
         Objects.requireNonNull(orderCode);

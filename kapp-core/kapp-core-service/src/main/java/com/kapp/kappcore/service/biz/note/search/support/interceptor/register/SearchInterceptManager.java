@@ -7,6 +7,10 @@ import com.kapp.kappcore.service.biz.note.search.support.interceptor.SearchInter
 import java.util.Set;
 
 public interface SearchInterceptManager {
+
+
+    void intercept(boolean intercept);
+
     /**
      * 将返回一个不可操作的拦截器集合
      *

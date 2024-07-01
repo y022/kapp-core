@@ -56,9 +56,8 @@ public class StandardSearchServiceImpl implements StandardSearchService {
     @Override
     public GroupSearchResultDTO groupSearch(GroupSearchDTO request) {
         GroupSearchContext context = mapperFacade.map(request, GroupSearchContext.class);
-        context.onlyTag(request.getTag());
+        context.tag(request.getTag());
         SearchResult<?> group = iStandardSearcher.group(context);
-
         return null;
     }
 }

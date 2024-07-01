@@ -29,4 +29,8 @@ public class RepositoryBean {
             setUpdateTime(updateTime);
         }
     }
+
+    public void updateTime(String updateTime) {
+        updateTime(null, updateTime);
+    }
 }

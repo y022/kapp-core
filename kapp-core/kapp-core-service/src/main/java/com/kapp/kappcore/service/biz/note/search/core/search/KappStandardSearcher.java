@@ -1,6 +1,7 @@
 package com.kapp.kappcore.service.biz.note.search.core.search;
 
 import com.kapp.kappcore.model.biz.domain.search.SearchResult;
+import com.kapp.kappcore.service.biz.note.search.context.GroupSearchContext;
 import com.kapp.kappcore.service.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.service.biz.note.search.request.RequestConstructor;
 import com.kapp.kappcore.service.biz.note.search.support.interceptor.register.SearchInterceptManager;
@@ -26,7 +27,7 @@ public class KappStandardSearcher extends AbstractStandardSearcher {
     }
 
     @Override
-    public SearchResult<?> group(SearchContext context) {
+    public SearchResult<?> group(GroupSearchContext context) {
         SearchRequest request = RequestConstructor.CONSTRUCTOR.group(context);
         SearchResponse searchResponse = doSearch(request, context);
         return SearchResponseCollector.doCollectGroup(searchResponse, context);

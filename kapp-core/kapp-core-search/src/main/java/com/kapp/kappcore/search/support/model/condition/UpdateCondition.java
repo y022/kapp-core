@@ -1,0 +1,38 @@
+package com.kapp.kappcore.search.support.model.condition;
+
+import com.kapp.kappcore.model.exception.SearchException;
+import com.kapp.kappcore.search.support.option.DocOption;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Author:Heping
+ * Date: 2024/6/23 17:17
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class UpdateCondition extends AbstractCondition {
+    private List<Map<String, Object>> valKeyMap;
+
+    public UpdateCondition(Set<String> index, DocOption option, List<Map<String, Object>> valKeyMap) {
+        super(index, option);
+        this.valKeyMap = valKeyMap;
+    }
+
+    public UpdateCondition() {
+    }
+
+    @Override
+    public String read() {
+        return "";
+    }
+
+    @Override
+    public void checkAndCompensate() throws SearchException {
+
+    }
+}

@@ -54,7 +54,7 @@ public class WSOrder extends RepositoryBean {
 
     public void updateStatus(String status, String updateTime) {
         updateStatus(status);
-        updateTime(null, updateTime);
+        updateTime(updateTime);
     }
 
 }

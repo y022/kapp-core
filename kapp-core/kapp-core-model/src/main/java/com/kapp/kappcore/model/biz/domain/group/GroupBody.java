@@ -14,8 +14,6 @@ public class GroupBody implements Sch {
     private long docCount;
     private String groupField;
 
-
-
     @Override
     public String body() {
         return "";

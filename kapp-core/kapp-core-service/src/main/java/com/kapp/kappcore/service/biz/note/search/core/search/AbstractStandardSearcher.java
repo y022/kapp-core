@@ -4,6 +4,8 @@ import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.service.biz.note.search.context.SearchContext;
 import com.kapp.kappcore.service.biz.note.search.support.interceptor.register.SearchInterceptManager;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -16,9 +18,12 @@ import java.io.IOException;
 public abstract class AbstractStandardSearcher implements StandardSearcher {
     private final SearchInterceptManager interceptManager;
     private final RestHighLevelClient restHighLevelClient;
+    public AbstractStandardSearcher(SearchInterceptManager interceptManager, RestHighLevelClient restHighLevelClient) {
+        this.interceptManager = interceptManager;
+        this.restHighLevelClient = restHighLevelClient;
+    }
 
-
-    public SearchResponse doSearch(SearchRequest request, SearchContext context) {
+    protected SearchResponse doSearch(SearchRequest request, SearchContext context) {
         this.before(context);
         SearchResponse response;
         try {
@@ -32,10 +37,7 @@ public abstract class AbstractStandardSearcher implements StandardSearcher {
     }
 
 
-    public AbstractStandardSearcher(SearchInterceptManager interceptManager, RestHighLevelClient restHighLevelClient) {
-        this.interceptManager = interceptManager;
-        this.restHighLevelClient = restHighLevelClient;
-    }
+
 
     @Override
     public void before(SearchContext context) {

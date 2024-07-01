@@ -11,4 +11,9 @@ public class SearchException extends KappException {
         this.message = message;
     }
 
+    public SearchException(String exceptionCode) {
+        this.exceptionCode = exceptionCode;
+        this.message = "";
+
+    }
 }

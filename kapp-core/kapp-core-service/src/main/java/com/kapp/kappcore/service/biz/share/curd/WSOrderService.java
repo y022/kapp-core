@@ -20,6 +20,7 @@ import com.kapp.kappcore.support.tool.date.DateTool;
 import com.kapp.kappcore.support.tool.id.IdTool;
 import com.kapp.kappcore.support.transaction.TransactionUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WSOrderService {
