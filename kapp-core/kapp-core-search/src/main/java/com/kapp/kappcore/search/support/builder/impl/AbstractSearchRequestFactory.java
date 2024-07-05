@@ -182,7 +182,11 @@ public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFac
         }
 
         protected static MatchQueryBuilder match(String key, Object value) {
-            return QueryBuilders.matchQuery(key, value).analyzer("ik");
+            return QueryBuilders.matchQuery(key, value);
+        }
+
+        protected static MatchQueryBuilder match(String key, Object value, String analyzer) {
+            return QueryBuilders.matchQuery(key, value).analyzer(analyzer);
         }
 
         protected static FuzzyQueryBuilder fuzzy(String key, Object value) {

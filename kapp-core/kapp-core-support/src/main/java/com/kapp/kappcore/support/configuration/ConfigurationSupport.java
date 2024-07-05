@@ -37,7 +37,6 @@ public class ConfigurationSupport {
     }
 
     @Configuration
-//    @ConditionalOnBean(ConnectionFactory.class)
     public static class MqConfiguration {
         @Bean
         public MessageConverter jsonMessageConverter() {

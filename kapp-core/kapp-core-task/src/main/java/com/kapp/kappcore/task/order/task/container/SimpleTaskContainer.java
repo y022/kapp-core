@@ -27,7 +27,9 @@ public class SimpleTaskContainer implements TaskContainer<Task> {
     public List<Task> fetchTask(TaskType taskType, int count) {
         Task task = new Task();
         task.setTaskType(TaskType.SCHEDULED.name());
-        Page<Task> result = repository.findAll(Example.of(task, ExampleMatcher.matching().withMatcher("task_type", ExampleMatcher.GenericPropertyMatchers.exact())), PageRequest.of(1, count));
+        Page<Task> result = repository.findAll(Example.of(task,
+                ExampleMatcher.matching().withMatcher("task_type", ExampleMatcher.GenericPropertyMatchers.exact())),
+                PageRequest.of(1, count));
         return result.toList();
     }
 
