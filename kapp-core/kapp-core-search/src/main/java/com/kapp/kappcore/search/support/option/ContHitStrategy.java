@@ -13,6 +13,7 @@ public enum ContHitStrategy {
     WILDCARD("02", "通配符"),
     FUZZY("03", "模糊"),
     RANGE("03", "区间"),
+
     ;
     private final String code;
     private final String desc;

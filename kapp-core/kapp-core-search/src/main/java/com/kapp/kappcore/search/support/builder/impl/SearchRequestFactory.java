@@ -9,9 +9,11 @@ import com.kapp.kappcore.search.support.model.param.ViewParam;
 import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.search.support.option.GroupOption;
 import com.kapp.kappcore.search.support.option.ViewType;
+import com.kapp.kappcore.search.support.option.sort.SortRule;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -119,13 +121,21 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
 
     protected SearchSourceBuilder search(SearchParam param) {
         SearchSourceBuilder sourceBuilder = Query.searchSourceBuilder();
+
+        //page and sort
         SearchLimiter searchLimiter = param.getSearchLimiter();
         sourceBuilder
                 .from((searchLimiter.getPageNum() - 1) * searchLimiter.getPageSize())
                 .size(searchLimiter.getPageSize());
+
+        if (searchLimiter.getSortRule().isAssign(SortRule.FIELD) && CollectionUtils.isNotEmpty(searchLimiter.getSortParams())) {
+            searchLimiter.getSortParams().forEach((sp) -> sourceBuilder.sort(Sort.sortBuilder(sp.getSortKey(), sp.getSortType().getCode())));
+        }
+
+
+
         QueryBuilder queryBuilder = MultiQuerySentenceFactory.getInstance().create(param);
         sourceBuilder.query(queryBuilder);
-        getSort(searchLimiter.getSortKeys()).forEach((sourceBuilder::sort));
         ViewParam viewParam = searchLimiter.getViewParam();
         String[] viewFields = null;
         switch (viewParam.getViewType()) {

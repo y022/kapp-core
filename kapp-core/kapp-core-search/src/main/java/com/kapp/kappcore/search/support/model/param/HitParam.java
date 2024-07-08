@@ -1,8 +1,8 @@
 package com.kapp.kappcore.search.support.model.param;
 
 import com.kapp.kappcore.model.constant.ExCode;
-import com.kapp.kappcore.model.exception.SearchException;
-import com.kapp.kappcore.search.support.Checker;
+import com.kapp.kappcore.model.exception.ValidateException;
+import com.kapp.kappcore.search.support.Validate;
 import com.kapp.kappcore.search.support.option.ContHitStrategy;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Data
 @NoArgsConstructor
-public class HitParam implements Checker {
+public class HitParam implements Validate {
     /**
      * 命中策略
      */
@@ -46,18 +46,23 @@ public class HitParam implements Checker {
     }
 
     public static HitParam accurate() {
+        return of(ContHitStrategy.ACCURATE);
+    }
+
+    public static HitParam of(ContHitStrategy contHitStrategy) {
         HitParam hitParam = new HitParam();
-        hitParam.setContHitStrategy(ContHitStrategy.ACCURATE);
+        hitParam.setContHitStrategy(contHitStrategy);
         return hitParam;
     }
 
+
     @Override
-    public void checkAndCompensate() throws SearchException {
+    public void validate() throws ValidateException {
         ContHitStrategy hitStrategy = getContHitStrategy();
         if (hitStrategy != null) {
             if (hitStrategy == ContHitStrategy.WILDCARD) {
                 if (StringUtils.isBlank(wildcard)) {
-                    throw new SearchException(ExCode.search_condition_error, "wildcard-search must bo hava valid wildcard");
+                    throw new ValidateException(ExCode.search_condition_error, "wildcard-search must bo hava valid wildcard");
                 }
             }
         }

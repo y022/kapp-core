@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum SortType {
-    DESC("00", "desc"),
-    ASC("01", "asc"),
+    DESC("desc", "倒序"),
+    ASC("asc", "升序"),
 
-    RANDOM("99", "随机"),
+    RANDOM("random", "随机"),
     ;
     private final String code;
     private final String name;
@@ -26,4 +26,6 @@ public enum SortType {
         }
         return null;
     }
+
+
 }

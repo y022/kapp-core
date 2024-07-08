@@ -1,11 +1,12 @@
 package com.kapp.kappcore.search.support.model.condition;
 
 import com.kapp.kappcore.model.exception.SearchException;
+import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.model.param.GroupParamUnit;
-import com.kapp.kappcore.search.support.model.param.HitParam;
 import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -43,7 +44,7 @@ public class GroupCondition extends AbstractSearchCondition {
     }
 
     @Override
-    public void checkAndCompensate() throws SearchException {
+    public void validate() throws ValidateException {
         if (bucketCount == 0 || bucketCount > searchField.getMaxGroupBucketCount()) {
             bucketCount = searchField.getMaxGroupBucketCount();
         }
@@ -56,6 +57,11 @@ public class GroupCondition extends AbstractSearchCondition {
     @Override
     boolean searchAll() {
         return true;
+    }
+
+    @Override
+    boolean hasMultiCondition() {
+        return CollectionUtils.isNotEmpty(groupParamUnits);
     }
 
 }

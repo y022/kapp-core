@@ -1,22 +1,21 @@
 package com.kapp.kappcore.search.support.builder.impl;
 
 import com.kapp.kappcore.search.common.SearchRequestDTO;
-import com.kapp.kappcore.search.support.builder.SearchFactory;
 import com.kapp.kappcore.search.support.DateTool;
+import com.kapp.kappcore.search.support.builder.SearchFactory;
 import com.kapp.kappcore.search.support.index.IndexChooser;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.GroupCondition;
 import com.kapp.kappcore.search.support.model.condition.SearchCondition;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
+import com.kapp.kappcore.search.support.model.param.SortParam;
 import com.kapp.kappcore.search.support.model.param.ViewParam;
 import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.search.support.option.ViewType;
 import com.kapp.kappcore.search.support.option.sort.SortRule;
-import com.kapp.kappcore.search.support.option.sort.SortType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Objects;
 import java.util.Set;
@@ -29,11 +28,9 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParamConstructor implements SearchFactory<SearchRequestDTO, SearchParam> {
     private static final ParamConstructor INSTANCE = new ParamConstructor();
-
     public static ParamConstructor instance() {
         return INSTANCE;
     }
-
     public SearchParam create() {
         return new SearchParam();
     }
@@ -69,14 +66,8 @@ public class ParamConstructor implements SearchFactory<SearchRequestDTO, SearchP
     private ValCondition searchCondition(SearchRequestDTO searchRequestDTO) {
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setSearchAll(searchRequestDTO.isSearchAll());
-        searchCondition.setHasMultiCondition(CollectionUtils.isNotEmpty(searchRequestDTO.getSearchParamUnits()));
         searchCondition.setOption(DocOption.SEARCH);
         searchCondition.setSearchValueMap(searchRequestDTO.getSearchValueMap());
-//        if (StringUtils.isBlank(searchRequestDTO.getWildcard())) {
-////            searchCondition.setHitParam(HitParam.accurate(searchRequestDTO.get()));
-//        } else {
-//            searchCondition.setHitParam(new HitParam(ContHitStrategy.codeOf(searchRequestDTO.getContHitStrategy()), searchRequestDTO.getWildcard(), searchRequestDTO.getSortKeys()));
-//        }
         return searchCondition;
     }
 
@@ -103,8 +94,8 @@ public class ParamConstructor implements SearchFactory<SearchRequestDTO, SearchP
         searchLimiter.setViewParam(viewParam);
 
         searchLimiter.setSortRule(SortRule.codeOf(searchRequestDTO.getSortRule()));
-        searchLimiter.setSortType(SortType.codeOf(searchRequestDTO.getSortType()));
-        searchLimiter.setSortKeys(searchRequestDTO.getSortKeys());
+        searchLimiter.setSortParams(SortParam.toParam(searchRequestDTO.getSortMap()));
+
         return searchLimiter;
     }
 }

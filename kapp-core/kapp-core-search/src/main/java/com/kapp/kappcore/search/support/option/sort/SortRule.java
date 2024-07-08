@@ -28,4 +28,10 @@ public enum SortRule {
         }
         return null;
     }
+
+
+    public boolean isAssign(SortRule sortRule) {
+        return this.equals(sortRule);
+    }
+
 }

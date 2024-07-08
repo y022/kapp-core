@@ -17,11 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SearchService {
     private final Searcher searcher;
-
     public SearchService(Searcher searcher) {
         this.searcher = searcher;
     }
-
     public SearchResult<?> search(SearchRequestDTO searchRequestDTO) throws SearchException {
         SearchParam searchParam = ParamConstructor.instance().create(searchRequestDTO);
         return searcher.search(searchParam, response -> new SearchResult<>());

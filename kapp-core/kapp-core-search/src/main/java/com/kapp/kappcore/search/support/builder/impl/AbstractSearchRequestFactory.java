@@ -18,6 +18,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -349,5 +350,11 @@ public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFac
         private static List<SortBuilder<?>> sort(Set<String> sortKeys) {
             return !isEmpty(sortKeys) ? sortKeys.stream().map(SortBuilders::fieldSort).collect(Collectors.toList()) : List.of();
         }
+
+        public static SortBuilder<?> sortBuilder(String sortKey, String order) {
+            return SortBuilders.fieldSort(sortKey).order(SortOrder.fromString(order));
+        }
+
+
     }
 }

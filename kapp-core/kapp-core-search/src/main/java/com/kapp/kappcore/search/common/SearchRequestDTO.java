@@ -30,17 +30,14 @@ public class SearchRequestDTO {
      */
     private String docOption;
     /**
-     * @see SortType
-     */
-    private String sortType;
-    /**
      * @see SortRule
      */
     private String sortRule;
     /**
-     * 用于排序的key
+     * 排序键Map,key-排序键，value-排序方式
+     * @see SortType
      */
-    private Set<String> sortKeys;
+    private Map<String,String> sortMap;
     /**
      * @see ContHitStrategy
      */

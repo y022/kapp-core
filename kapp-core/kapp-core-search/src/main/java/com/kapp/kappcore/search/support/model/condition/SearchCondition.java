@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,10 +37,6 @@ public class SearchCondition extends AbstractSearchCondition {
      * 直接的key-value嵌套查询。
      */
     private Map<String, Object> searchValueMap;
-    /**
-     * 是否有多个条件
-     */
-    private boolean hasMultiCondition;
     /**
      * 多条件
      */
@@ -83,9 +78,9 @@ public class SearchCondition extends AbstractSearchCondition {
     }
 
     @Override
-    public void checkAndCompensate() throws SearchException {
+    public void validate() throws SearchException {
         if (!searchAll) {
-            if (hasMultiCondition) {
+            if (hasMultiCondition()) {
                 if (CollectionUtils.isEmpty(searchParamUnits)) {
                     throw new SearchException(ExCode.search_condition_error, "missing search param!");
                 }
@@ -109,6 +104,11 @@ public class SearchCondition extends AbstractSearchCondition {
     @Override
     boolean searchAll() {
         return searchAll;
+    }
+
+    @Override
+    public boolean hasMultiCondition() {
+        return CollectionUtils.isNotEmpty(getSearchParamUnits());
     }
 
     /**

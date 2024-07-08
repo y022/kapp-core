@@ -2,6 +2,7 @@ package com.kapp.kappcore.search.support.model.condition;
 
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
+import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
@@ -30,9 +31,9 @@ public class DeleteCondition extends AbstractCondition {
     }
 
     @Override
-    public void checkAndCompensate() throws SearchException {
+    public void validate() throws ValidateException {
         if (ids == null || ids.isEmpty()) {
-            throw new SearchException(ExCode.search_condition_error, "delete id can not be empty");
+            throw new ValidateException(ExCode.search_condition_error, "delete id can not be empty");
         }
     }
 

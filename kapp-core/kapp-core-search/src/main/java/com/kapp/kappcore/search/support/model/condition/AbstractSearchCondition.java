@@ -17,4 +17,5 @@ public abstract class AbstractSearchCondition extends AbstractCondition {
      */
     abstract boolean searchAll();
 
+    abstract boolean hasMultiCondition();
 }

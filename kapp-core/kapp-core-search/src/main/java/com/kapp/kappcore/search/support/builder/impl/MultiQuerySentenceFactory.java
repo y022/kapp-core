@@ -34,7 +34,7 @@ public class MultiQuerySentenceFactory extends AbstractSearchRequestFactory<Bool
             return Query.boolQuery();
         }
         BoolQueryBuilder queryBuilder = Query.boolQuery();
-        List<SearchParamUnit> paramUnits = condition.isHasMultiCondition() ? condition.getSearchParamUnits() : condition.toParamUnit();
+        List<SearchParamUnit> paramUnits = condition.hasMultiCondition() ? condition.getSearchParamUnits() : condition.toParamUnit();
         for (SearchParamUnit paramUnit : paramUnits) {
             QueryBuilder subQueryBuilder = create(paramUnit);
             switch (paramUnit.getMultiQueryRule()) {
@@ -74,7 +74,9 @@ public class MultiQuerySentenceFactory extends AbstractSearchRequestFactory<Bool
             case RANGE:
                 RangeParam rangeParam = paramUnit.getRangeParam();
                 queryBuilder = Query.range(key, rangeParam.getLte(), rangeParam.getGte(), rangeParam.isIncludeLow(), rangeParam.isIncludeHigh());
+                break;
             default:
+                // nothing to do
         }
         return queryBuilder;
     }

@@ -2,15 +2,16 @@ package com.kapp.kappcore.search.support.model;
 
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
-import com.kapp.kappcore.search.support.Checker;
+import com.kapp.kappcore.model.exception.ValidateException;
+import com.kapp.kappcore.search.support.Validate;
+import com.kapp.kappcore.search.support.model.param.SortParam;
 import com.kapp.kappcore.search.support.model.param.ViewParam;
 import com.kapp.kappcore.search.support.option.ViewType;
 import com.kapp.kappcore.search.support.option.sort.SortRule;
-import com.kapp.kappcore.search.support.option.sort.SortType;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Author:Heping
@@ -18,50 +19,37 @@ import java.util.Set;
  * 搜索限制：分页，排序，响应字段
  */
 @Data
-public class SearchLimiter implements Checker {
+public class SearchLimiter implements Validate {
     private int pageNum;
     private int pageSize;
-    private Set<String> sortKeys;
-    private SortRule sortRule;
-    private SortType sortType;
-    private ViewParam viewParam;
-    private boolean showScore = true;
 
-    public SearchLimiter(Set<String> sortKeys, SortRule sortRule, SortType sortType) {
-        this.sortKeys = sortKeys;
-        this.sortRule = sortRule;
-        this.sortType = sortType;
-    }
+    private SortRule sortRule;
+
+    private List<SortParam> sortParams;
+
+    private ViewParam viewParam;
+
+    private boolean showScore = true;
 
     public SearchLimiter() {
     }
 
-    /**
-     * 默认的排序规则
-     *
-     * @return st
-     */
-    public static SearchLimiter defaultSort() {
-        return new SearchLimiter(Set.of(), SortRule.SCORE, SortType.DESC);
-    }
 
     @Override
-    public void checkAndCompensate() throws SearchException {
+    public void validate() throws ValidateException {
         if (pageSize > 100) {
-            throw new SearchException(ExCode.search_condition_error, "page size to large!");
+            throw new ValidateException(ExCode.search_condition_error, "page size to large!");
         }
         if (pageNum > 100) {
-            throw new SearchException(ExCode.search_condition_error, "page number to large!");
-        }
-        if (sortType == null) {
-            sortType = SortType.DESC;
+            throw new ValidateException(ExCode.search_condition_error, "page number to large!");
         }
         if (sortRule == null) {
             sortRule = SortRule.SCORE;
+            sortParams = List.of();
         } else {
             // 如果是指定字段排序，但是没有给出排序字段，就退化为分数排序
             if (SortRule.FIELD.equals(sortRule)) {
-                if (CollectionUtils.isEmpty(sortKeys)) {
+                if (CollectionUtils.isEmpty(sortParams)) {
                     sortRule = SortRule.SCORE;
                 }
             }
@@ -73,7 +61,7 @@ public class SearchLimiter implements Checker {
             viewParam = ViewParam.defaultView();
         } else if (viewParam.getViewType().equals(ViewType.SET)) {
             if (CollectionUtils.isEmpty(viewParam.getViewFields())) {
-                throw new SearchException(ExCode.search_condition_error, "please set view field!");
+                throw new ValidateException(ExCode.search_condition_error, "please set view field!");
             }
         }
     }

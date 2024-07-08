@@ -1,6 +1,6 @@
 package com.kapp.kappcore.search.support.model.condition;
 
-import com.kapp.kappcore.model.exception.SearchException;
+import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +32,7 @@ public class UpdateCondition extends AbstractCondition {
     }
 
     @Override
-    public void checkAndCompensate() throws SearchException {
+    public void validate() throws ValidateException {
 
     }
 }

@@ -8,4 +8,11 @@ import lombok.EqualsAndHashCode;
 public class KappException extends RuntimeException{
     protected String exceptionCode;
     protected String message;
+
+    public KappException(String exceptionCode, String message) {
+
+    }
+
+    public KappException() {
+    }
 }

@@ -41,11 +41,11 @@ public class ParamInterceptor implements SearchInterceptor {
         if (condition == null) {
             throw new SearchException(ExCode.search_condition_error, "search condition is null!");
         } else {
-            condition.checkAndCompensate();
+            condition.validate();
         }
         SearchLimiter searchLimiter = searchParam.getSearchLimiter();
         if (searchLimiter != null) {
-            searchLimiter.checkAndCompensate();
+            searchLimiter.validate();
         } else {
             throw new SearchException(ExCode.search_condition_error, "search limiter is null!");
         }

@@ -2,7 +2,9 @@ package com.kapp.kappcore.search.core;
 
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
+import com.kapp.kappcore.search.core.interceptor.InterceptorRegistry;
 import com.kapp.kappcore.search.support.Collector;
+import com.kapp.kappcore.search.support.model.param.SearchParam;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -18,8 +20,15 @@ import java.io.IOException;
 @Slf4j
 public abstract class AbstractKappSearcher implements Searcher {
     private final RestHighLevelClient restHighLevelClient;
-    public AbstractKappSearcher(RestHighLevelClient restHighLevelClient) {
+    private final InterceptorRegistry interceptorRegistry;
+
+    public AbstractKappSearcher(RestHighLevelClient restHighLevelClient, InterceptorRegistry interceptorRegistry) {
         this.restHighLevelClient = restHighLevelClient;
+        this.interceptorRegistry = interceptorRegistry;
+    }
+
+    protected void intercept(SearchParam searchParam) {
+        interceptorRegistry.invoke(searchParam);
     }
 
     /**
@@ -38,8 +47,5 @@ public abstract class AbstractKappSearcher implements Searcher {
             log.error("error when doSearch", e);
             throw new SearchException(ExCode.error);
         }
-
     }
-
-
 }
