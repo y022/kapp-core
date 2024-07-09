@@ -1,5 +1,6 @@
 package com.kapp.kappcore.model.entity.share;
 
+import com.kapp.kappcore.model.entity.RepositoryBean;
 import lombok.*;
 
 import javax.persistence.Entity;

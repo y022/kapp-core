@@ -1,5 +1,6 @@
-package com.kapp.kappcore.task.book;
+package com.kapp.kappcore.task.book.reader;
 
+import com.kapp.kappcore.model.dto.book.BookMeta;
 import com.kapp.kappcore.model.dto.book.BookType;
 import com.kapp.kappcore.model.entity.book.Book;
 
@@ -13,8 +14,7 @@ import java.util.function.Consumer;
 
 public interface KappBookReader {
     boolean support(BookType bookType);
-
-    void read(BookType bookType, Path path, Consumer<Book> consumer);
+    void read(Path path, BookMeta bookMeta , Consumer<Book> consumer);
 
 
 }

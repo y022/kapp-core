@@ -329,7 +329,6 @@ public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFac
             }
             return bulkRequest;
         }
-
     }
 
     protected static class Highlight {
@@ -354,7 +353,5 @@ public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFac
         public static SortBuilder<?> sortBuilder(String sortKey, String order) {
             return SortBuilders.fieldSort(sortKey).order(SortOrder.fromString(order));
         }
-
-
     }
 }

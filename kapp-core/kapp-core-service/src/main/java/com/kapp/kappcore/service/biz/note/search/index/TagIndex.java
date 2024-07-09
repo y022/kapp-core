@@ -1,7 +1,5 @@
 package com.kapp.kappcore.service.biz.note.search.index;
 
-import com.kapp.kappcore.model.constant.ExCode;
-import com.kapp.kappcore.model.exception.SearchException;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -11,9 +9,7 @@ public enum TagIndex implements EnumAware {
     IT_NOTE("IT_NOTE", "it_note", "计算机笔记"),
     FR("FR", "fr", "凡人修仙传"),
     KNOWLEDGE("KNOWLEDGE", "knowledge", "知识"),
-
-
-    ;
+    BOOK("BOOK", "book", "book");
 
     private final String tag;
     private final String index;

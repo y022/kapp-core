@@ -34,7 +34,6 @@ public class TransferElasticSearch {
         this.objectMapper = objectMapper;
     }
 
-
     public void transfer(List<LineMsItem> items) throws IOException {
         Map<String, LineMsDTO> data = items.stream().map(item -> {
             LineMsDTO lineMsDTO = new LineMsDTO();
@@ -61,7 +60,6 @@ public class TransferElasticSearch {
 
             return lineMsDTO;
         }).collect(Collectors.toMap(LineMsDTO::getDocId, Function.identity()));
-
 
         BulkRequest bulkRequest = new BulkRequest();
 

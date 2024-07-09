@@ -1,4 +1,4 @@
-package com.kapp.kappcore.model.entity.share;
+package com.kapp.kappcore.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

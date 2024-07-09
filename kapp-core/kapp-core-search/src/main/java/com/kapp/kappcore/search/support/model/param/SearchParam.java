@@ -46,7 +46,6 @@ public class SearchParam {
 
     }
 
-
     public Set<String> getSearchIndex() {
         return CollectionUtils.isEmpty(indexes) ? condition.index() : indexes;
     }

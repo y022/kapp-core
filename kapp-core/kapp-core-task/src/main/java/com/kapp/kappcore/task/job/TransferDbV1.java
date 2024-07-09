@@ -1,10 +1,17 @@
 package com.kapp.kappcore.task.job;
 
+import cn.hutool.core.collection.ListUtil;
+import com.kapp.kappcore.model.entity.ExecuteItem;
+import com.kapp.kappcore.model.entity.LineMsItem;
 import com.kapp.kappcore.service.domain.repository.LineMsItemRepository;
 import com.kapp.kappcore.task.support.produce.LineMsProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.util.StopWatch;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 @Slf4j
 public class TransferDbV1 extends AbstractTransferDb {
@@ -24,7 +31,7 @@ public class TransferDbV1 extends AbstractTransferDb {
         stopWatch.stop();
         log.info("数据读取完毕,读取耗时:" + stopWatch.getLastTaskTimeMillis());
 
-//
+
 //        stopWatch.start("write");
 //
 //        List<ExecuteItem> items = lineMsProducer.produce(-1);

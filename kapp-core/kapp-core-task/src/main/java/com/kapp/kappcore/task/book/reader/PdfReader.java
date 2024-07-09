@@ -1,5 +1,6 @@
-package com.kapp.kappcore.task.book;
+package com.kapp.kappcore.task.book.reader;
 
+import com.kapp.kappcore.model.dto.book.BookMeta;
 import com.kapp.kappcore.model.dto.book.BookType;
 import com.kapp.kappcore.model.entity.book.Book;
 import org.springframework.stereotype.Component;
@@ -12,14 +13,14 @@ import java.util.function.Consumer;
  * Date: 2024/7/9 18:03
  */
 @Component
-public class PdfReader implements KappBookReader{
+public class PdfReader extends AbstractKappBookReader {
     @Override
     public boolean support(BookType bookType) {
-        return false;
+        return BookType.PDF.equals(bookType);
     }
 
     @Override
-    public void read(BookType bookType, Path path, Consumer<Book> consumer) {
+    public void read(Path path, BookMeta bookMeta , Consumer<Book> consumer) {
 
     }
 }

@@ -1,6 +1,7 @@
 package com.kapp.kappcore.model.entity.share;
 
 import com.kapp.kappcore.model.dto.share.pay.PayStatus;
+import com.kapp.kappcore.model.entity.RepositoryBean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

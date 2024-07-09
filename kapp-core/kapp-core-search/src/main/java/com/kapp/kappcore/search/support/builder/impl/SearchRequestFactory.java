@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption, SearchParam, SearchRequest> {
     private static final SearchRequestFactory INSTANCE = new SearchRequestFactory();
-
     public static SearchRequestFactory getInstance() {
         return INSTANCE;
     }
@@ -131,8 +130,6 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
         if (searchLimiter.getSortRule().isAssign(SortRule.FIELD) && CollectionUtils.isNotEmpty(searchLimiter.getSortParams())) {
             searchLimiter.getSortParams().forEach((sp) -> sourceBuilder.sort(Sort.sortBuilder(sp.getSortKey(), sp.getSortType().getCode())));
         }
-
-
 
         QueryBuilder queryBuilder = MultiQuerySentenceFactory.getInstance().create(param);
         sourceBuilder.query(queryBuilder);

@@ -16,11 +16,11 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UpdateCondition extends AbstractCondition {
-    private List<Map<String, Object>> valKeyMap;
+    private List<Map<String, Object>> updateMap;
 
-    public UpdateCondition(Set<String> index, DocOption option, List<Map<String, Object>> valKeyMap) {
+    public UpdateCondition(Set<String> index, DocOption option, List<Map<String, Object>> updateMap) {
         super(index, option);
-        this.valKeyMap = valKeyMap;
+        this.updateMap = updateMap;
     }
 
     public UpdateCondition() {

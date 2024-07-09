@@ -15,4 +15,6 @@ public @interface MqConsumer {
     @AliasFor(annotation = RabbitListener.class, attribute = "queues")
     String[] queue() default {};
 
+    @AliasFor(annotation = RabbitListener.class, attribute = "concurrency")
+    String concurrency() default "";
 }

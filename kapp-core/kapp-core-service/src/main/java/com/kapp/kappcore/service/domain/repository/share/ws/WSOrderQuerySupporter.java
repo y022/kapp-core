@@ -14,7 +14,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
