@@ -42,7 +42,7 @@ public class BookWatcher {
     private final MqProducer mqProducer;
     private static final AtomicInteger counter = new AtomicInteger(1);
 
-    @MqConsumer(queue = MqRouteMapping.Queue.SAVE_BOOK, concurrency = "2")
+    @MqConsumer(queue = MqRouteMapping.Queue.SAVE_BOOK_RETRY, concurrency = "1")
     public void watch(Book book) {
         if (book != null) {
             BOOK_QUEUE.add(book);
@@ -62,15 +62,15 @@ public class BookWatcher {
         }
     }
 
-    @Scheduled(fixedRate = 1000 * 5)
-    public void loopSaveEs() {
-        Page<Book> books = bookRepository.findAll((PageRequest.of(counter.get(), 600)));
-        List<Book> list = books.toList();
-        if (CollectionUtils.isNotEmpty(list)) {
-            saveSearch(list);
-            counter.addAndGet(1);
-        }
-    }
+//    @Scheduled(fixedRate = 1000 * 5)
+//    public void loopSaveEs() {
+//        Page<Book> books = bookRepository.findAll((PageRequest.of(counter.get(), 600)));
+//        List<Book> list = books.toList();
+//        if (CollectionUtils.isNotEmpty(list)) {
+//            saveSearch(list);
+//            counter.addAndGet(1);
+//        }
+//    }
 
 
     public void saveSearch(List<Book> books) {
