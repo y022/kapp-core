@@ -36,3 +36,4 @@ build/
 ../*.log
 ../.idea/**
 ./jar/**
+/jar/kapp-core-v1.0.jar
