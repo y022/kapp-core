@@ -23,7 +23,7 @@ public abstract class AbstractKappBookReader implements KappBookReader {
     }
 
     protected boolean shouldSave(String content) {
-        return !StringUtils.isBlank(content);
+        return  !StringUtils.isBlank(content) && !content.contains("\u0000");
     }
 
     protected Book warpBook(String content, BookMeta bookMeta, long contentSort) {

@@ -33,7 +33,7 @@ public class ReaderWarpper implements KappBookSaveService {
     }
 
     @Override
-    public void save(String path,BookMeta bookMeta) {
+    public void save(String path, BookMeta bookMeta) {
         if (StringUtils.isEmpty(path)) {
             throw new BizException(ExCode.DATE_BLANK, "path is blank!");
         }

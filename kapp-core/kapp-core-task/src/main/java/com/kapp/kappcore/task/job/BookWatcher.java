@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class BookWatcher {
-    private static final ArrayDeque<Book> BOOK_QUEUE = new ArrayDeque<>(100000);
+    private static final Queue<Book> BOOK_QUEUE = new ArrayBlockingQueue<>(10000000);
     private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
@@ -35,14 +37,16 @@ public class BookWatcher {
     @Value("${batchSize:100}")
     public int batchSize;
 
+
     public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper) {
         this.restHighLevelClient = restHighLevelClient;
         this.mqProducer = mqProducer;
         this.bookMapper = bookMapper;
     }
 
-    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK_RETRY, MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
+    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
     public void watchMessage(Book book) {
+
         if (book != null) {
             BOOK_QUEUE.add(book);
         }
