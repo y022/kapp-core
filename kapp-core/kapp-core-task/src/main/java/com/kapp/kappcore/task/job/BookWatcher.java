@@ -1,6 +1,5 @@
 package com.kapp.kappcore.task.job;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
@@ -8,8 +7,6 @@ import com.kapp.kappcore.service.domain.mapper.BookMapper;
 import com.kapp.kappcore.support.mq.MqProducer;
 import com.kapp.kappcore.support.mq.MqRouteMapping;
 import com.kapp.kappcore.support.mq.annotation.MqConsumer;
-import com.kapp.kappcore.task.order.domain.reposity.BookRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -18,11 +15,11 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -31,18 +28,22 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class BookWatcher {
     private static final ArrayBlockingQueue<Book> BOOK_QUEUE = new ArrayBlockingQueue<>(100000);
-    private final BookRepository bookRepository;
-    private final ObjectMapper ob = new ObjectMapper();
     private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
-    private static final AtomicInteger counter = new AtomicInteger(1);
+    private final AsyncTaskExecutor asyncTaskExecutor;
 
     @Value("${batchSize:100}")
     public int batchSize;
+
+    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper, AsyncTaskExecutor asyncTaskExecutor) {
+        this.restHighLevelClient = restHighLevelClient;
+        this.mqProducer = mqProducer;
+        this.bookMapper = bookMapper;
+        this.asyncTaskExecutor = asyncTaskExecutor;
+    }
 
     @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK_RETRY, MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
     public void watch(Book book) {
@@ -54,14 +55,16 @@ public class BookWatcher {
             for (int i = 0; i < batchSize; i++) {
                 books.add(BOOK_QUEUE.poll());
             }
-            try {
-//                bookRepository.saveAll(books);
-                bookMapper.insert(books);
-            } catch (Exception e) {
-                log.error("save pg error", e);
-                reSend(books);
-            }
-            saveSearch(books);
+            asyncTaskExecutor.execute(() -> {
+                log.info("async task save start");
+                try {
+                    bookMapper.insert(books);
+                } catch (Exception e) {
+                    log.error("save pg error:", e);
+                    reSend(books);
+                }
+                saveSearch(books);
+            });
         }
     }
 
@@ -96,6 +99,7 @@ public class BookWatcher {
 
             @Override
             public void onFailure(Exception e) {
+                log.error("save es error:", e);
                 reSend(books);
             }
         });

@@ -60,10 +60,9 @@ public class ConfigurationSupport {
             SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
             factory.setConnectionFactory(connectionFactory);
             factory.setMessageConverter(messageConverter);
+            factory.setPrefetchCount(600);
             return factory;
         }
-
-
     }
 
 
