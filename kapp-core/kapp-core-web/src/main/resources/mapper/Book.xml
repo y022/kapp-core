@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kapp.kappcore.service.domain.mapper.BookMapper">
+
+    <!-- 定义一个简单的查询操作 -->
+    <select id="insert" parameterType="java.util.List">
+        insert into tb_book (id,content,content_sort,version,tag,
+        author,title,deleted,create_time,update_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.content},#{item.contentSort},#{item.version},#{item.tag},
+            #{item.author},#{item.title},#{item.deleted},#{item.createTime},#{item.updateTime})
+        </foreach>
+        on conflict (id) do update set version = 'V2.0'
+    </select>
+
+</mapper>

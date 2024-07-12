@@ -13,4 +13,5 @@ import java.util.Set;
 public interface ValCondition extends Readable, Validate {
     DocOption option();
     Set<String> index();
+
 }

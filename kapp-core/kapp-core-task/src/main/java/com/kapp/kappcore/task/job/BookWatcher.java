@@ -4,22 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
+import com.kapp.kappcore.service.domain.mapper.BookMapper;
 import com.kapp.kappcore.support.mq.MqProducer;
 import com.kapp.kappcore.support.mq.MqRouteMapping;
 import com.kapp.kappcore.support.mq.annotation.MqConsumer;
 import com.kapp.kappcore.task.order.domain.reposity.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -40,38 +38,32 @@ public class BookWatcher {
     private final ObjectMapper ob = new ObjectMapper();
     private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
+    private final BookMapper bookMapper;
     private static final AtomicInteger counter = new AtomicInteger(1);
 
-    @MqConsumer(queue = MqRouteMapping.Queue.SAVE_BOOK_RETRY, concurrency = "1")
+    @Value("${batchSize:100}")
+    public int batchSize;
+
+    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK_RETRY, MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
     public void watch(Book book) {
         if (book != null) {
             BOOK_QUEUE.add(book);
         }
-        if (BOOK_QUEUE.size() >= 100) {
+        if (BOOK_QUEUE.size() >= batchSize) {
             ArrayList<Book> books = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < batchSize; i++) {
                 books.add(BOOK_QUEUE.poll());
             }
-
             try {
-                bookRepository.saveAll(books);
+//                bookRepository.saveAll(books);
+                bookMapper.insert(books);
             } catch (Exception e) {
+                log.error("save pg error", e);
                 reSend(books);
             }
             saveSearch(books);
         }
     }
-
-//    @Scheduled(fixedRate = 1000 * 5)
-//    public void loopSaveEs() {
-//        Page<Book> books = bookRepository.findAll((PageRequest.of(counter.get(), 600)));
-//        List<Book> list = books.toList();
-//        if (CollectionUtils.isNotEmpty(list)) {
-//            saveSearch(list);
-//            counter.addAndGet(1);
-//        }
-//    }
-
 
     public void saveSearch(List<Book> books) {
         List<Map<String, Object>> dataMap = books.stream().map(book -> {
@@ -101,6 +93,7 @@ public class BookWatcher {
             public void onResponse(BulkResponse bulkItemResponses) {
                 log.info("一批数据成功处理完毕，数量：" + dataMap.size());
             }
+
             @Override
             public void onFailure(Exception e) {
                 reSend(books);

@@ -18,7 +18,6 @@ import java.util.Set;
 public abstract class AbstractCondition implements ValCondition {
     @Setter
     protected Set<String> index;
-
     @Setter
     protected DocOption option;
     protected SearchConfiguration.SearchField searchField;

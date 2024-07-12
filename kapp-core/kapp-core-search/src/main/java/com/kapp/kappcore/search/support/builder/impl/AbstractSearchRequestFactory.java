@@ -243,42 +243,40 @@ public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFac
             }
             return mainTb;
         }
-
-
     }
 
     protected static class Update {
         private static final Logger log = LoggerFactory.getLogger(Update.class);
 
-        private interface ReqLam {
+        protected interface ReqLam {
             DocWriteRequest<?> get(String indexName, String indexId, Map<String, Object> content);
         }
 
-        private static UpdateRequest updateRequest() {
+        protected static UpdateRequest updateRequest() {
             return new UpdateRequest();
         }
 
-        private static IndexRequest indexRequest() {
+        protected static IndexRequest indexRequest() {
             return new IndexRequest();
         }
 
-        private static IndexRequest indexRequest(String indexName) {
+        protected static IndexRequest indexRequest(String indexName) {
             return new IndexRequest(indexName);
         }
 
-        private static DeleteRequest deleteRequest() {
+        protected static DeleteRequest deleteRequest() {
             return new DeleteRequest();
         }
 
-        private static DeleteRequest deleteRequest(String indexName) {
+        protected static DeleteRequest deleteRequest(String indexName) {
             return new DeleteRequest(indexName);
         }
 
-        private static BulkRequest bulkRequest() {
+        protected static BulkRequest bulkRequest() {
             return new BulkRequest();
         }
 
-        private static BulkRequest bulkRequest(String indexName) {
+        protected static BulkRequest bulkRequest(String indexName) {
             return new BulkRequest(indexName);
         }
 
