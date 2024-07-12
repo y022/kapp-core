@@ -15,11 +15,9 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -29,42 +27,37 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class BookWatcher {
-    private static final ArrayBlockingQueue<Book> BOOK_QUEUE = new ArrayBlockingQueue<>(100000);
+    private static final ArrayDeque<Book> BOOK_QUEUE = new ArrayDeque<>(100000);
     private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
-    private final AsyncTaskExecutor asyncTaskExecutor;
 
     @Value("${batchSize:100}")
     public int batchSize;
 
-    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper, AsyncTaskExecutor asyncTaskExecutor) {
+    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper) {
         this.restHighLevelClient = restHighLevelClient;
         this.mqProducer = mqProducer;
         this.bookMapper = bookMapper;
-        this.asyncTaskExecutor = asyncTaskExecutor;
     }
 
     @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK_RETRY, MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
-    public void watch(Book book) {
+    public void watchMessage(Book book) {
         if (book != null) {
             BOOK_QUEUE.add(book);
         }
         if (BOOK_QUEUE.size() >= batchSize) {
-            ArrayList<Book> books = new ArrayList<>();
+            ArrayList<Book> books = new ArrayList<>(400);
             for (int i = 0; i < batchSize; i++) {
                 books.add(BOOK_QUEUE.poll());
             }
-            asyncTaskExecutor.execute(() -> {
-                log.info("async task save start");
-                try {
-                    bookMapper.insert(books);
-                } catch (Exception e) {
-                    log.error("save pg error:", e);
-                    reSend(books);
-                }
-                saveSearch(books);
-            });
+            try {
+                bookMapper.insert(books);
+            } catch (Exception e) {
+                log.error("save pg error:", e);
+                reSend(books);
+            }
+            saveSearch(books);
         }
     }
 
