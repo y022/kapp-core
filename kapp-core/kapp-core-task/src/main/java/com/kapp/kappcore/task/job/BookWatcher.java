@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
 import java.util.stream.Collectors;
 
 /**
@@ -44,19 +43,20 @@ public class BookWatcher {
         this.bookMapper = bookMapper;
     }
 
-    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
+    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK_RETRY}, concurrency = "1")
     public void watchMessage(Book book) {
-
         if (book != null) {
             BOOK_QUEUE.add(book);
         }
         if (BOOK_QUEUE.size() >= batchSize) {
-            ArrayList<Book> books = new ArrayList<>(400);
+            Set<Book> books = new HashSet<>(400);
             for (int i = 0; i < batchSize; i++) {
                 books.add(BOOK_QUEUE.poll());
             }
             try {
+                long start = System.currentTimeMillis();
                 bookMapper.insert(books);
+                log.info("数据库插入耗时：{}", System.currentTimeMillis() - start);
             } catch (Exception e) {
                 log.error("save pg error:", e);
                 reSend(books);
@@ -65,7 +65,7 @@ public class BookWatcher {
         }
     }
 
-    public void saveSearch(List<Book> books) {
+    public void saveSearch(Set<Book> books) {
         List<Map<String, Object>> dataMap = books.stream().map(book -> {
             Map<String, Object> map = new HashMap<>();
             map.put(DocKey.ID, book.getId());
@@ -81,16 +81,18 @@ public class BookWatcher {
             return map;
         }).collect(Collectors.toList());
 
+
         BulkRequest bulkRequest = new BulkRequest();
         for (Map<String, Object> itemMap : dataMap) {
             IndexRequest indexRequest = new IndexRequest(TagIndex.BOOK.getIndex(), "_doc", itemMap.get(DocKey.ID).toString());
             IndexRequest source = indexRequest.source(itemMap);
             bulkRequest.add(source);
         }
-
+        long start = System.currentTimeMillis();
         restHighLevelClient.bulkAsync(bulkRequest, RequestOptions.DEFAULT, new ActionListener<>() {
             @Override
             public void onResponse(BulkResponse bulkItemResponses) {
+                log.info("es插入耗时：{}", System.currentTimeMillis() - start);
                 log.info("一批数据成功处理完毕，数量：" + dataMap.size());
             }
 
@@ -102,7 +104,7 @@ public class BookWatcher {
         });
     }
 
-    private void reSend(List<Book> books) {
+    private void reSend(Set<Book> books) {
         log.warn("reSend message...");
         books.forEach(v -> mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, v));
     }

@@ -28,7 +28,7 @@ public class TimingTaskExecutor {
     private final SimpleTaskContainer taskContainer;
     private final WSOrderRepository wsOrderRepository;
 
-    @Scheduled(fixedDelay = 5 * 60 * 1000, initialDelay = 10000)
+//    @Scheduled(fixedDelay = 5 * 60 * 1000, initialDelay = 10000)
     public void execute() {
         log.info("timing task start...");
         List<Task> tasks = taskContainer.fetchTask(TaskType.SCHEDULED, 200);

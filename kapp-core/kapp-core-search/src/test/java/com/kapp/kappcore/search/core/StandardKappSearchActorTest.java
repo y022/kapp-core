@@ -1,7 +1,8 @@
 package com.kapp.kappcore.search.core;
 
 import com.kapp.kappcore.search.common.SearchRequestDTO;
-import com.kapp.kappcore.search.support.builder.impl.ParamConstructor;
+import com.kapp.kappcore.search.core.search.StandardKappSearchActor;
+import com.kapp.kappcore.search.support.factory.impl.ParamConstructor;
 import com.kapp.kappcore.search.support.model.param.GroupParamUnit;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import com.kapp.kappcore.search.support.option.ContHitStrategy;
@@ -33,11 +34,11 @@ import java.util.Set;
  */
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-class StandardKappSearcherTest {
+class StandardKappSearchActorTest {
 
     private static final String HOST = "47.108.75.6";
     private static RestHighLevelClient restHighLevelClient;
-    private static StandardKappSearcher searcher;
+    private static StandardKappSearchActor searcher;
 
     @BeforeAll
     public static void setup() {
@@ -54,7 +55,7 @@ class StandardKappSearcherTest {
                 .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
 
         restHighLevelClient = new RestHighLevelClient(rcb);
-        searcher = new StandardKappSearcher(restHighLevelClient, null);
+        searcher = new StandardKappSearchActor(restHighLevelClient, null);
     }
 
     @AfterAll
@@ -88,7 +89,7 @@ class StandardKappSearcherTest {
         searchRequestDTO.setPageSize(10);
         ParamConstructor paramConstructor = ParamConstructor.instance();
         SearchParam searchParam = paramConstructor.create(searchRequestDTO);
-        searcher.search(searchParam, StandardKappSearcherTest::collect);
+        searcher.search(searchParam, StandardKappSearchActorTest::collect);
     }
 
     @Test
@@ -111,6 +112,6 @@ class StandardKappSearcherTest {
         searchRequestDTO.setPageSize(10);
         ParamConstructor paramConstructor = ParamConstructor.instance();
         SearchParam searchParam = paramConstructor.create(searchRequestDTO);
-        searcher.search(searchParam, StandardKappSearcherTest::collect);
+        searcher.search(searchParam, StandardKappSearchActorTest::collect);
     }
 }

@@ -22,6 +22,7 @@ public class SearchConfiguration {
         return new InterceptorRegistry(interceptors);
     }
 
+
     @Data
     @Configuration
     @ConditionalOnProperty("com.kapp.search")
@@ -34,7 +35,6 @@ public class SearchConfiguration {
          * 单桶内的文档数量最大限制
          */
         private int maxGroupSubBucketCount = 8;
-
 
     }
 }

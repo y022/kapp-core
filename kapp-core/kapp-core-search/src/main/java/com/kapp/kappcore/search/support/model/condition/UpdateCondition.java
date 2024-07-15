@@ -7,6 +7,7 @@ import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.apache.commons.collections4.CollectionUtils;
+import org.elasticsearch.index.query.QueryBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,28 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UpdateCondition extends AbstractCondition {
-    private static final int MAX_SIZE = 1000;
-    private List<Map<String, Object>> updateMap;
+
+    /**
+     * default bulk Update
+     */
+    private final boolean bulkUpdate = true;
+    /**
+     * doc updates only allow single index
+     */
     private String actualIndex;
+    /**
+     * delete Id
+     */
+    private Set<String> delIds;
+    /**
+     * delete by query-sentence
+     */
+    private QueryBuilder queryBuilder;
+
+    /**
+     * update content
+     */
+    private List<Map<String, Object>> updateMap;
 
     public UpdateCondition(Set<String> index, DocOption option, List<Map<String, Object>> updateMap) {
         super(index, option);
@@ -38,7 +58,6 @@ public class UpdateCondition extends AbstractCondition {
 
     }
 
-
     @Override
     public String read() {
         return "";
@@ -46,10 +65,6 @@ public class UpdateCondition extends AbstractCondition {
 
     @Override
     public void validate() throws ValidateException {
-        if (CollectionUtils.isNotEmpty(updateMap)) {
-            if (updateMap.size() > MAX_SIZE) {
-                throw new ValidateException(ExCode.search_condition_error, "Exceeded the maximum batch operation limit!");
-            }
-        }
+        super.validate();
     }
 }

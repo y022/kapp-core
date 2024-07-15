@@ -1,22 +1,19 @@
 package com.kapp.kappcore.search.core.builder;
 
 import com.kapp.kappcore.search.support.DateTool;
-import com.kapp.kappcore.search.support.builder.impl.SearchRequestFactory;
+import com.kapp.kappcore.search.support.factory.impl.SearchRequestFactory;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.SearchCondition;
 import com.kapp.kappcore.search.support.model.param.*;
 import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.search.support.option.MultiQueryRule;
-import com.kapp.kappcore.search.support.option.ViewType;
 import com.kapp.kappcore.search.support.option.sort.SortRule;
 import com.kapp.kappcore.search.support.option.sort.SortType;
 import org.elasticsearch.action.search.SearchRequest;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Set;
 
 /**

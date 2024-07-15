@@ -1,6 +1,6 @@
 package com.kapp.kappcore.search.core.builder.impl;
 
-import com.kapp.kappcore.search.support.builder.impl.SearchRequestFactory;
+import com.kapp.kappcore.search.support.factory.impl.SearchRequestFactory;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.SearchCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;

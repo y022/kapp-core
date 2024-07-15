@@ -1,9 +1,9 @@
-package com.kapp.kappcore.search.support.builder.impl;
+package com.kapp.kappcore.search.support.factory.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kapp.kappcore.model.constant.SearchVal;
-import com.kapp.kappcore.search.support.builder.SearchFactory;
+import com.kapp.kappcore.search.support.factory.SearchFactory;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;

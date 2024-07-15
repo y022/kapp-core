@@ -1,4 +1,4 @@
-package com.kapp.kappcore.search.support.builder.impl;
+package com.kapp.kappcore.search.support.factory.impl;
 
 import com.kapp.kappcore.search.support.model.condition.SearchCondition;
 import com.kapp.kappcore.search.support.model.param.HitParam;

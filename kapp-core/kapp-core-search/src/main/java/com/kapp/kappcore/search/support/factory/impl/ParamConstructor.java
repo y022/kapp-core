@@ -1,8 +1,8 @@
-package com.kapp.kappcore.search.support.builder.impl;
+package com.kapp.kappcore.search.support.factory.impl;
 
 import com.kapp.kappcore.search.common.SearchRequestDTO;
 import com.kapp.kappcore.search.support.DateTool;
-import com.kapp.kappcore.search.support.builder.SearchFactory;
+import com.kapp.kappcore.search.support.factory.SearchFactory;
 import com.kapp.kappcore.search.support.index.IndexChooser;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.GroupCondition;
@@ -48,7 +48,7 @@ public class ParamConstructor implements SearchFactory<SearchRequestDTO, SearchP
         ValCondition valCondition;
         switch (Objects.requireNonNull(docOption)) {
             case SEARCH:
-                valCondition = searchCondition(searchRequestDTO);
+                valCondition = search(searchRequestDTO);
                 break;
             case GROUP:
                 valCondition = group(searchRequestDTO);
@@ -63,7 +63,7 @@ public class ParamConstructor implements SearchFactory<SearchRequestDTO, SearchP
         return searchParam;
     }
 
-    private ValCondition searchCondition(SearchRequestDTO searchRequestDTO) {
+    private ValCondition search(SearchRequestDTO searchRequestDTO) {
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setSearchAll(searchRequestDTO.isSearchAll());
         searchCondition.setOption(DocOption.SEARCH);
@@ -78,7 +78,7 @@ public class ParamConstructor implements SearchFactory<SearchRequestDTO, SearchP
         updateCondition.setBucketCount(100);
         updateCondition.setSubBucketCount(10);
         updateCondition.setBucketGroup(true);
-        updateCondition.setIndex(searchRequestDTO.getTag());
+        updateCondition.setIndexes(searchRequestDTO.getTag());
         return updateCondition;
     }
 

@@ -1,5 +1,6 @@
 package com.kapp.kappcore.search.support.model.condition;
 
+import com.kapp.kappcore.search.configuration.SearchConfiguration;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -7,9 +8,11 @@ import lombok.EqualsAndHashCode;
  * Author:Heping
  * Date: 2024/6/24 22:52
  */
-@Data
+
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractSearchCondition extends AbstractCondition {
+    protected SearchConfiguration.SearchField searchField;
+
     /**
      * 是否查询全部数据
      *
@@ -18,4 +21,6 @@ public abstract class AbstractSearchCondition extends AbstractCondition {
     abstract boolean searchAll();
 
     abstract boolean hasMultiCondition();
+
+
 }

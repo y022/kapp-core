@@ -8,6 +8,6 @@ import com.kapp.kappcore.search.support.model.param.SearchParam;
  * Author:Heping
  * Date: 2024/6/26 15:49
  */
-public interface Searcher {
+public interface SearchActor {
     <R> R search(SearchParam searchParam, Collector<R> resultCollector) throws SearchException;
 }

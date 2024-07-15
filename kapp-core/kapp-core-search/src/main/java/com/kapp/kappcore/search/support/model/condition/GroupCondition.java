@@ -1,6 +1,5 @@
 package com.kapp.kappcore.search.support.model.condition;
 
-import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.model.param.GroupParamUnit;
 import com.kapp.kappcore.search.support.option.DocOption;

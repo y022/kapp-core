@@ -1,7 +1,8 @@
-package com.kapp.kappcore.search.core;
+package com.kapp.kappcore.search.core.search;
 
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
+import com.kapp.kappcore.search.core.SearchActor;
 import com.kapp.kappcore.search.core.interceptor.InterceptorRegistry;
 import com.kapp.kappcore.search.support.Collector;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
@@ -18,11 +19,11 @@ import java.io.IOException;
  * Date: 2024/6/26 15:49
  */
 @Slf4j
-public abstract class AbstractKappSearcher implements Searcher {
+public abstract class AbstractKappSearchActor implements SearchActor {
     private final RestHighLevelClient restHighLevelClient;
     private final InterceptorRegistry interceptorRegistry;
 
-    public AbstractKappSearcher(RestHighLevelClient restHighLevelClient, InterceptorRegistry interceptorRegistry) {
+    public AbstractKappSearchActor(RestHighLevelClient restHighLevelClient, InterceptorRegistry interceptorRegistry) {
         this.restHighLevelClient = restHighLevelClient;
         this.interceptorRegistry = interceptorRegistry;
     }
@@ -38,8 +39,8 @@ public abstract class AbstractKappSearcher implements Searcher {
      * @param resultCollector result handle
      * @return result
      */
-    protected <R> R doSearch(SearchRequest searchRequest,
-                             Collector<R> resultCollector) {
+    protected <R> R normalSearch(SearchRequest searchRequest,
+                                 Collector<R> resultCollector) {
         try {
             SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
             return resultCollector.collect(response);
@@ -48,4 +49,5 @@ public abstract class AbstractKappSearcher implements Searcher {
             throw new SearchException(ExCode.error);
         }
     }
+
 }

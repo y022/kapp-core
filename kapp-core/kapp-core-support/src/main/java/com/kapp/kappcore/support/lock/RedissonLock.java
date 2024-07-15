@@ -2,6 +2,7 @@ package com.kapp.kappcore.support.lock;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -11,7 +12,7 @@ public class RedissonLock implements KappLock {
 
     private final RedissonClient redissonClient;
 
-    public RedissonLock(RedissonClient redissonClient) {
+    public RedissonLock(@Autowired(required = false) RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
     }
 

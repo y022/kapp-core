@@ -2,8 +2,9 @@ package com.kapp.kappcore.service.domain.mapper;
 
 import com.kapp.kappcore.model.entity.book.Book;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Author:Heping
@@ -11,5 +12,5 @@ import java.util.List;
  */
 @Mapper
 public interface BookMapper {
-    void insert(List<Book> bookList);
+    void insert(@Param("books") Set<Book> set);
 }

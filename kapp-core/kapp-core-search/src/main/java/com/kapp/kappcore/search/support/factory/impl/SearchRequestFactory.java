@@ -1,4 +1,4 @@
-package com.kapp.kappcore.search.support.builder.impl;
+package com.kapp.kappcore.search.support.factory.impl;
 
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.GroupCondition;
@@ -54,7 +54,7 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
                 sourceBuilder = search(param);
                 break;
             default:
-                //
+
         }
         request.source(sourceBuilder);
         return request;

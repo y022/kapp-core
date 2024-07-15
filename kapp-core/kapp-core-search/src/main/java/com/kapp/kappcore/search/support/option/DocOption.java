@@ -9,8 +9,8 @@ import lombok.Getter;
 @Getter
 public enum DocOption {
     SEARCH("00", "查询"), GROUP("01", "分组查询"),
-
-    DELETE("10", "删除"), UPDATE("20", "更新"), ADD("99", "新增"), NONE("100", "未知类型"),
+    DELETE("10", "删除"), UPDATE("20", "更新"), ADD("30", "新增"), NONE("100", "未知类型"),
+    DELETE_BY_QUERY("200", "按查询删除"),
     ;
 
 
@@ -31,5 +31,15 @@ public enum DocOption {
         return null;
     }
 
+    public static boolean support(DocOption option) {
+        boolean support = false;
+        for (DocOption value : DocOption.values()) {
+            if (value.equals(option)) {
+                support = true;
+                break;
+            }
+        }
+        return support;
+    }
 
 }

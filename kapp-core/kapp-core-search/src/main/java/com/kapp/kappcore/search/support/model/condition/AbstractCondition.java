@@ -1,11 +1,14 @@
 package com.kapp.kappcore.search.support.model.condition;
 
+import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.configuration.SearchConfiguration;
 import com.kapp.kappcore.search.support.option.DocOption;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Set;
 
@@ -13,30 +16,20 @@ import java.util.Set;
  * Author:Heping
  * Date: 2024/6/23 17:18
  */
-@Getter
+@Data
 @NoArgsConstructor
 public abstract class AbstractCondition implements ValCondition {
-    @Setter
-    protected Set<String> index;
-    @Setter
+    protected Set<String> indexes;
     protected DocOption option;
-    protected SearchConfiguration.SearchField searchField;
 
-    public AbstractCondition(Set<String> index, DocOption option) {
-        this.index = index;
+    public AbstractCondition(Set<String> indexes, DocOption option) {
+        this.indexes = indexes;
         this.option = option;
     }
 
     @Override
     public Set<String> index() {
-        return this.index;
-    }
-
-    public AbstractCondition(Set<String> index, DocOption option,
-                             SearchConfiguration.SearchField searchField) {
-        this.index = index;
-        this.option = option;
-        this.searchField = searchField;
+        return this.indexes;
     }
 
     @Override
@@ -44,52 +37,15 @@ public abstract class AbstractCondition implements ValCondition {
         return getOption();
     }
 
-    public static ValCondition nullCondition() {
-        return new NullCondition();
-    }
 
-    public static class NullCondition extends AbstractCondition {
-        public NullCondition() {
-            super();
+    @Override
+    public void validate() throws ValidateException {
+        if (CollectionUtils.isEmpty(indexes)) {
+            throw new ValidateException(ExCode.search_condition_error, "indexes is empty!");
         }
-
-        @Override
-        public Set<String> getIndex() {
-            return null;
-        }
-
-        @Override
-        public DocOption getOption() {
-            return null;
-        }
-
-        @Override
-        public void setOption(DocOption option) {
-            // noting to do
-        }
-
-        public NullCondition(Set<String> index, DocOption option) {
-            super(index, option);
-        }
-
-        @Override
-        public DocOption option() {
-            return null;
-        }
-
-        @Override
-        public Set<String> index() {
-            return Set.of();
-        }
-
-        @Override
-        public String read() {
-            return "";
-        }
-
-        @Override
-        public void validate() throws ValidateException {
-
+        if (option == null) {
+            throw new ValidateException(ExCode.search_condition_error, "doc option is null!");
         }
     }
+
 }

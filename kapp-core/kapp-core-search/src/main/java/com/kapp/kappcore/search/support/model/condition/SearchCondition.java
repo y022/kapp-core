@@ -79,6 +79,7 @@ public class SearchCondition extends AbstractSearchCondition {
 
     @Override
     public void validate() throws SearchException {
+        super.validate();
         if (!searchAll) {
             if (hasMultiCondition()) {
                 if (CollectionUtils.isEmpty(searchParamUnits)) {
@@ -115,15 +116,14 @@ public class SearchCondition extends AbstractSearchCondition {
      * 转换为最小检索单位
      */
     public List<SearchParamUnit> toParamUnit() {
-        return MapUtils.isEmpty(searchValueMap) ? List.of() :
-                searchValueMap.entrySet().stream().map(entry -> {
-                    SearchParamUnit searchParamUnit = new SearchParamUnit();
-                    searchParamUnit.setKey(entry.getKey());
-                    searchParamUnit.setValue(entry.getValue());
-                    searchParamUnit.setHitParam(HitParam.accurate());
-                    searchParamUnit.setMultiQueryRule(MultiQueryRule.MUST);
-                    return searchParamUnit;
-                }).collect(Collectors.toList());
+        return MapUtils.isEmpty(searchValueMap) ? List.of() : searchValueMap.entrySet().stream().map(entry -> {
+            SearchParamUnit searchParamUnit = new SearchParamUnit();
+            searchParamUnit.setKey(entry.getKey());
+            searchParamUnit.setValue(entry.getValue());
+            searchParamUnit.setHitParam(HitParam.accurate());
+            searchParamUnit.setMultiQueryRule(MultiQueryRule.MUST);
+            return searchParamUnit;
+        }).collect(Collectors.toList());
     }
 
 }

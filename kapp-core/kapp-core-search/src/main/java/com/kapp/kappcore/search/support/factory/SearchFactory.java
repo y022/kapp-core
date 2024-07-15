@@ -1,4 +1,4 @@
-package com.kapp.kappcore.search.support.builder;
+package com.kapp.kappcore.search.support.factory;
 
 /**
  * Author:Heping
