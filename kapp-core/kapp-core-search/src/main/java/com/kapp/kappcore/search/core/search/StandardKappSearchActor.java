@@ -1,7 +1,7 @@
 package com.kapp.kappcore.search.core.search;
 
 import com.kapp.kappcore.model.exception.SearchException;
-import com.kapp.kappcore.search.core.interceptor.InterceptorRegistry;
+import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.support.Collector;
 import com.kapp.kappcore.search.support.factory.impl.SearchRequestFactory;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class StandardKappSearchActor extends AbstractKappSearchActor {
     private final SearchRequestFactory searchRequestFactory;
-    public StandardKappSearchActor(RestHighLevelClient restHighLevelClient, InterceptorRegistry interceptorRegistry) {
-        super(restHighLevelClient, interceptorRegistry);
+    public StandardKappSearchActor(RestHighLevelClient restHighLevelClient, SearchInterceptorRegistry searchInterceptorRegistry) {
+        super(restHighLevelClient, searchInterceptorRegistry);
         this.searchRequestFactory = SearchRequestFactory.getInstance();
     }
 

@@ -51,7 +51,7 @@ class SearchRequestFactoryTest {
         HitParam accurate = HitParam.accurate();
 
         SearchCondition searchCondition = new SearchCondition();
-        searchCondition.setIndex(indexes);
+        searchCondition.setIndexes(indexes);
         searchCondition.setSearchAll(false);
         searchCondition.setOption(DocOption.SEARCH);
         ArrayList<SearchParamUnit> searchParamUnits = new ArrayList<>();
@@ -100,7 +100,7 @@ class SearchRequestFactoryTest {
         HitParam accurate = HitParam.accurate();
 
         SearchCondition searchCondition = new SearchCondition();
-        searchCondition.setIndex(indexes);
+        searchCondition.setIndexes(indexes);
         searchCondition.setSearchAll(false);
         searchCondition.setOption(DocOption.SEARCH);
         ArrayList<SearchParamUnit> searchParamUnits = new ArrayList<>();

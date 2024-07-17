@@ -1,6 +1,6 @@
 package com.kapp.kappcore.search.configuration;
 
-import com.kapp.kappcore.search.core.interceptor.InterceptorRegistry;
+import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ import java.util.List;
 public class SearchConfiguration {
 
     @Bean
-    public InterceptorRegistry interceptorRegistry(@Autowired(required = false) List<SearchInterceptor> interceptors) {
-        return new InterceptorRegistry(interceptors);
+    public SearchInterceptorRegistry interceptorRegistry(@Autowired(required = false) List<SearchInterceptor> interceptors) {
+        return new SearchInterceptorRegistry(interceptors);
     }
 
 

@@ -10,10 +10,10 @@ import java.util.List;
  * Author:Heping
  * Date: 2024/6/25 14:11
  */
-public class InterceptorRegistry {
+public class SearchInterceptorRegistry {
     private final List<SearchInterceptor> interceptors;
 
-    public InterceptorRegistry(List<SearchInterceptor> interceptors) {
+    public SearchInterceptorRegistry(List<SearchInterceptor> interceptors) {
         if (interceptors != null && !interceptors.isEmpty()) {
             this.interceptors = interceptors;
         } else {
@@ -22,10 +22,8 @@ public class InterceptorRegistry {
     }
 
     public void invoke(SearchParam searchParam) throws SearchException {
-        if (interceptors != null) {
-            for (SearchInterceptor interceptor : interceptors) {
-                interceptor.intercept(searchParam);
-            }
+        for (SearchInterceptor interceptor : interceptors) {
+            interceptor.intercept(searchParam);
         }
     }
 }

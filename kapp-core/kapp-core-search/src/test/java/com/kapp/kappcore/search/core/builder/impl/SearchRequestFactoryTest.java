@@ -32,7 +32,7 @@ public class SearchRequestFactoryTest {
         keyValueMap.put("title", "你好");
         searchCondition.setSearchValueMap(keyValueMap);
         searchCondition.setOption(DocOption.SEARCH);
-        searchCondition.setIndex(Set.of("fr"));
+        searchCondition.setIndexes(Set.of("fr"));
 
         searchParam.setCondition(searchCondition);
 

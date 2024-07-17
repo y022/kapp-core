@@ -3,7 +3,7 @@ package com.kapp.kappcore.search.core.search;
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.core.SearchActor;
-import com.kapp.kappcore.search.core.interceptor.InterceptorRegistry;
+import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.support.Collector;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +21,15 @@ import java.io.IOException;
 @Slf4j
 public abstract class AbstractKappSearchActor implements SearchActor {
     private final RestHighLevelClient restHighLevelClient;
-    private final InterceptorRegistry interceptorRegistry;
+    private final SearchInterceptorRegistry searchInterceptorRegistry;
 
-    public AbstractKappSearchActor(RestHighLevelClient restHighLevelClient, InterceptorRegistry interceptorRegistry) {
+    public AbstractKappSearchActor(RestHighLevelClient restHighLevelClient, SearchInterceptorRegistry searchInterceptorRegistry) {
         this.restHighLevelClient = restHighLevelClient;
-        this.interceptorRegistry = interceptorRegistry;
+        this.searchInterceptorRegistry = searchInterceptorRegistry;
     }
 
     protected void intercept(SearchParam searchParam) {
-        interceptorRegistry.invoke(searchParam);
+        searchInterceptorRegistry.invoke(searchParam);
     }
 
     /**
