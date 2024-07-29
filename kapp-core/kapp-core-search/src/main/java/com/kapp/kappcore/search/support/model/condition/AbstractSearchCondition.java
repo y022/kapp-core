@@ -1,7 +1,6 @@
 package com.kapp.kappcore.search.support.model.condition;
 
-import com.kapp.kappcore.search.configuration.SearchConfiguration;
-import lombok.Data;
+import com.kapp.kappcore.search.configuration.BeanConfiguration;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -11,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public abstract class AbstractSearchCondition extends AbstractCondition {
-    protected SearchConfiguration.SearchField searchField;
+    protected BeanConfiguration.SearchField searchField;
 
     /**
      * 是否查询全部数据

@@ -2,17 +2,13 @@ package com.kapp.kappcore.task.job;
 
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
+import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
 import com.kapp.kappcore.service.domain.mapper.BookMapper;
 import com.kapp.kappcore.support.mq.MqProducer;
 import com.kapp.kappcore.support.mq.MqRouteMapping;
 import com.kapp.kappcore.support.mq.annotation.MqConsumer;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,18 +28,20 @@ public class BookWatcher {
     private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
-
+    private final UpdateServiceImpl updateServiceImplService;
     @Value("${batchSize:100}")
     public int batchSize;
 
 
-    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper) {
+    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper, UpdateServiceImpl updateServiceImplService) {
         this.restHighLevelClient = restHighLevelClient;
         this.mqProducer = mqProducer;
         this.bookMapper = bookMapper;
+        this.updateServiceImplService = updateServiceImplService;
+
     }
 
-    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK_RETRY}, concurrency = "1")
+    @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
     public void watchMessage(Book book) {
         if (book != null) {
             BOOK_QUEUE.add(book);
@@ -80,28 +78,7 @@ public class BookWatcher {
             map.put(DocKey.CONTENT_LENGTH, book.getContent().length());
             return map;
         }).collect(Collectors.toList());
-
-
-        BulkRequest bulkRequest = new BulkRequest();
-        for (Map<String, Object> itemMap : dataMap) {
-            IndexRequest indexRequest = new IndexRequest(TagIndex.BOOK.getIndex(), "_doc", itemMap.get(DocKey.ID).toString());
-            IndexRequest source = indexRequest.source(itemMap);
-            bulkRequest.add(source);
-        }
-        long start = System.currentTimeMillis();
-        restHighLevelClient.bulkAsync(bulkRequest, RequestOptions.DEFAULT, new ActionListener<>() {
-            @Override
-            public void onResponse(BulkResponse bulkItemResponses) {
-                log.info("es插入耗时：{}", System.currentTimeMillis() - start);
-                log.info("一批数据成功处理完毕，数量：" + dataMap.size());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                log.error("save es error:", e);
-                reSend(books);
-            }
-        });
+        updateServiceImplService.update_async(dataMap, TagIndex.BOOK.getIndex());
     }
 
     private void reSend(Set<Book> books) {

@@ -16,8 +16,7 @@ import java.util.Set;
  * 检索参数拦截器
  * 检查参数，并如有必要会进行自动补偿
  */
-@Component
-public class ParamInterceptor implements SearchInterceptor {
+public class KappParamInterceptor implements SearchInterceptor {
     @Override
     public int order() {
         return 0;

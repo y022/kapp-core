@@ -1,24 +1,22 @@
-package com.kapp.kappcore.search.service;
+package com.kapp.kappcore.search.endpoint;
 
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.common.SearchRequestDTO;
 import com.kapp.kappcore.search.common.SearchResult;
-import com.kapp.kappcore.search.core.SearchActor;
+import com.kapp.kappcore.search.core.search.SearchActor;
 import com.kapp.kappcore.search.support.factory.impl.ParamConstructor;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 /**
  * Author:Heping
  * Date: 2024/6/25 17:58
  */
 @Slf4j
-@Service
-public class SearchService {
+public class SearchServiceImpl {
     private final SearchActor searchActor;
 
-    public SearchService(SearchActor searchActor) {
+    public SearchServiceImpl(SearchActor searchActor) {
         this.searchActor = searchActor;
     }
 

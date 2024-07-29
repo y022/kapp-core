@@ -8,13 +8,8 @@
         <version>v1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-
     <artifactId>kapp-core-web</artifactId>
     <name>kapp-core-web</name>
-
-
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

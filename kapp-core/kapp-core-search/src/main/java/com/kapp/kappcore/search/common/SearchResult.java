@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class SearchResult<T extends Body> {
+    private boolean success;
     private long took;
     private long total;
     private int pageNum;
@@ -17,6 +18,10 @@ public class SearchResult<T extends Body> {
     private SearchParam param;
 
     public SearchResult() {
+    }
+
+    public SearchResult(boolean success) {
+        this.success = success;
     }
 
     public SearchResult(T data) {
@@ -28,5 +33,6 @@ public class SearchResult<T extends Body> {
     public SearchResult(SearchParam param, T data) {
         SearchResult<T> result = new SearchResult<>(data);
         result.setParam(param);
+        result.success = true;
     }
 }

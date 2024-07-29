@@ -2,7 +2,6 @@ package com.kapp.kappcore.search.core.search;
 
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.SearchException;
-import com.kapp.kappcore.search.core.SearchActor;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.support.Collector;
 import com.kapp.kappcore.search.support.model.param.SearchParam;

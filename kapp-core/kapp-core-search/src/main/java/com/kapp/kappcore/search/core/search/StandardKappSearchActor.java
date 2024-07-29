@@ -5,17 +5,13 @@ import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.support.Collector;
 import com.kapp.kappcore.search.support.factory.impl.SearchRequestFactory;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
-import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.stereotype.Service;
 
 /**
  * Author:Heping
  * Date: 2024/6/26 15:52
  */
-@Slf4j
-@Service
 public class StandardKappSearchActor extends AbstractKappSearchActor {
     private final SearchRequestFactory searchRequestFactory;
     public StandardKappSearchActor(RestHighLevelClient restHighLevelClient, SearchInterceptorRegistry searchInterceptorRegistry) {

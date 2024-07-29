@@ -17,4 +17,4 @@ else
     echo "Process $process_name is not running"
 fi
 ##
-nohup /home/app/jdk-11.0.19/bin/java -jar -Xms512m -Xmx512m /home/app/jar/kapp-core-v1.0.jar >> /home/logs/kapp_core_log.txt  2>1 &
+nohup /hom/app/jdk/bin/java -jar -Xms512m -Xmx512m /home/app/jar/kapp-core-v1.0.jar >> /home/logs/kapp_core_log.txt  2>1 &

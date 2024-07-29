@@ -1,4 +1,4 @@
-package com.kapp.kappcore.search.core;
+package com.kapp.kappcore.search.core.search;
 
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.support.Collector;

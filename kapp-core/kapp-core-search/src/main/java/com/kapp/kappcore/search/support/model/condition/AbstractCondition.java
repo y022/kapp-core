@@ -2,12 +2,9 @@ package com.kapp.kappcore.search.support.model.condition;
 
 import com.kapp.kappcore.model.constant.ExCode;
 import com.kapp.kappcore.model.exception.ValidateException;
-import com.kapp.kappcore.search.configuration.SearchConfiguration;
 import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Set;
