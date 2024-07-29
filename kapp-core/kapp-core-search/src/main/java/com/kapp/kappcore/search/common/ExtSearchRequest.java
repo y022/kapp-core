@@ -21,8 +21,11 @@ import java.util.Set;
  */
 @Data
 @NoArgsConstructor
-public class SearchRequestDTO {
-    private Set<String> tag;
+public class ExtSearchRequest {
+    /**
+     * index
+     */
+    private String tag;
     private int pageNum;
     private int pageSize;
     /**
@@ -30,14 +33,19 @@ public class SearchRequestDTO {
      */
     private String docOption;
     /**
+     * 是否检索所有
+     */
+    private boolean searchAll;
+    /**
      * @see SortRule
      */
     private String sortRule;
     /**
      * 排序键Map,key-排序键，value-排序方式
+     *
      * @see SortType
      */
-    private Map<String,String> sortMap;
+    private Map<String, String> sortMap;
     /**
      * @see ContHitStrategy
      */
@@ -68,7 +76,13 @@ public class SearchRequestDTO {
      * 响应是否返回分数
      */
     private boolean showScore;
-    private boolean searchAll;
 
-
+    /**
+     * delete Id
+     */
+    private Set<String> deleteIds;
+    /**
+     * @see com.kapp.kappcore.search.support.model.condition.UpdateCondition
+     */
+    private List<Map<String, Object>> updateValueMap;
 }

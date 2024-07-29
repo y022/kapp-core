@@ -1,10 +1,10 @@
 package com.kapp.kappcore.search.endpoint;
 
 import com.kapp.kappcore.model.exception.SearchException;
-import com.kapp.kappcore.search.common.SearchRequestDTO;
+import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
 import com.kapp.kappcore.search.core.search.SearchActor;
-import com.kapp.kappcore.search.support.factory.impl.ParamConstructor;
+import com.kapp.kappcore.search.support.factory.impl.ParamFactory;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,8 +20,8 @@ public class SearchServiceImpl {
         this.searchActor = searchActor;
     }
 
-    public SearchResult<?> search(SearchRequestDTO searchRequestDTO) throws SearchException {
-        SearchParam searchParam = ParamConstructor.instance().create(searchRequestDTO);
+    public SearchResult<?> search(ExtSearchRequest extSearchRequest) throws SearchException {
+        SearchParam searchParam = ParamFactory.instance().create(extSearchRequest);
         return searchActor.search(searchParam, response -> new SearchResult<>());
     }
 }

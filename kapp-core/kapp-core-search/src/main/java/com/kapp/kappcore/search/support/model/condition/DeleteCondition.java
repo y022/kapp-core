@@ -20,7 +20,7 @@ public class DeleteCondition extends AbstractCondition {
     public DeleteCondition() {
     }
 
-    public DeleteCondition(Set<String> index, DocOption option, Set<String> ids) {
+    public DeleteCondition(String index, DocOption option, Set<String> ids) {
         super(index, option);
         this.ids = ids;
     }

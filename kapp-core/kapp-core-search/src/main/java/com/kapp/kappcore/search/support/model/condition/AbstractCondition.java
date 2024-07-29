@@ -5,9 +5,7 @@ import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Author:Heping
@@ -16,17 +14,25 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 public abstract class AbstractCondition implements ValCondition {
-    protected Set<String> indexes;
+    protected String index;
     protected DocOption option;
 
-    public AbstractCondition(Set<String> indexes, DocOption option) {
-        this.indexes = indexes;
+    public AbstractCondition(String index, DocOption option) {
+        this.index = index;
         this.option = option;
     }
 
     @Override
-    public Set<String> index() {
-        return this.indexes;
+    public String index() {
+        return this.index;
+    }
+
+    @Override
+    public String index(String index) {
+        if (StringUtils.isNotBlank(index)) {
+            this.index = index;
+        }
+        return index();
     }
 
     @Override
@@ -37,11 +43,11 @@ public abstract class AbstractCondition implements ValCondition {
 
     @Override
     public void validate() throws ValidateException {
-        if (CollectionUtils.isEmpty(indexes)) {
-            throw new ValidateException(ExCode.search_condition_error, "indexes is empty!");
+        if (StringUtils.isBlank(index)) {
+            throw new ValidateException(ExCode.search_condition_error, "indexes is blank!");
         }
         if (option == null) {
-            throw new ValidateException(ExCode.search_condition_error, "doc option is null!");
+            throw new ValidateException(ExCode.search_condition_error, "doc option not exists!");
         }
     }
 

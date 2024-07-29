@@ -1,6 +1,6 @@
 package com.kapp.kappcore.search.configuration;
 
-import com.kapp.kappcore.search.core.interceptor.KappParamInterceptor;
+import com.kapp.kappcore.search.core.interceptor.KappSearchParamInterceptor;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptor;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.core.search.StandardKappSearchActor;
@@ -20,10 +20,10 @@ import java.util.List;
  */
 @Configuration
 @SuppressWarnings("all")
-public class BeanConfiguration {
+public class SearchConfiguration {
     @Bean
-    public KappParamInterceptor kappParamInterceptor(){
-        return  new KappParamInterceptor();
+    public KappSearchParamInterceptor kappParamInterceptor(){
+        return  new KappSearchParamInterceptor();
     }
 
     @Bean

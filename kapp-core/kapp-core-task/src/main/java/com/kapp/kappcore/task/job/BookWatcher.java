@@ -2,7 +2,9 @@ package com.kapp.kappcore.task.job;
 
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
+import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
+import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
 import com.kapp.kappcore.service.domain.mapper.BookMapper;
 import com.kapp.kappcore.support.mq.MqProducer;
@@ -78,8 +80,16 @@ public class BookWatcher {
             map.put(DocKey.CONTENT_LENGTH, book.getContent().length());
             return map;
         }).collect(Collectors.toList());
-        updateServiceImplService.update_async(dataMap, TagIndex.BOOK.getIndex());
+
+        ExtSearchRequest extSearchRequest = new ExtSearchRequest();
+        extSearchRequest.setDocOption(DocOption.UPDATE.getCode());
+        extSearchRequest.setUpdateValueMap(dataMap);
+        extSearchRequest.setTag(TagIndex.BOOK.getIndex());
+
+        updateServiceImplService.update(extSearchRequest,(book)->
+                mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, book));
     }
+
 
     private void reSend(Set<Book> books) {
         log.warn("reSend message...");

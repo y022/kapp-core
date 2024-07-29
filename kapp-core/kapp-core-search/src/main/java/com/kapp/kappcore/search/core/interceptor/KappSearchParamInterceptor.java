@@ -5,10 +5,7 @@ import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.stereotype.Component;
-
-import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Author:Heping
@@ -16,7 +13,7 @@ import java.util.Set;
  * 检索参数拦截器
  * 检查参数，并如有必要会进行自动补偿
  */
-public class KappParamInterceptor implements SearchInterceptor {
+public class KappSearchParamInterceptor implements SearchInterceptor {
     @Override
     public int order() {
         return 0;
@@ -32,8 +29,8 @@ public class KappParamInterceptor implements SearchInterceptor {
             return;
         }
 
-        Set<String> indexes = searchParam.getIndexes();
-        if (CollectionUtils.isEmpty(indexes)) {
+        String index = searchParam.getIndex();
+        if (StringUtils.isBlank(index)) {
             throw new SearchException(ExCode.search_condition_error, "index is empty!");
         }
         ValCondition condition = searchParam.getCondition();

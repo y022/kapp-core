@@ -6,7 +6,7 @@ import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.option.DocOption;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.QueryBuilder;
 
 import java.util.List;
@@ -26,36 +26,30 @@ public class UpdateCondition extends AbstractCondition {
      */
     private final boolean bulkUpdate = true;
     /**
-     * doc updates only allow single index
-     */
-    private String actualIndex;
-    /**
-     * delete Id
+     * delete Ids
      */
     private Set<String> delIds;
     /**
      * delete by query-sentence
      */
     private QueryBuilder queryBuilder;
-
     /**
      * update content
      */
     private List<Map<String, Object>> updateMap;
 
-    public UpdateCondition(Set<String> index, DocOption option, List<Map<String, Object>> updateMap) {
+
+    public UpdateCondition(String index, DocOption option, List<Map<String, Object>> updateMap) {
         super(index, option);
-        this.updateMap = updateMap;
-        if (CollectionUtils.isNotEmpty(index)) {
-            if (index.size() > 1) {
-                throw new SearchException(ExCode.search_condition_error, "update is not support multiple index");
-            }
-            actualIndex = index().stream().findAny().get();
+        if (StringUtils.isBlank(index)) {
+            throw new SearchException(ExCode.search_condition_error, "update is not support multiple index");
         }
+        this.updateMap = updateMap;
+
     }
 
-    public UpdateCondition() {
-
+    public UpdateCondition(DocOption docOption) {
+        this.option = docOption;
     }
 
     @Override

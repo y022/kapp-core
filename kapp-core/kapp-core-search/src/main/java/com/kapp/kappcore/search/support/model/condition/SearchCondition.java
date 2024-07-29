@@ -46,20 +46,6 @@ public class SearchCondition extends AbstractSearchCondition {
     public SearchCondition() {
     }
 
-    public static SearchCondition search(Map<String, Object> searchValueMap) {
-        SearchCondition condition = new SearchCondition();
-        condition.setSearchValueMap(searchValueMap);
-        condition.setOption(DocOption.SEARCH);
-        return condition;
-    }
-
-    public static SearchCondition search(List<SearchParamUnit> searchParamUnits) {
-        SearchCondition condition = new SearchCondition();
-        condition.setSearchParamUnits(searchParamUnits);
-        condition.setOption(DocOption.SEARCH);
-        return condition;
-    }
-
 
     /**
      * 如果外部传入了option,那么就直接使用，否则自行推测

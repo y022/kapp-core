@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption, SearchParam, SearchRequest> {
     private static final SearchRequestFactory INSTANCE = new SearchRequestFactory();
+
     public static SearchRequestFactory getInstance() {
         return INSTANCE;
     }

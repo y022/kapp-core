@@ -3,28 +3,31 @@ package com.kapp.kappcore.search.support.model.param;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import lombok.Data;
-import org.apache.commons.collections4.CollectionUtils;
-
-import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Author:Heping
  * Date: 2024/6/23 16:30
  */
 @Data
-public class SearchParam {
+public class SearchParam implements SearchMetrics {
     /**
      * 检索Id，每次都会生成新的，用于标识唯一
      */
     private String searchId;
     /**
-     * 检索时间
+     * 检索开始时间
      */
-    private String searchTime;
+    private String startTime;
+    /**
+     * 检索结束时间
+     */
+    private String endTime;
+
     /**
      * 索引
      */
-    private Set<String> indexes;
+    private String index;
     /**
      * 检索限制，可为空，如果为空则表示不进行限制。
      */
@@ -46,9 +49,25 @@ public class SearchParam {
 
     }
 
-    public Set<String> getSearchIndex() {
-        return CollectionUtils.isEmpty(indexes) ? condition.index() : indexes;
+    public String getSearchIndex() {
+        return StringUtils.isBlank(index) ? condition.index() : index;
     }
 
+    @Override
+    public void searchId(String searchId) {
+        this.searchId = searchId;
+    }
 
+    @Override
+    public void startTime(String timestamp) {
+        if (StringUtils.isBlank(startTime)) {
+            this.startTime = timestamp;
+        }
+    }
+
+    @Override
+    public void endTime(String timestamp) {
+        this.endTime = timestamp;
+
+    }
 }
