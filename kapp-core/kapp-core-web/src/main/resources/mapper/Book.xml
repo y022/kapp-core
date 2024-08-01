@@ -15,4 +15,19 @@
         on conflict (id) do update set version = 'V2.0'
     </select>
 
+    <select id="insertInfo" parameterType="java.util.Set">
+        insert into tb_book_info (id,book_md5,create_time,update_time)
+        values
+        <foreach collection="bookInfos" item="item" separator=",">
+            (#{item.id},#{item.bookMd5},#{item.createTime},#{item.updateTime})
+        </foreach>
+        on conflict (id) do update set book_md5 = 'conflict'
+    </select>
+
+    <select id="select" resultType="com.kapp.kappcore.model.entity.book.Book">
+        select *
+        from tb_book where id > #{idCursor}
+        order by id
+        limit #{pageSize}
+    </select>
 </mapper>

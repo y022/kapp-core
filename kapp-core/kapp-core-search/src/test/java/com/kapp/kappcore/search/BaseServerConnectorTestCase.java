@@ -10,24 +10,34 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class BaseServerConnectorTestCase {
-    private static final String HOST = "47.108.75.6";
+
     protected static RestHighLevelClient restHighLevelClient;
+    private static final Properties PROPERTIES = new Properties();
+    private final static String PROPERTIES_FILE_NAME = "application.properties";
 
     public static void initConnector() {
+        try (InputStream is = BaseServerConnectorTestCase.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
+            if (is == null) {
+                throw new IllegalArgumentException("Configuration file not found: " + PROPERTIES_FILE_NAME);
+            }
+            PROPERTIES.load(is);
+        } catch (Exception e) {
+            throw new RuntimeException("Error loading configuration file: " + PROPERTIES_FILE_NAME, e);
+        }
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
                 AuthScope.ANY,
                 new UsernamePasswordCredentials(
-                        "elastic",
-                        "y1039390833"
+                        PROPERTIES.getProperty("spring.elasticsearch.rest.username"),
+                        "spring.elasticsearch.rest.password"
                 )
         );
-
-        RestClientBuilder rcb = RestClient.builder(new HttpHost(HOST, 9200, "http"))
+        RestClientBuilder rcb = RestClient.builder(new HttpHost(PROPERTIES.getProperty("spring.elasticsearch.rest.host"), 9200, "http"))
                 .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
-
         restHighLevelClient = new RestHighLevelClient(rcb);
     }
 
