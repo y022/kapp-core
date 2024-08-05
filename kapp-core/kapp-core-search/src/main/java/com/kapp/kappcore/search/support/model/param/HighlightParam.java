@@ -8,11 +8,23 @@ import lombok.Data;
  */
 @Data
 public class HighlightParam {
-    private boolean highlight;
+    private final boolean highlight;
     private String preTag;
     private String postTag;
 
-    public static HighlightParam instance() {
-        return new HighlightParam();
+    public HighlightParam(final boolean highlight) {
+        this.highlight = highlight;
     }
+
+    public HighlightParam(boolean highlight, String preTag, String postTag) {
+        this.highlight = highlight;
+        this.preTag = preTag;
+        this.postTag = postTag;
+    }
+
+
+    public static HighlightParam noneHighlight() {
+        return new HighlightParam(false);
+    }
+
 }

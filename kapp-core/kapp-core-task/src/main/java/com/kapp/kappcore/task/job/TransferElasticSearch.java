@@ -34,7 +34,7 @@ public class TransferElasticSearch {
         this.objectMapper = objectMapper;
     }
 
-    public void transfer(List<LineMsItem> items) throws IOException {
+    public void transfer(List<LineMsItem> items) {
         Map<String, LineMsDTO> data = items.stream().map(item -> {
             LineMsDTO lineMsDTO = new LineMsDTO();
             lineMsDTO.setTag(item.getTag());
@@ -43,21 +43,15 @@ public class TransferElasticSearch {
             if (originContent.length() >= 4) {
                 originContent = originContent.substring(3);
             }
+
             String content = originContent.replace(" ", "");
-
             lineMsDTO.setTitle(content.length() > 4 ? content.substring(0, 3) : content);
-
             lineMsDTO.setOwner(OWNER_NAME);
-
             lineMsDTO.setDate(item.getDate());
-
             lineMsDTO.setDocId(item.getId());
-
             lineMsDTO.setBody(Arrays.stream(content.split("。")).toArray(String[]::new));
-
             lineMsDTO.setBodyLength(originContent.length());
             lineMsDTO.setVersion(item.getVersion());
-
             return lineMsDTO;
         }).collect(Collectors.toMap(LineMsDTO::getDocId, Function.identity()));
 
@@ -76,12 +70,12 @@ public class TransferElasticSearch {
         restHighLevelClient.bulkAsync(bulkRequest, RequestOptions.DEFAULT, new ActionListener<>() {
             @Override
             public void onResponse(BulkResponse bulkItemResponses) {
-                log.info("一批数据成功处理完毕，数量：" + data.size());
+                log.info("一批数据成功处理完毕，数量：{}", data.size());
             }
 
             @Override
             public void onFailure(Exception e) {
-                log.error("error occur," + e);
+                log.error("error occur:", e);
             }
         });
     }

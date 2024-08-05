@@ -10,9 +10,9 @@ import com.kapp.kappcore.search.support.option.DocOption;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.bulk.BulkResponse;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -21,13 +21,13 @@ import java.util.function.Consumer;
  * Date: 2024/7/26 17:05
  */
 public interface KappDockUpdate {
-    SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName);
+    SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName) throws IOException;
 
-    SearchResult<UpdateBody> update(Map<String, Object> data, String indexName, Consumer<Object> consumer);
+    SearchResult<UpdateBody> update(Map<String, Object> data, String indexName, Consumer<Object> consumer) throws IOException;
 
-    SearchResult<UpdateBody> update_bulk(List<Map<String, Object>> data, String indexName);
+    SearchResult<UpdateBody> update_bulk(List<Map<String, Object>> data, String indexName) throws IOException;
 
-    void update_async(Map<String, Object> data, String indexName);
+    void update_async(Map<String, Object> data, String indexName) throws IOException;
 
     void update_async(List<Map<String, Object>> data, String indexName, Consumer<Object> consumer);
 
@@ -35,9 +35,11 @@ public interface KappDockUpdate {
 
     default SearchResult<UpdateBody> collectUpdate(BulkResponse response) {
         SearchResult<UpdateBody> searchResult = new SearchResult<>();
-        UpdateBody updateBody = new UpdateBody();
-        response.iterator().forEachRemaining(item -> updateBody.wire(item.getId(), !item.isFailed()));
-        searchResult.setSuccess(CollectionUtils.isEmpty(updateBody.getFailureIds()));
+        UpdateBody ub = new UpdateBody();
+        ub.setTook(response.getTook().getMillis());
+        ub.setTotal(response.getItems().length);
+        response.iterator().forEachRemaining(item -> ub.wire(item.getId(), !item.isFailed()));
+        searchResult.setSuccess(CollectionUtils.isEmpty(ub.getFailureIds()));
         return searchResult;
     }
 

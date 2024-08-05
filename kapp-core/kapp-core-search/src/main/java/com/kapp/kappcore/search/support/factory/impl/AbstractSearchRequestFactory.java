@@ -187,6 +187,10 @@ public abstract class AbstractSearchRequestFactory<S, T extends SearchMetrics, R
             return QueryBuilders.matchQuery(key, value);
         }
 
+        protected static MatchPhraseQueryBuilder phrase(String key, Object value) {
+            return QueryBuilders.matchPhraseQuery(key, value);
+        }
+
         protected static MatchQueryBuilder match(String key, Object value, String analyzer) {
             return QueryBuilders.matchQuery(key, value).analyzer(analyzer);
         }

@@ -34,7 +34,7 @@ public class ParamFactory extends AbstractParamFactory {
     public SearchParam create(ExtSearchRequest extSearchRequest) {
         requiredNonNull(extSearchRequest);
         SearchParam searchParam = create();
-        searchParam.setIndex((extSearchRequest.getTag()));
+        searchParam.setIndex((extSearchRequest.getIndex()));
         ValCondition valCondition = initCondition(extSearchRequest);
         searchParam.setCondition(valCondition);
         searchParam.setSearchLimiter(createLimiter(extSearchRequest));

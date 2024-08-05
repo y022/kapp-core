@@ -1,6 +1,7 @@
 package com.kapp.kappcore.search.support.model.response;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.Set;
  */
 @Data
 public class UpdateBody extends AbstractBody {
-
     private Set<String> successIds;
     private Set<String> failureIds;
 

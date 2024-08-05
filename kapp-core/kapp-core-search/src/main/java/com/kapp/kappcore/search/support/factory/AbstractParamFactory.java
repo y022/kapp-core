@@ -35,7 +35,7 @@ public abstract class AbstractParamFactory {
         UpdateCondition uc = new UpdateCondition(docOption);
         uc.setUpdateMap(extSearchRequest.getUpdateValueMap());
         uc.setDelIds(extSearchRequest.getDeleteIds());
-        uc.setIndex(extSearchRequest.getTag());
+        uc.setIndex(extSearchRequest.getIndex());
         return uc;
 
     }

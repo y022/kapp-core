@@ -141,7 +141,6 @@ public class MergePractice {
 
         // 将排序后的小块合并成最终的输出文件
         private static void mergeSortedChunks(List<String> chunkFileNames, String outputFile) {
-
             System.out.println("开始合并排序");
             System.out.println("current:" + new Date().toString());
             PriorityQueue<ChunkReader> chunkReaderQueue = new PriorityQueue<>((o1, o2) -> {

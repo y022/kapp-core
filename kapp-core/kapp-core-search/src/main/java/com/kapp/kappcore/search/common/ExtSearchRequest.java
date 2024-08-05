@@ -25,7 +25,7 @@ public class ExtSearchRequest {
     /**
      * index
      */
-    private String tag;
+    private String index;
     private int pageNum;
     private int pageSize;
     /**

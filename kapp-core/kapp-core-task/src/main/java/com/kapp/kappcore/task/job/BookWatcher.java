@@ -3,6 +3,7 @@ package com.kapp.kappcore.task.job;
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
 import com.kapp.kappcore.search.common.ExtSearchRequest;
+import com.kapp.kappcore.search.endpoint.KappDockUpdate;
 import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
 import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
@@ -11,7 +12,6 @@ import com.kapp.kappcore.support.mq.MqProducer;
 import com.kapp.kappcore.support.mq.MqRouteMapping;
 import com.kapp.kappcore.support.mq.annotation.MqConsumer;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -27,20 +27,17 @@ import java.util.stream.Collectors;
 @Component
 public class BookWatcher {
     private static final Queue<Book> BOOK_QUEUE = new ArrayBlockingQueue<>(10000000);
-    private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
-    private final UpdateServiceImpl updateServiceImplService;
+    private final KappDockUpdate kappDockUpdate;
     @Value("${batchSize:100}")
     public int batchSize;
 
 
-    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper, UpdateServiceImpl updateServiceImplService) {
-        this.restHighLevelClient = restHighLevelClient;
+    public BookWatcher(MqProducer mqProducer, BookMapper bookMapper, KappDockUpdate kappDockUpdate) {
         this.mqProducer = mqProducer;
         this.bookMapper = bookMapper;
-        this.updateServiceImplService = updateServiceImplService;
-
+        this.kappDockUpdate = kappDockUpdate;
     }
 
     @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
@@ -84,10 +81,9 @@ public class BookWatcher {
         ExtSearchRequest extSearchRequest = new ExtSearchRequest();
         extSearchRequest.setDocOption(DocOption.UPDATE.getCode());
         extSearchRequest.setUpdateValueMap(dataMap);
-        extSearchRequest.setTag(TagIndex.BOOK.getIndex());
+        extSearchRequest.setIndex(TagIndex.BOOK.getIndex());
 
-        updateServiceImplService.update(extSearchRequest,(book)->
-                mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, book));
+        kappDockUpdate.update(extSearchRequest, (book) -> mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, book));
     }
 
 

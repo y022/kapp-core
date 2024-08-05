@@ -10,9 +10,10 @@ import lombok.Getter;
 public enum ContHitStrategy {
     ACCURATE("00", "精确查询"),
     PARTICIPLE("01", "分词查询"),
+    PHRASE("05", "短语匹配"),
     WILDCARD("02", "通配符"),
     FUZZY("03", "模糊"),
-    RANGE("03", "区间"),
+    RANGE("04", "区间"),
 
     ;
     private final String code;

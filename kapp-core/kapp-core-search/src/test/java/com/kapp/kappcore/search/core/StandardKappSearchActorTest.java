@@ -48,7 +48,7 @@ class StandardKappSearchActorTest extends BaseServerConnectorTestCase {
     void search() {
         ExtSearchRequest extSearchRequest = new ExtSearchRequest();
         extSearchRequest.setSearchAll(false);
-        extSearchRequest.setTag("book");
+        extSearchRequest.setIndex("book");
         extSearchRequest.setViewType(ViewType.TIP.getCode());
         extSearchRequest.setDocOption(DocOption.GROUP.getCode());
         extSearchRequest.setContHitStrategy(ContHitStrategy.ACCURATE.getCode());
@@ -66,7 +66,7 @@ class StandardKappSearchActorTest extends BaseServerConnectorTestCase {
     void search_metric() {
         ExtSearchRequest extSearchRequest = new ExtSearchRequest();
         extSearchRequest.setSearchAll(false);
-        extSearchRequest.setTag("book");
+        extSearchRequest.setIndex("book");
         extSearchRequest.setViewType(ViewType.NONE.getCode());
         extSearchRequest.setDocOption(DocOption.GROUP.getCode());
         extSearchRequest.setContHitStrategy(ContHitStrategy.ACCURATE.getCode());

@@ -1,7 +1,5 @@
 package com.kapp.kappcore.search.endpoint;
 
-import com.kapp.kappcore.model.constant.ExCode;
-import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
 import com.kapp.kappcore.search.support.factory.impl.ParamFactory;
@@ -17,6 +15,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -36,61 +35,46 @@ public class UpdateServiceImpl implements KappDockUpdate {
     }
 
     @Override
-    public SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName) {
+    public SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName) throws IOException {
         SearchParam searchParam = ParamFactory.instance().create(extSearchRequest);
-        doUpdate(searchParam);
-        SearchResult<UpdateBody> result = new SearchResult<>();
-        result.setData(new UpdateBody() {{
-            setSuccessIds(extSearchRequest.getDeleteIds());
-        }});
-
-        return result;
+        return doUpdate(searchParam);
     }
 
     @Override
-    public SearchResult<UpdateBody> update(Map<String, Object> data, String indexName, Consumer<Object> consumer) {
+    public SearchResult<UpdateBody> update(Map<String, Object> data, String indexName, Consumer<Object> consumer) throws IOException {
         return update_bulk(List.of(data), indexName);
     }
 
     @Override
-    public SearchResult<UpdateBody> update_bulk(List<Map<String, Object>> data, String indexName) {
+    public SearchResult<UpdateBody> update_bulk(List<Map<String, Object>> data, String indexName) throws IOException {
         SearchParam searchParam = toParam(data, indexName);
-        ActionRequest request = updateRequestFactory.create(searchParam);
-        SearchResult<UpdateBody> searchResult;
-        try {
-            searchResult = collectUpdate(restHighLevelClient.bulk((BulkRequest) request, RequestOptions.DEFAULT));
-        } catch (Exception e) {
-            LOG.error("update error", e);
-            return new SearchResult<>(false);
-        }
-        return searchResult;
+        return doUpdate(searchParam);
     }
 
     @Override
-    public void update_async(Map<String, Object> data, String indexName) {
+    public void update_async(Map<String, Object> data, String indexName) throws IOException {
         update_bulk(List.of(data), indexName);
     }
 
     @Override
     public void update_async(List<Map<String, Object>> data, String indexName, Consumer<Object> consumer) {
         SearchParam searchParam = toParam(data, indexName);
-        doUpdate_Async(searchParam, consumer);
+        doUpdate_async(searchParam, consumer);
     }
 
     @Override
     public void update(ExtSearchRequest extSearchRequest, Consumer<Object> consumer) {
         SearchParam searchParam = ParamFactory.instance().create(extSearchRequest);
-        doUpdate_Async(searchParam, consumer);
+        doUpdate_async(searchParam, consumer);
     }
 
-    private void doUpdate_Async(SearchParam searchParam, Consumer<Object> callback) {
+    private void doUpdate_async(SearchParam searchParam, Consumer<Object> callback) {
         ActionRequest request = updateRequestFactory.create(searchParam);
         restHighLevelClient.bulkAsync((BulkRequest) request, RequestOptions.DEFAULT, new ActionListener<>() {
             @Override
             public void onResponse(BulkResponse bulkItemResponses) {
-                LOG.info("update success!");
+                callback.accept(bulkItemResponses);
             }
-
             @Override
             public void onFailure(Exception e) {
                 LOG.error("update error:", e);
@@ -98,15 +82,14 @@ public class UpdateServiceImpl implements KappDockUpdate {
         });
     }
 
-    private void doUpdate(SearchParam searchParam) {
+    private SearchResult<UpdateBody> doUpdate(SearchParam searchParam) throws IOException {
         ActionRequest request = updateRequestFactory.create(searchParam);
         try {
             BulkResponse response = restHighLevelClient.bulk((BulkRequest) request, RequestOptions.DEFAULT);
-            if (response.hasFailures()) {
-                throw new SearchException(ExCode.search_server_error, "update error!");
-            }
-        } catch (Exception e) {
-
+            return collectUpdate(response);
+        } catch (IOException e) {
+            LOG.error("update error", e);
+            throw e;
         }
     }
 }

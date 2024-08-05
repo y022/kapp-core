@@ -4,7 +4,9 @@ import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Author:Heping
@@ -15,7 +17,7 @@ public class SearchInterceptorRegistry {
 
     public SearchInterceptorRegistry(List<SearchInterceptor> interceptors) {
         if (interceptors != null && !interceptors.isEmpty()) {
-            this.interceptors = interceptors;
+            this.interceptors = interceptors.stream().sorted(Comparator.comparingInt(SearchInterceptor::order)).collect(Collectors.toList());
         } else {
             this.interceptors = new ArrayList<>(0);
         }

@@ -35,13 +35,15 @@ public class SearchCondition extends AbstractSearchCondition {
     private HighlightParam highlightParam;
     /**
      * 直接的key-value嵌套查询。
+     * 使用{@link MultiQueryRule#MUST}组合多个查询条件
+     * 条件查询方式为{@link com.kapp.kappcore.search.support.option.ContHitStrategy#PARTICIPLE}
+     * @see SearchCondition#toParamUnit()
      */
     private Map<String, Object> searchValueMap;
     /**
      * 多条件
      */
     private List<SearchParamUnit> searchParamUnits;
-
 
     public SearchCondition() {
     }
@@ -69,7 +71,7 @@ public class SearchCondition extends AbstractSearchCondition {
         if (!searchAll) {
             if (hasMultiCondition()) {
                 if (CollectionUtils.isEmpty(searchParamUnits)) {
-                    throw new SearchException(ExCode.search_condition_error, "missing search param!");
+                    throw new SearchException(ExCode.search_condition_error, "missing multi search param!");
                 }
             } else if (MapUtils.isEmpty(searchValueMap)) {
                 throw new SearchException(ExCode.search_condition_error, "missing search param!");
@@ -83,7 +85,7 @@ public class SearchCondition extends AbstractSearchCondition {
                 }
             }
         } else {
-            highlightParam = HighlightParam.instance();
+            highlightParam = HighlightParam.noneHighlight();
         }
 
     }
@@ -106,7 +108,7 @@ public class SearchCondition extends AbstractSearchCondition {
             SearchParamUnit searchParamUnit = new SearchParamUnit();
             searchParamUnit.setKey(entry.getKey());
             searchParamUnit.setValue(entry.getValue());
-            searchParamUnit.setHitParam(HitParam.accurate());
+            searchParamUnit.setHitParam(HitParam.participle());
             searchParamUnit.setMultiQueryRule(MultiQueryRule.MUST);
             return searchParamUnit;
         }).collect(Collectors.toList());
