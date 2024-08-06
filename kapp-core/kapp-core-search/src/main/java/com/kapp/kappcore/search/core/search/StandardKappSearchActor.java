@@ -23,8 +23,7 @@ public class StandardKappSearchActor extends AbstractKappSearchActor {
     public <R> R search(SearchParam searchParam, Collector<R> resultCollector) throws SearchException {
         super.intercept(searchParam);
         SearchRequest searchRequest = searchRequestFactory.create(searchParam);
-        return normalSearch(searchRequest, resultCollector);
+        return doSearch(searchRequest, resultCollector);
     }
-
 
 }

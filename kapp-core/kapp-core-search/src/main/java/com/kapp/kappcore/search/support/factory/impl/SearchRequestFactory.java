@@ -57,8 +57,7 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
             default:
 
         }
-        request.source(sourceBuilder);
-        return request;
+        return request.source(sourceBuilder);
     }
 
     /**

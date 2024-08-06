@@ -1,5 +1,6 @@
 package com.kapp.kappcore.search.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import com.kapp.kappcore.search.support.model.response.Body;
 import lombok.Data;
@@ -9,11 +10,14 @@ import lombok.Data;
  * Date: 2024/6/21 21:41
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SearchResult<T extends Body> {
     private boolean success;
     private long took;
     private long total;
     private int pageNum;
+    private int pageSize;
+    private String scrollId;
     private T data;
     private SearchParam param;
 
@@ -34,5 +38,10 @@ public class SearchResult<T extends Body> {
         SearchResult<T> result = new SearchResult<>(data);
         result.setParam(param);
         result.success = true;
+    }
+
+    public void pageParam(int pageNum, int pageSize) {
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
     }
 }

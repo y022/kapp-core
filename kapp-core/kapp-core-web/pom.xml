@@ -32,6 +32,11 @@
             <groupId>com.kapp.kappcore.support</groupId>
             <artifactId>kapp-core-support</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.kapp.search</groupId>
+            <artifactId>kapp-core-search</artifactId>
+            <version>v1.0</version>
+        </dependency>
     </dependencies>
 
 <!--    <build>-->

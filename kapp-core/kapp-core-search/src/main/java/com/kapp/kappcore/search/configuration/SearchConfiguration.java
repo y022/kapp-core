@@ -4,7 +4,7 @@ import com.kapp.kappcore.search.core.interceptor.KappSearchParamInterceptor;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptor;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.core.search.StandardKappSearchActor;
-import com.kapp.kappcore.search.endpoint.SearchServiceImpl;
+import com.kapp.kappcore.search.endpoint.SearcherServiceImpl;
 import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
 import lombok.Data;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -38,8 +38,8 @@ public class SearchConfiguration {
     }
 
     @Bean
-    public SearchServiceImpl searchService(StandardKappSearchActor standardKappSearchActor) {
-        return new SearchServiceImpl(standardKappSearchActor);
+    public SearcherServiceImpl searchService(StandardKappSearchActor standardKappSearchActor) {
+        return new SearcherServiceImpl(standardKappSearchActor);
     }
 
     @Bean

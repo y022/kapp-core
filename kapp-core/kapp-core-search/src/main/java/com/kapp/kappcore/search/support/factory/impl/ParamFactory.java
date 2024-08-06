@@ -44,6 +44,7 @@ public class ParamFactory extends AbstractParamFactory {
 
     private ValCondition initCondition(ExtSearchRequest extSearchRequest) {
         DocOption docOption = DocOption.codeOf(extSearchRequest.getDocOption());
+
         ValCondition valCondition = null;
         switch (Objects.requireNonNull(docOption)) {
             case SEARCH:
@@ -57,7 +58,7 @@ public class ParamFactory extends AbstractParamFactory {
                 valCondition = update(extSearchRequest, docOption);
                 break;
         }
-
+        valCondition.index(extSearchRequest.getIndex());
         return valCondition;
 
     }

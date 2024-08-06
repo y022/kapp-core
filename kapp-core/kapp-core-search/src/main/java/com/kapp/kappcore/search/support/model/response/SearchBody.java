@@ -11,7 +11,6 @@ import java.util.List;
  */
 @Data
 public class SearchBody extends AbstractBody {
-
     private List<?> data;
 
     @Override

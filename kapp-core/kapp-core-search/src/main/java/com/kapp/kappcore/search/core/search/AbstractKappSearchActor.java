@@ -38,8 +38,8 @@ public abstract class AbstractKappSearchActor implements SearchActor {
      * @param resultCollector result handle
      * @return result
      */
-    protected <R> R normalSearch(SearchRequest searchRequest,
-                                 Collector<R> resultCollector) {
+    protected <R> R doSearch(SearchRequest searchRequest,
+                             Collector<R> resultCollector) {
         try {
             SearchResponse response = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
             return resultCollector.collect(response);

@@ -22,12 +22,15 @@ public abstract class AbstractParamFactory {
         sc.setSearchAll(extSearchRequest.isSearchAll());
         sc.setSearchValueMap(extSearchRequest.getSearchValueMap());
         sc.setSearchParamUnits(extSearchRequest.getSearchParamUnits());
+        sc.setOption(DocOption.SEARCH);
         return sc;
     }
 
     protected ValCondition group(ExtSearchRequest extSearchRequest) {
         GroupCondition gc = new GroupCondition();
         gc.setGroupParamUnits(extSearchRequest.getGroupParamUnits());
+        gc.setOption(DocOption.GROUP);
+
         return gc;
     }
 
@@ -36,6 +39,8 @@ public abstract class AbstractParamFactory {
         uc.setUpdateMap(extSearchRequest.getUpdateValueMap());
         uc.setDelIds(extSearchRequest.getDeleteIds());
         uc.setIndex(extSearchRequest.getIndex());
+        uc.setOption(DocOption.UPDATE);
+
         return uc;
 
     }
