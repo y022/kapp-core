@@ -3,6 +3,8 @@ package com.kapp.kappcore.search.support.factory.impl;
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.support.factory.AbstractParamFactory;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
+import com.kapp.kappcore.search.support.model.condition.AbstractSearchCondition;
+import com.kapp.kappcore.search.support.model.condition.SearchCondition;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import com.kapp.kappcore.search.support.model.param.SortParam;
@@ -35,9 +37,17 @@ public class ParamFactory extends AbstractParamFactory {
         requiredNonNull(extSearchRequest);
         SearchParam searchParam = create();
         searchParam.setIndex((extSearchRequest.getIndex()));
-        ValCondition valCondition = initCondition(extSearchRequest);
-        searchParam.setCondition(valCondition);
-        searchParam.setSearchLimiter(createLimiter(extSearchRequest));
+        searchParam.setEnableScroll(extSearchRequest.isEnableScroll());
+        searchParam.setScrollId(extSearchRequest.getScrollId());
+
+        if (searchParam.continueScroll()) {
+            searchParam.setCondition(AbstractSearchCondition.scroll(searchParam.getIndex()));
+            return searchParam;
+        } else {
+            ValCondition valCondition = initCondition(extSearchRequest);
+            searchParam.setCondition(valCondition);
+            searchParam.setSearchLimiter(createLimiter(extSearchRequest));
+        }
         searchParam.baseMetrics();
         return searchParam;
     }

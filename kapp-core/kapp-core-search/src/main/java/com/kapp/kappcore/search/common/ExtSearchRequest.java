@@ -28,7 +28,8 @@ public class ExtSearchRequest {
     private String index;
     private int pageNum;
     private int pageSize;
-    private boolean scroll;
+    private boolean enableScroll;
+    private String scrollId;
     /**
      * @see DocOption
      */

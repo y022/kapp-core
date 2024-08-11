@@ -82,7 +82,7 @@ public class ConfigurationSupport {
         @Bean
         public ThreadPoolTaskScheduler taskScheduler(CustomizePoolProperties properties) {
             ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-            scheduler.setPoolSize(properties.getCoreSize());
+            scheduler.setPoolSize(properties.getCoreSize() < 1 ? (Runtime.getRuntime().availableProcessors() * 2) + 1 : properties.getCoreSize());
             scheduler.setThreadNamePrefix(properties.getThreadNamePrefix());
             scheduler.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
             scheduler.setWaitForTasksToCompleteOnShutdown(true);

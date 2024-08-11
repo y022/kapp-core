@@ -10,5 +10,4 @@ import com.kapp.kappcore.search.common.SearchResult;
  */
 public interface KappDocSearcher {
     SearchResult<?> search(ExtSearchRequest extSearchRequest) throws SearchException;
-    SearchResult<?> scroll(ExtSearchRequest extSearchRequest) throws SearchException;
 }

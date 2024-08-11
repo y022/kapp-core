@@ -23,7 +23,14 @@ public class SearchParam implements SearchMetrics {
      * 检索结束时间
      */
     private String endTime;
-
+    /**
+     *
+     */
+    private boolean enableScroll;
+    /**
+     * scrollId，为空则表示当前不处于scroll模式
+     */
+    private String scrollId;
     /**
      * 索引
      */
@@ -69,5 +76,9 @@ public class SearchParam implements SearchMetrics {
     public void endTime(String timestamp) {
         this.endTime = timestamp;
 
+    }
+
+    public boolean continueScroll() {
+        return enableScroll && StringUtils.isNotBlank(scrollId);
     }
 }

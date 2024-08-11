@@ -36,10 +36,9 @@ public class SearcherServiceImpl implements KappDocSearcher {
         return searchResult;
     }
 
-    @Override
-    public SearchResult<?> scroll(ExtSearchRequest extSearchRequest) throws SearchException {
-        return null;
-    }
+
+
+
 
     Collector<SearchResult<SearchBody>> defaultCollector() {
         return (searchResponse) -> {
@@ -50,8 +49,9 @@ public class SearcherServiceImpl implements KappDocSearcher {
                 SearchBody searchBody = new SearchBody();
                 searchBody.setTook(searchResponse.getTook().getMillis());
                 SearchHits hits = searchResponse.getHits();
-                searchBody.setTotal(hits.getTotalHits().value);
-
+                if (hits.getTotalHits() != null) {
+                    searchBody.setTotal(hits.getTotalHits().value);
+                }
                 List<Map<String, Object>> data = Arrays.stream(hits.getHits()).map(SearchHit::getSourceAsMap).collect(Collectors.toList());
                 searchBody.setData(data);
                 searchResult.setTook(searchBody.getTook());

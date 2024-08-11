@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
@@ -46,6 +47,10 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
 
     private SearchRequest create(SearchParam param, DocOption option) {
         SearchRequest request = init(param.getSearchIndex());
+        if (param.continueScroll()) {
+            request.scroll(TimeValue.MINUS_ONE);
+            return request;
+        }
         SearchSourceBuilder sourceBuilder = null;
         switch (option) {
             case GROUP:
@@ -55,7 +60,9 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
                 sourceBuilder = search(param);
                 break;
             default:
-
+        }
+        if (param.isEnableScroll()) {
+            request.scroll(TimeValue.MINUS_ONE);
         }
         return request.source(sourceBuilder);
     }
