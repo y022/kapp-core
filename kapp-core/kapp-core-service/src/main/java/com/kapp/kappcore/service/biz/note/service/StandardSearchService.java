@@ -15,4 +15,5 @@ public interface StandardSearchService {
     ComplexSearchResultDTO normalSearch(SearchRequestDTO searchDTO);
 
     GroupSearchResultDTO groupSearch(GroupSearchDTO searchDTO);
+
 }

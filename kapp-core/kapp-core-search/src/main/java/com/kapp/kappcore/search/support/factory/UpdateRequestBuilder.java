@@ -62,9 +62,9 @@ public class UpdateRequestBuilder {
     }
 
     private UpdateRequest warpUpdate(String indexName, String indexId, Map<String, Object> content) {
-            return new UpdateRequest(indexName, indexId)
-                    .doc(content) // 设置用于更新的文档内容
-                    .upsert(content, XContentType.JSON); // 在文档不存在时插入新的文档
-        }
+        return new UpdateRequest(indexName, indexId)
+                .doc(content)
+                .upsert(content, XContentType.JSON);
+    }
 
 }

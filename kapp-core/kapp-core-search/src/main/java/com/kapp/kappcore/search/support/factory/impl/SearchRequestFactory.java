@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption, SearchParam, SearchRequest> {
     private static final SearchRequestFactory INSTANCE = new SearchRequestFactory();
+
     public static SearchRequestFactory getInstance() {
         return INSTANCE;
     }
@@ -43,8 +45,13 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
         return create(t, t.getCondition().option());
     }
 
+    @SuppressWarnings("all")
     private SearchRequest create(SearchParam param, DocOption option) {
         SearchRequest request = init(param.getSearchIndex());
+        if (param.continueScroll()) {
+            request.scroll(TimeValue.MINUS_ONE);
+            return request;
+        }
         SearchSourceBuilder sourceBuilder = null;
         switch (option) {
             case GROUP:
@@ -54,10 +61,11 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
                 sourceBuilder = search(param);
                 break;
             default:
-
         }
-        request.source(sourceBuilder);
-        return request;
+        if (param.isEnableScroll()) {
+            request.scroll(Val.SCROLL_KEEP_ALIVE);
+        }
+        return request.source(sourceBuilder);
     }
 
     /**
@@ -123,9 +131,11 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
 
         //page and sort
         SearchLimiter searchLimiter = param.getSearchLimiter();
-        sourceBuilder
-                .from((searchLimiter.getPageNum() - 1) * searchLimiter.getPageSize())
-                .size(searchLimiter.getPageSize());
+        sourceBuilder.size(searchLimiter.getPageSize());
+        if (!param.isEnableScroll()) {
+            sourceBuilder
+                    .from((searchLimiter.getPageNum() - 1) * searchLimiter.getPageSize());
+        }
 
         if (searchLimiter.getSortRule().isAssign(SortRule.FIELD) && CollectionUtils.isNotEmpty(searchLimiter.getSortParams())) {
             searchLimiter.getSortParams().forEach((sp) -> sourceBuilder.sort(Sort.sortBuilder(sp.getSortKey(), sp.getSortType().getCode())));

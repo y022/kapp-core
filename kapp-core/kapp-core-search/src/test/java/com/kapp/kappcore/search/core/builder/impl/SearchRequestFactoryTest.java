@@ -10,9 +10,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Author:Heping
@@ -24,7 +23,6 @@ public class SearchRequestFactoryTest {
     public void testSearch() {
         SearchRequestFactory instance = SearchRequestFactory.getInstance();
 
-
         SearchParam searchParam = new SearchParam();
 
         SearchCondition searchCondition = new SearchCondition();
@@ -32,7 +30,7 @@ public class SearchRequestFactoryTest {
         keyValueMap.put("title", "你好");
         searchCondition.setSearchValueMap(keyValueMap);
         searchCondition.setOption(DocOption.SEARCH);
-        searchCondition.setIndexes(Set.of("fr"));
+        searchCondition.setIndex("book");
 
         searchParam.setCondition(searchCondition);
 

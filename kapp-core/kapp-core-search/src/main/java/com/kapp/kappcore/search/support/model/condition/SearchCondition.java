@@ -35,6 +35,9 @@ public class SearchCondition extends AbstractSearchCondition {
     private HighlightParam highlightParam;
     /**
      * 直接的key-value嵌套查询。
+     * 使用{@link MultiQueryRule#MUST}组合多个查询条件
+     * 条件查询方式为{@link com.kapp.kappcore.search.support.option.ContHitStrategy#PARTICIPLE}
+     * @see SearchCondition#toParamUnit()
      */
     private Map<String, Object> searchValueMap;
     /**
@@ -42,22 +45,7 @@ public class SearchCondition extends AbstractSearchCondition {
      */
     private List<SearchParamUnit> searchParamUnits;
 
-
     public SearchCondition() {
-    }
-
-    public static SearchCondition search(Map<String, Object> searchValueMap) {
-        SearchCondition condition = new SearchCondition();
-        condition.setSearchValueMap(searchValueMap);
-        condition.setOption(DocOption.SEARCH);
-        return condition;
-    }
-
-    public static SearchCondition search(List<SearchParamUnit> searchParamUnits) {
-        SearchCondition condition = new SearchCondition();
-        condition.setSearchParamUnits(searchParamUnits);
-        condition.setOption(DocOption.SEARCH);
-        return condition;
     }
 
 
@@ -83,7 +71,7 @@ public class SearchCondition extends AbstractSearchCondition {
         if (!searchAll) {
             if (hasMultiCondition()) {
                 if (CollectionUtils.isEmpty(searchParamUnits)) {
-                    throw new SearchException(ExCode.search_condition_error, "missing search param!");
+                    throw new SearchException(ExCode.search_condition_error, "missing multi search param!");
                 }
             } else if (MapUtils.isEmpty(searchValueMap)) {
                 throw new SearchException(ExCode.search_condition_error, "missing search param!");
@@ -97,7 +85,7 @@ public class SearchCondition extends AbstractSearchCondition {
                 }
             }
         } else {
-            highlightParam = HighlightParam.instance();
+            highlightParam = HighlightParam.noneHighlight();
         }
 
     }
@@ -120,7 +108,7 @@ public class SearchCondition extends AbstractSearchCondition {
             SearchParamUnit searchParamUnit = new SearchParamUnit();
             searchParamUnit.setKey(entry.getKey());
             searchParamUnit.setValue(entry.getValue());
-            searchParamUnit.setHitParam(HitParam.accurate());
+            searchParamUnit.setHitParam(HitParam.participle());
             searchParamUnit.setMultiQueryRule(MultiQueryRule.MUST);
             return searchParamUnit;
         }).collect(Collectors.toList());

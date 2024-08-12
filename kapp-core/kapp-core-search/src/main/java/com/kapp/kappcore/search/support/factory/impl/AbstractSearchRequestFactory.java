@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kapp.kappcore.model.constant.SearchVal;
 import com.kapp.kappcore.search.support.factory.SearchFactory;
+import com.kapp.kappcore.search.support.model.param.SearchMetrics;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -30,17 +31,17 @@ import java.util.stream.Collectors;
  * Author:Heping
  * Date: 2024/6/26 16:19
  */
-public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFactory<T, R> {
+public abstract class AbstractSearchRequestFactory<S, T extends SearchMetrics, R> implements SearchFactory<T, R> {
 
     /**
      * set up search index
      *
-     * @param tag index-tag
+     * @param index doc-index
      * @return request
      */
-    protected SearchRequest init(Set<String> tag) {
+    protected SearchRequest init(String index) {
         SearchRequest searchRequest = new SearchRequest();
-        searchRequest.indices(tag.toArray(new String[0]));
+        searchRequest.indices(index);
         return searchRequest;
     }
 
@@ -184,6 +185,10 @@ public abstract class AbstractSearchRequestFactory<S, T, R> implements SearchFac
 
         protected static MatchQueryBuilder match(String key, Object value) {
             return QueryBuilders.matchQuery(key, value);
+        }
+
+        protected static MatchPhraseQueryBuilder phrase(String key, Object value) {
+            return QueryBuilders.matchPhraseQuery(key, value);
         }
 
         protected static MatchQueryBuilder match(String key, Object value, String analyzer) {

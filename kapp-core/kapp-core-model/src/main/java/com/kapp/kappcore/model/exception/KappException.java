@@ -10,7 +10,8 @@ public class KappException extends RuntimeException{
     protected String message;
 
     public KappException(String exceptionCode, String message) {
-
+        this.exceptionCode =exceptionCode;
+        this.message = message;
     }
 
     public KappException() {

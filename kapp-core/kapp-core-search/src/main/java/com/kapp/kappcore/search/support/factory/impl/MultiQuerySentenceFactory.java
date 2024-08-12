@@ -8,6 +8,7 @@ import com.kapp.kappcore.search.support.model.param.SearchParamUnit;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 
@@ -21,7 +22,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MultiQuerySentenceFactory extends AbstractSearchRequestFactory<Boolean, SearchParam, QueryBuilder> {
     private static final MultiQuerySentenceFactory INSTANCE = new MultiQuerySentenceFactory();
-
     public static MultiQuerySentenceFactory getInstance() {
         return INSTANCE;
     }
@@ -31,7 +31,7 @@ public class MultiQuerySentenceFactory extends AbstractSearchRequestFactory<Bool
     public QueryBuilder create(SearchParam searchParam) {
         SearchCondition condition = (SearchCondition) searchParam.getCondition();
         if (condition.isSearchAll()) {
-            return Query.boolQuery();
+            return Query.all();
         }
         BoolQueryBuilder queryBuilder = Query.boolQuery();
         List<SearchParamUnit> paramUnits = condition.hasMultiCondition() ? condition.getSearchParamUnits() : condition.toParamUnit();
@@ -48,7 +48,7 @@ public class MultiQuerySentenceFactory extends AbstractSearchRequestFactory<Bool
                     queryBuilder.should(subQueryBuilder);
                     break;
                 case FILTER:
-                    queryBuilder.filter(queryBuilder);
+                    queryBuilder.filter(subQueryBuilder);
                     break;
             }
         }
@@ -66,10 +66,15 @@ public class MultiQuerySentenceFactory extends AbstractSearchRequestFactory<Bool
                 queryBuilder = Query.term(key, value);
                 break;
             case PARTICIPLE:
-                queryBuilder = Query.match(key, value);
+                queryBuilder = StringUtils.isBlank(paramUnit.getAnalyzerName())
+                        ? Query.match(key, value)
+                        : Query.match(key, value, paramUnit.getAnalyzerName());
                 break;
             case FUZZY:
                 queryBuilder = Query.fuzzy(key, value);
+                break;
+            case PHRASE:
+                queryBuilder = Query.phrase(key, value);
                 break;
             case RANGE:
                 RangeParam rangeParam = paramUnit.getRangeParam();

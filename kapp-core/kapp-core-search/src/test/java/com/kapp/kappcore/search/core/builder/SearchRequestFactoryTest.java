@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Author:Heping
@@ -41,17 +40,16 @@ class SearchRequestFactoryTest {
     @Test
     void search_v1() {
         SearchRequestFactory instance = SearchRequestFactory.getInstance();
-        Set<String> indexes = Set.of("fr");
         SearchParam searchParam = new SearchParam();
-        searchParam.setIndexes(indexes);
-        searchParam.setSearchTime(DateTool.now());
+        searchParam.setIndex("fr");
+        searchParam.setStartTime(DateTool.now());
         searchParam.setSearchId("xxxx");
         searchParam.setParamCheck(true);
 
         HitParam accurate = HitParam.accurate();
 
         SearchCondition searchCondition = new SearchCondition();
-        searchCondition.setIndexes(indexes);
+        searchCondition.setIndex("fr");
         searchCondition.setSearchAll(false);
         searchCondition.setOption(DocOption.SEARCH);
         ArrayList<SearchParamUnit> searchParamUnits = new ArrayList<>();
@@ -90,17 +88,16 @@ class SearchRequestFactoryTest {
     @Test
     void search_v2() {
         SearchRequestFactory instance = SearchRequestFactory.getInstance();
-        Set<String> indexes = Set.of("fr");
         SearchParam searchParam = new SearchParam();
-        searchParam.setIndexes(indexes);
-        searchParam.setSearchTime(DateTool.now());
+        searchParam.setIndex("fr");
+        searchParam.setStartTime(DateTool.now());
         searchParam.setSearchId("xxxx");
         searchParam.setParamCheck(true);
 
         HitParam accurate = HitParam.accurate();
 
         SearchCondition searchCondition = new SearchCondition();
-        searchCondition.setIndexes(indexes);
+        searchCondition.setIndex("fr");
         searchCondition.setSearchAll(false);
         searchCondition.setOption(DocOption.SEARCH);
         ArrayList<SearchParamUnit> searchParamUnits = new ArrayList<>();

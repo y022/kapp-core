@@ -54,7 +54,7 @@ public class SearchLimiter implements Validate {
                 }
             }
         }
-        //如果没有给出viewType,或者设置返回指定字段，但没有给出指定字段，则直接报错
+        //如果没有给出viewType,或者设置了返回指定字段，但没有给出指定字段，则直接报错
         if (viewParam == null) {
             viewParam = ViewParam.defaultView();
         } else if (viewParam.getViewType() == null) {

@@ -28,6 +28,7 @@ public class GroupCondition extends AbstractSearchCondition {
     }
 
     public GroupCondition() {
+        this.option = DocOption.GROUP;
     }
 
     /**

@@ -2,10 +2,11 @@ package com.kapp.kappcore.search.core.search;
 
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
-import com.kapp.kappcore.search.support.Collector;
-import com.kapp.kappcore.search.support.factory.impl.SearchRequestFactory;
+import com.kapp.kappcore.search.support.SearchCollector;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchScrollRequest;
 import org.elasticsearch.client.RestHighLevelClient;
 
 /**
@@ -13,18 +14,25 @@ import org.elasticsearch.client.RestHighLevelClient;
  * Date: 2024/6/26 15:52
  */
 public class StandardKappSearchActor extends AbstractKappSearchActor {
-    private final SearchRequestFactory searchRequestFactory;
+
     public StandardKappSearchActor(RestHighLevelClient restHighLevelClient, SearchInterceptorRegistry searchInterceptorRegistry) {
         super(restHighLevelClient, searchInterceptorRegistry);
-        this.searchRequestFactory = SearchRequestFactory.getInstance();
     }
 
     @Override
-    public <R> R search(SearchParam searchParam, Collector<R> resultCollector) throws SearchException {
-        super.intercept(searchParam);
-        SearchRequest searchRequest = searchRequestFactory.create(searchParam);
-        return normalSearch(searchRequest, resultCollector);
+    public <R> R search(SearchParam searchParam, SearchCollector<SearchResponse, R> resultCollector) throws SearchException {
+        searchParam.startTime();
+        SearchRequest searchRequest = searchTemplate(searchParam);
+        R r = searchParam.continueScroll()
+                ? scroll(searchParam.getScrollId(), resultCollector)
+                : doSearch(searchRequest, resultCollector);
+        searchParam.endTime();
+        return r;
     }
 
+    @Override
+    public <R> R scroll(String scrollId, SearchCollector<SearchResponse,R> resultCollector) throws SearchException {
+        return scroll(new SearchScrollRequest(scrollId), resultCollector);
+    }
 
 }

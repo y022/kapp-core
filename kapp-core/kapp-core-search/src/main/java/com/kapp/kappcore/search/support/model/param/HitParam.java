@@ -49,6 +49,11 @@ public class HitParam implements Validate {
         return of(ContHitStrategy.ACCURATE);
     }
 
+
+    public static HitParam participle() {
+        return of(ContHitStrategy.PARTICIPLE);
+    }
+
     public static HitParam of(ContHitStrategy contHitStrategy) {
         HitParam hitParam = new HitParam();
         hitParam.setContHitStrategy(contHitStrategy);

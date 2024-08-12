@@ -2,14 +2,15 @@ package com.kapp.kappcore.task.job;
 
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
-import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
+import com.kapp.kappcore.search.common.ExtSearchRequest;
+import com.kapp.kappcore.search.endpoint.KappDockUpdater;
+import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
 import com.kapp.kappcore.service.domain.mapper.BookMapper;
 import com.kapp.kappcore.support.mq.MqProducer;
 import com.kapp.kappcore.support.mq.MqRouteMapping;
 import com.kapp.kappcore.support.mq.annotation.MqConsumer;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,20 +26,17 @@ import java.util.stream.Collectors;
 @Component
 public class BookWatcher {
     private static final Queue<Book> BOOK_QUEUE = new ArrayBlockingQueue<>(10000000);
-    private final RestHighLevelClient restHighLevelClient;
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
-    private final UpdateServiceImpl updateServiceImplService;
+    private final KappDockUpdater kappDockUpdater;
     @Value("${batchSize:100}")
     public int batchSize;
 
 
-    public BookWatcher(RestHighLevelClient restHighLevelClient, MqProducer mqProducer, BookMapper bookMapper, UpdateServiceImpl updateServiceImplService) {
-        this.restHighLevelClient = restHighLevelClient;
+    public BookWatcher(MqProducer mqProducer, BookMapper bookMapper, KappDockUpdater kappDockUpdater) {
         this.mqProducer = mqProducer;
         this.bookMapper = bookMapper;
-        this.updateServiceImplService = updateServiceImplService;
-
+        this.kappDockUpdater = kappDockUpdater;
     }
 
     @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
@@ -78,8 +76,15 @@ public class BookWatcher {
             map.put(DocKey.CONTENT_LENGTH, book.getContent().length());
             return map;
         }).collect(Collectors.toList());
-        updateServiceImplService.update_async(dataMap, TagIndex.BOOK.getIndex());
+
+        ExtSearchRequest extSearchRequest = new ExtSearchRequest();
+        extSearchRequest.setDocOption(DocOption.UPDATE.getCode());
+        extSearchRequest.setUpdateValueMap(dataMap);
+        extSearchRequest.setIndex(TagIndex.BOOK.getIndex());
+
+        kappDockUpdater.update(extSearchRequest, (book) -> mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, book));
     }
+
 
     private void reSend(Set<Book> books) {
         log.warn("reSend message...");
