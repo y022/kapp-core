@@ -18,8 +18,8 @@ public class SearchResult<T extends Body> {
     private int pageNum;
     private int pageSize;
     private String scrollId;
+    private SearchParam searchParam;
     private T data;
-    private SearchParam param;
 
     public SearchResult() {
     }
@@ -34,14 +34,18 @@ public class SearchResult<T extends Body> {
         this.took = data.took();
     }
 
-    public SearchResult(SearchParam param, T data) {
+    public SearchResult(SearchParam searchParam, T data) {
         SearchResult<T> result = new SearchResult<>(data);
-        result.setParam(param);
+        result.setSearchParam(searchParam);
         result.success = true;
     }
 
     public void pageParam(int pageNum, int pageSize) {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
+    }
+
+    public void searchParam(SearchParam searchParam) {
+        this.searchParam = searchParam;
     }
 }

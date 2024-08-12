@@ -7,8 +7,8 @@ import java.util.UUID;
 public interface SearchMetrics {
     void searchId(String searchId);
     void startTime(String timestamp);
-    void endTime(String timestamp);
-    default void baseMetrics() {
+    void endTime();
+    default void startTime() {
         searchId(UUID.randomUUID().toString());
         startTime(DateTool.now());
     }

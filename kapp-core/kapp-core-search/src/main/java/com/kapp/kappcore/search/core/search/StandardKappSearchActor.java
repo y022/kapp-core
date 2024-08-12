@@ -2,16 +2,12 @@ package com.kapp.kappcore.search.core.search;
 
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
-import com.kapp.kappcore.search.support.Collector;
+import com.kapp.kappcore.search.support.SearchCollector;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchScrollRequest;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.unit.TimeValue;
-
-import java.io.IOException;
 
 /**
  * Author:Heping
@@ -24,22 +20,19 @@ public class StandardKappSearchActor extends AbstractKappSearchActor {
     }
 
     @Override
-    public <R> R search(SearchParam searchParam, Collector<R> resultCollector) throws SearchException {
+    public <R> R search(SearchParam searchParam, SearchCollector<SearchResponse, R> resultCollector) throws SearchException {
+        searchParam.startTime();
         SearchRequest searchRequest = searchTemplate(searchParam);
-        return searchParam.continueScroll()
-                ? scrollSearch(searchParam.getScrollId(), resultCollector)
+        R r = searchParam.continueScroll()
+                ? scroll(searchParam.getScrollId(), resultCollector)
                 : doSearch(searchRequest, resultCollector);
+        searchParam.endTime();
+        return r;
     }
 
     @Override
-    public <R> R scrollSearch(String scrollId, Collector<R> resultCollector) throws SearchException {
-        SearchScrollRequest searchScrollRequest = new SearchScrollRequest(scrollId);
-        searchScrollRequest.scroll(TimeValue.timeValueMinutes(1));
-        try {
-            SearchResponse scroll = restHighLevelClient.scroll(searchScrollRequest, RequestOptions.DEFAULT);
-            return resultCollector.collect(scroll);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public <R> R scroll(String scrollId, SearchCollector<SearchResponse,R> resultCollector) throws SearchException {
+        return scroll(new SearchScrollRequest(scrollId), resultCollector);
     }
+
 }

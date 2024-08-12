@@ -1,5 +1,6 @@
 package com.kapp.kappcore.search.support.model.param;
 
+import com.kapp.kappcore.search.support.DateTool;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import lombok.Data;
@@ -73,8 +74,8 @@ public class SearchParam implements SearchMetrics {
     }
 
     @Override
-    public void endTime(String timestamp) {
-        this.endTime = timestamp;
+    public void endTime() {
+        this.endTime = DateTool.now();
 
     }
 

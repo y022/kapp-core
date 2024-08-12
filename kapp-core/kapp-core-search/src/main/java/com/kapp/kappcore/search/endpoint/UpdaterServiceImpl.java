@@ -2,6 +2,7 @@ package com.kapp.kappcore.search.endpoint;
 
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
+import com.kapp.kappcore.search.support.SearchCollector;
 import com.kapp.kappcore.search.support.factory.impl.ParamFactory;
 import com.kapp.kappcore.search.support.factory.impl.UpdateRequestFactory;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
@@ -24,12 +25,12 @@ import java.util.function.Consumer;
  * Author:Heping
  * Date: 2024/6/30 19:40
  */
-public class UpdateServiceImpl implements KappDockUpdate {
-    private static final Logger LOG = LoggerFactory.getLogger(UpdateServiceImpl.class);
+public class UpdaterServiceImpl implements KappDockUpdater {
+    private static final Logger LOG = LoggerFactory.getLogger(UpdaterServiceImpl.class);
     private final RestHighLevelClient restHighLevelClient;
     private final UpdateRequestFactory updateRequestFactory;
 
-    public UpdateServiceImpl(RestHighLevelClient restHighLevelClient) {
+    public UpdaterServiceImpl(RestHighLevelClient restHighLevelClient) {
         this.restHighLevelClient = restHighLevelClient;
         this.updateRequestFactory = UpdateRequestFactory.getInstance();
     }
@@ -37,7 +38,7 @@ public class UpdateServiceImpl implements KappDockUpdate {
     @Override
     public SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName) throws IOException {
         SearchParam searchParam = ParamFactory.instance().create(extSearchRequest);
-        return doUpdate(searchParam);
+        return doUpdate(searchParam, updateCollector());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class UpdateServiceImpl implements KappDockUpdate {
     @Override
     public SearchResult<UpdateBody> update_bulk(List<Map<String, Object>> data, String indexName) throws IOException {
         SearchParam searchParam = toParam(data, indexName);
-        return doUpdate(searchParam);
+        return doUpdate(searchParam, updateCollector());
     }
 
     @Override
@@ -82,13 +83,14 @@ public class UpdateServiceImpl implements KappDockUpdate {
         });
     }
 
-    private SearchResult<UpdateBody> doUpdate(SearchParam searchParam) throws IOException {
+    private SearchResult<UpdateBody> doUpdate(SearchParam searchParam, SearchCollector<BulkResponse,
+            SearchResult<UpdateBody>> collector) throws IOException {
         ActionRequest request = updateRequestFactory.create(searchParam);
         try {
             BulkResponse response = restHighLevelClient.bulk((BulkRequest) request, RequestOptions.DEFAULT);
-            return collectUpdate(response);
+            return collector.collect(response);
         } catch (IOException e) {
-            LOG.error("update error", e);
+            LOG.error("update error");
             throw e;
         }
     }

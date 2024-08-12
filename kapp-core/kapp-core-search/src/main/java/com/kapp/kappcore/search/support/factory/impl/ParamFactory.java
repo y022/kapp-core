@@ -4,7 +4,6 @@ import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.support.factory.AbstractParamFactory;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.AbstractSearchCondition;
-import com.kapp.kappcore.search.support.model.condition.SearchCondition;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
 import com.kapp.kappcore.search.support.model.param.SortParam;
@@ -48,7 +47,6 @@ public class ParamFactory extends AbstractParamFactory {
             searchParam.setCondition(valCondition);
             searchParam.setSearchLimiter(createLimiter(extSearchRequest));
         }
-        searchParam.baseMetrics();
         return searchParam;
     }
 

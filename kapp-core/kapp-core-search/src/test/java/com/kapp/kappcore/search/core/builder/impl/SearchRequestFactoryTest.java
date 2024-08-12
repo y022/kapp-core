@@ -23,7 +23,6 @@ public class SearchRequestFactoryTest {
     public void testSearch() {
         SearchRequestFactory instance = SearchRequestFactory.getInstance();
 
-
         SearchParam searchParam = new SearchParam();
 
         SearchCondition searchCondition = new SearchCondition();

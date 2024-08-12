@@ -13,12 +13,12 @@ import java.io.IOException;
 import java.util.Set;
 
 public class UpdateServiceImplTest extends BaseServerConnectorTestCase {
-    private static UpdateServiceImpl updateService;
+    private static UpdaterServiceImpl updateService;
 
     @BeforeAll
     public static void setup() {
         initConnector();
-        updateService = new UpdateServiceImpl(restHighLevelClient);
+        updateService = new UpdaterServiceImpl(restHighLevelClient);
     }
 
     @AfterAll

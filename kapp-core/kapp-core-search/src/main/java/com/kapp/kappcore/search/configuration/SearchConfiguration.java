@@ -5,7 +5,7 @@ import com.kapp.kappcore.search.core.interceptor.SearchInterceptor;
 import com.kapp.kappcore.search.core.interceptor.SearchInterceptorRegistry;
 import com.kapp.kappcore.search.core.search.StandardKappSearchActor;
 import com.kapp.kappcore.search.endpoint.SearcherServiceImpl;
-import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
+import com.kapp.kappcore.search.endpoint.UpdaterServiceImpl;
 import lombok.Data;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -43,8 +43,8 @@ public class SearchConfiguration {
     }
 
     @Bean
-    public UpdateServiceImpl kappDocUpdateManager(RestHighLevelClient restHighLevelClient) {
-        return new UpdateServiceImpl(restHighLevelClient);
+    public UpdaterServiceImpl kappDocUpdateManager(RestHighLevelClient restHighLevelClient) {
+        return new UpdaterServiceImpl(restHighLevelClient);
     }
 
     @Data

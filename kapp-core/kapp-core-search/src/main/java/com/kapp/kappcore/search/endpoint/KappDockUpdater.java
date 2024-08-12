@@ -2,6 +2,7 @@ package com.kapp.kappcore.search.endpoint;
 
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
+import com.kapp.kappcore.search.support.SearchCollector;
 import com.kapp.kappcore.search.support.factory.impl.ParamFactory;
 import com.kapp.kappcore.search.support.model.condition.UpdateCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
@@ -20,7 +21,7 @@ import java.util.function.Consumer;
  * Author:Heping
  * Date: 2024/7/26 17:05
  */
-public interface KappDockUpdate {
+public interface KappDockUpdater {
     SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName) throws IOException;
 
     SearchResult<UpdateBody> update(Map<String, Object> data, String indexName, Consumer<Object> consumer) throws IOException;
@@ -33,14 +34,16 @@ public interface KappDockUpdate {
 
     void update(ExtSearchRequest extSearchRequest, Consumer<Object> consumer);
 
-    default SearchResult<UpdateBody> collectUpdate(BulkResponse response) {
-        SearchResult<UpdateBody> searchResult = new SearchResult<>();
-        UpdateBody ub = new UpdateBody();
-        ub.setTook(response.getTook().getMillis());
-        ub.setTotal(response.getItems().length);
-        response.iterator().forEachRemaining(item -> ub.wire(item.getId(), !item.isFailed()));
-        searchResult.setSuccess(CollectionUtils.isEmpty(ub.getFailureIds()));
-        return searchResult;
+    default SearchCollector<BulkResponse, SearchResult<UpdateBody>> updateCollector() {
+        return (response) -> {
+            SearchResult<UpdateBody> searchResult = new SearchResult<>();
+            UpdateBody ub = new UpdateBody();
+            ub.setTook(response.getTook().getMillis());
+            ub.setTotal(response.getItems().length);
+            response.iterator().forEachRemaining(item -> ub.wire(item.getId(), !item.isFailed()));
+            searchResult.setSuccess(CollectionUtils.isEmpty(ub.getFailureIds()));
+            return searchResult;
+        };
     }
 
     default SearchParam toParam(List<Map<String, Object>> data, String indexNames) {

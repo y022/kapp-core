@@ -3,8 +3,7 @@ package com.kapp.kappcore.task.job;
 import com.kapp.kappcore.model.constant.DocKey;
 import com.kapp.kappcore.model.entity.book.Book;
 import com.kapp.kappcore.search.common.ExtSearchRequest;
-import com.kapp.kappcore.search.endpoint.KappDockUpdate;
-import com.kapp.kappcore.search.endpoint.UpdateServiceImpl;
+import com.kapp.kappcore.search.endpoint.KappDockUpdater;
 import com.kapp.kappcore.search.support.option.DocOption;
 import com.kapp.kappcore.service.biz.note.search.index.TagIndex;
 import com.kapp.kappcore.service.domain.mapper.BookMapper;
@@ -29,15 +28,15 @@ public class BookWatcher {
     private static final Queue<Book> BOOK_QUEUE = new ArrayBlockingQueue<>(10000000);
     private final MqProducer mqProducer;
     private final BookMapper bookMapper;
-    private final KappDockUpdate kappDockUpdate;
+    private final KappDockUpdater kappDockUpdater;
     @Value("${batchSize:100}")
     public int batchSize;
 
 
-    public BookWatcher(MqProducer mqProducer, BookMapper bookMapper, KappDockUpdate kappDockUpdate) {
+    public BookWatcher(MqProducer mqProducer, BookMapper bookMapper, KappDockUpdater kappDockUpdater) {
         this.mqProducer = mqProducer;
         this.bookMapper = bookMapper;
-        this.kappDockUpdate = kappDockUpdate;
+        this.kappDockUpdater = kappDockUpdater;
     }
 
     @MqConsumer(queue = {MqRouteMapping.Queue.SAVE_BOOK}, concurrency = "1")
@@ -83,7 +82,7 @@ public class BookWatcher {
         extSearchRequest.setUpdateValueMap(dataMap);
         extSearchRequest.setIndex(TagIndex.BOOK.getIndex());
 
-        kappDockUpdate.update(extSearchRequest, (book) -> mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, book));
+        kappDockUpdater.update(extSearchRequest, (book) -> mqProducer.send(MqRouteMapping.Exchange.BOOK, MqRouteMapping.RoutingKey.SAVE_BOOK_RETRY, book));
     }
 
 
