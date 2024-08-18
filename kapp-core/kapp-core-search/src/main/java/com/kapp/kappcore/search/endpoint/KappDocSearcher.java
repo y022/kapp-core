@@ -3,7 +3,7 @@ package com.kapp.kappcore.search.endpoint;
 import com.kapp.kappcore.model.exception.SearchException;
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
-import com.kapp.kappcore.search.support.SearchCollector;
+import com.kapp.kappcore.search.support.SearchCallBack;
 import com.kapp.kappcore.search.support.model.response.SearchBody;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
@@ -22,7 +22,7 @@ public interface KappDocSearcher {
     SearchResult<?> search(ExtSearchRequest extSearchRequest) throws SearchException;
 
 
-    default SearchCollector<SearchResponse, SearchResult<SearchBody>> defaultSearchCollector() {
+    default SearchCallBack<SearchResponse, SearchResult<SearchBody>> defaultSearchCollector() {
         return (response) -> {
             SearchResult<SearchBody> searchResult = new SearchResult<>();
             if (response == null || response.isTimedOut()) {

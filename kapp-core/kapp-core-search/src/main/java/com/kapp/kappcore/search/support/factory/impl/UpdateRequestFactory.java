@@ -32,17 +32,20 @@ public class UpdateRequestFactory implements SearchFactory<SearchParam, ActionRe
 
         DocOption option = condition.option();
         String indexName = searchParam.getSearchIndex();
+        ActionRequest actionRequest = null;
         switch (option) {
             case ADD:
             case UPDATE:
-                return instance.upsert(indexName, upCondition.getUpdateMap());
+                actionRequest = instance.upsert(indexName, upCondition.getUpdateMap());
+                break;
             case DELETE:
-                return instance.del(indexName, upCondition.getDelIds());
+                actionRequest = instance.del(indexName, upCondition.getDelIds());
+                break;
             case DELETE_BY_QUERY:
-//                return instance.delByQuery(indexName,);
+                actionRequest = instance.delByQuery(indexName, upCondition.getQueryBuilder());
+                break;
         }
-
-        return null;
+        return actionRequest;
     }
 
 

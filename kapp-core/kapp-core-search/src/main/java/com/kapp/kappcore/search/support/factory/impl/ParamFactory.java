@@ -22,6 +22,7 @@ import java.util.Objects;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ParamFactory extends AbstractParamFactory {
+    private MultiQuerySentenceFactory querySentenceFactory = MultiQuerySentenceFactory.getInstance();
     private static final ParamFactory INSTANCE = new ParamFactory();
 
     public static ParamFactory instance() {
@@ -66,9 +67,9 @@ public class ParamFactory extends AbstractParamFactory {
                 valCondition = update(extSearchRequest, docOption);
                 break;
         }
-        valCondition.index(extSearchRequest.getIndex());
+        if (valCondition != null)
+            valCondition.index(extSearchRequest.getIndex());
         return valCondition;
-
     }
 
 

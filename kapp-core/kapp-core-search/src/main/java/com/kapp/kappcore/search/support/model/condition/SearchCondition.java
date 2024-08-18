@@ -34,10 +34,9 @@ public class SearchCondition extends AbstractSearchCondition {
      */
     private HighlightParam highlightParam;
     /**
-     * 直接的key-value嵌套查询。
-     * 使用{@link MultiQueryRule#MUST}组合多个查询条件
-     * 条件查询方式为{@link com.kapp.kappcore.search.support.option.ContHitStrategy#PARTICIPLE}
-     * @see SearchCondition#toParamUnit()
+     * <p>直接的key-value形式查询，会在内部转化为{@link #searchParamUnits},通过{@link #toParamUnit()} </p>
+     * <p>使用{@link MultiQueryRule#MUST}组合多个查询条件</p>
+     * <p>条件查询方式为{@link com.kapp.kappcore.search.support.option.ContHitStrategy#PARTICIPLE}</p>
      */
     private Map<String, Object> searchValueMap;
     /**
@@ -62,7 +61,7 @@ public class SearchCondition extends AbstractSearchCondition {
 
     @Override
     public String read() {
-        return "";
+        return this.toString();
     }
 
     @Override
