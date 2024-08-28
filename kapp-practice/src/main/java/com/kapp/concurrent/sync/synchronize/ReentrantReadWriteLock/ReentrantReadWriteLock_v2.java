@@ -1,4 +1,4 @@
-package com.kapp.concurrent.sync.synchronize;
+package com.kapp.concurrent.sync.synchronize.ReentrantReadWriteLock;
 
 /**
  * Author:Heping
@@ -10,18 +10,16 @@ public class ReentrantReadWriteLock_v2 {
     private static final Object LOCK = new Object();
 
     public static void main(String[] args) {
-        Thread a = new Thread(() -> {
+        new Thread(() -> {
             while (counter < 30) {
                 incrementAndPrint(Thread.currentThread().getName());
             }
-        }, "thread-1");
-        Thread b = new Thread(() -> {
+        }, "thread-1").start();
+        new Thread(() -> {
             while (counter < 30) {
                 incrementAndPrint(Thread.currentThread().getName());
             }
-        }, "thread-2");
-        a.start();
-        b.start();
+        }, "thread-2").start();
     }
 
     private static void incrementAndPrint(String name) {

@@ -1,4 +1,4 @@
-package com.kapp.concurrent.sync.synchronize;
+package com.kapp.concurrent.sync.synchronize.ReentrantReadWriteLock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Date: 2024/8/28 16:15
  */
 public class ReentrantReadWriteLock_v1 {
-    private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+    private static final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
     private static final Map<String, Object> map = new HashMap<>();
     private static final Random random = new Random();
     private volatile static boolean cycle = true;
@@ -35,7 +35,6 @@ public class ReentrantReadWriteLock_v1 {
                 }
             }
         };
-
 
         Runnable write = () -> {
             while (cycle) {
