@@ -30,7 +30,7 @@ public enum SortRule {
     }
 
 
-    public boolean isAssign(SortRule sortRule) {
+    public boolean assignFor(SortRule sortRule) {
         return this.equals(sortRule);
     }
 

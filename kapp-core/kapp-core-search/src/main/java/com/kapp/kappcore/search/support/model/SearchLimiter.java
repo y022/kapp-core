@@ -22,13 +22,9 @@ import java.util.List;
 public class SearchLimiter implements Validate {
     private int pageNum;
     private int pageSize;
-
     private SortRule sortRule;
-
     private List<SortParam> sortParams;
-
     private ViewParam viewParam;
-
     private boolean showScore = true;
 
     public SearchLimiter() {

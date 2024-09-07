@@ -49,7 +49,7 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
     private SearchRequest create(SearchParam param, DocOption option) {
         SearchRequest request = init(param.getSearchIndex());
         if (param.continueScroll()) {
-            request.scroll(TimeValue.MINUS_ONE);
+            request.scroll(Val.SCROLL_KEEP_ALIVE);
             return request;
         }
         SearchSourceBuilder sourceBuilder = null;
@@ -137,7 +137,7 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
                     .from((searchLimiter.getPageNum() - 1) * searchLimiter.getPageSize());
         }
 
-        if (searchLimiter.getSortRule().isAssign(SortRule.FIELD) && CollectionUtils.isNotEmpty(searchLimiter.getSortParams())) {
+        if (searchLimiter.getSortRule().assignFor(SortRule.FIELD) && CollectionUtils.isNotEmpty(searchLimiter.getSortParams())) {
             searchLimiter.getSortParams().forEach((sp) -> sourceBuilder.sort(Sort.sortBuilder(sp.getSortKey(), sp.getSortType().getCode())));
         }
 
@@ -160,7 +160,6 @@ public class SearchRequestFactory extends AbstractSearchRequestFactory<DocOption
             sourceBuilder.fetchSource(viewFields, null);
         }
         return sourceBuilder;
-
     }
 }
 

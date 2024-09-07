@@ -1,6 +1,9 @@
 package com.kapp.kappcore.search.support.model.param;
 
+import com.kapp.kappcore.model.constant.ExCode;
+import com.kapp.kappcore.model.exception.ValidateException;
 import com.kapp.kappcore.search.support.DateTool;
+import com.kapp.kappcore.search.support.Validate;
 import com.kapp.kappcore.search.support.model.SearchLimiter;
 import com.kapp.kappcore.search.support.model.condition.ValCondition;
 import lombok.Data;
@@ -11,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
  * Date: 2024/6/23 16:30
  */
 @Data
-public class SearchParam implements SearchMetrics {
+public class SearchParam implements SearchMetrics, Validate {
     /**
      * 检索Id，每次都会生成新的，用于标识唯一
      */
@@ -25,7 +28,7 @@ public class SearchParam implements SearchMetrics {
      */
     private String endTime;
     /**
-     *
+     * enableScroll，如果{{@link SearchParam#scrollId}}为空，则表示是首次开启scroll
      */
     private boolean enableScroll;
     /**
@@ -81,5 +84,12 @@ public class SearchParam implements SearchMetrics {
 
     public boolean continueScroll() {
         return enableScroll && StringUtils.isNotBlank(scrollId);
+    }
+
+    @Override
+    public void validate() throws ValidateException {
+        if (StringUtils.isBlank(index)) {
+            throw new ValidateException(ExCode.search_condition_error, "search-param miss index");
+        }
     }
 }
