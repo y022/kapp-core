@@ -1,4 +1,4 @@
-package com.kapp.concurrent.sync.synchronize.ReentrantReadWriteLock;
+package com.kapp.concurrent.sync.synchronize.reentrantReadWriteLock;
 
 /**
  * Author:Heping
