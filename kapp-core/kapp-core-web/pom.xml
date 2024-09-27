@@ -37,11 +37,6 @@
             <artifactId>kapp-core-search</artifactId>
             <version>v1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.kapp</groupId>
-            <artifactId>kapp-core-flowable</artifactId>
-            <version>v1.0</version>
-        </dependency>
     </dependencies>
 
 <!--    <build>-->
