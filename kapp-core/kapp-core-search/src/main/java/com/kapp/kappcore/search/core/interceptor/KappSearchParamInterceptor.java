@@ -28,11 +28,8 @@ public class KappSearchParamInterceptor implements SearchInterceptor {
         if (!searchParam.isParamCheck()) {
             return;
         }
+        searchParam.validate();
 
-        String index = searchParam.getIndex();
-        if (StringUtils.isBlank(index)) {
-            throw new SearchException(ExCode.search_condition_error, "index is empty!");
-        }
         if (searchParam.continueScroll()) {
             return;
         }

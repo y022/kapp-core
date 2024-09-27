@@ -2,7 +2,7 @@ package com.kapp.kappcore.search.endpoint;
 
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
-import com.kapp.kappcore.search.support.SearchCollector;
+import com.kapp.kappcore.search.support.SearchCallBack;
 import com.kapp.kappcore.search.support.factory.impl.ParamFactory;
 import com.kapp.kappcore.search.support.factory.impl.UpdateRequestFactory;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
@@ -38,7 +38,7 @@ public class UpdaterServiceImpl implements KappDockUpdater {
     @Override
     public SearchResult<UpdateBody> deleteById(ExtSearchRequest extSearchRequest, String indexName) throws IOException {
         SearchParam searchParam = ParamFactory.instance().create(extSearchRequest);
-        return doUpdate(searchParam, updateCollector());
+        return doUpdate(searchParam, updateCallback());
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UpdaterServiceImpl implements KappDockUpdater {
     @Override
     public SearchResult<UpdateBody> update_bulk(List<Map<String, Object>> data, String indexName) throws IOException {
         SearchParam searchParam = toParam(data, indexName);
-        return doUpdate(searchParam, updateCollector());
+        return doUpdate(searchParam, updateCallback());
     }
 
     @Override
@@ -83,14 +83,14 @@ public class UpdaterServiceImpl implements KappDockUpdater {
         });
     }
 
-    private SearchResult<UpdateBody> doUpdate(SearchParam searchParam, SearchCollector<BulkResponse,
-            SearchResult<UpdateBody>> collector) throws IOException {
+    private SearchResult<UpdateBody> doUpdate(SearchParam searchParam, SearchCallBack<BulkResponse,
+                SearchResult<UpdateBody>> collector) throws IOException {
         ActionRequest request = updateRequestFactory.create(searchParam);
         try {
             BulkResponse response = restHighLevelClient.bulk((BulkRequest) request, RequestOptions.DEFAULT);
-            return collector.collect(response);
+            return collector.process(response);
         } catch (IOException e) {
-            LOG.error("update error");
+            LOG.error("update error!");
             throw e;
         }
     }

@@ -37,11 +37,8 @@ public class UpdateRequestBuilder {
     }
 
     public DeleteByQueryRequest delByQuery(String indexName, QueryBuilder qb) {
-        DeleteByQueryRequest delByQuery = new DeleteByQueryRequest(indexName);
-        delByQuery.setQuery(qb);
-        return delByQuery;
+        return new DeleteByQueryRequest(indexName).setQuery(qb);
     }
-
 
     private BulkRequest bulk(String indexName, List<Map<String, Object>> content, DocWriter docWriter) {
         BulkRequest bulkRequest = new BulkRequest(indexName);

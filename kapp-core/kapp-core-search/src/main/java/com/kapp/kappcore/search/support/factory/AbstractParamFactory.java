@@ -30,7 +30,6 @@ public abstract class AbstractParamFactory {
         GroupCondition gc = new GroupCondition();
         gc.setGroupParamUnits(extSearchRequest.getGroupParamUnits());
         gc.setOption(DocOption.GROUP);
-
         return gc;
     }
 
@@ -39,9 +38,8 @@ public abstract class AbstractParamFactory {
         uc.setUpdateMap(extSearchRequest.getUpdateValueMap());
         uc.setDelIds(extSearchRequest.getDeleteIds());
         uc.setIndex(extSearchRequest.getIndex());
-        uc.setOption(DocOption.UPDATE);
-
         return uc;
-
     }
+
+
 }

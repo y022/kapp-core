@@ -2,7 +2,7 @@ package com.kapp.kappcore.search.endpoint;
 
 import com.kapp.kappcore.search.common.ExtSearchRequest;
 import com.kapp.kappcore.search.common.SearchResult;
-import com.kapp.kappcore.search.support.SearchCollector;
+import com.kapp.kappcore.search.support.SearchCallBack;
 import com.kapp.kappcore.search.support.factory.impl.ParamFactory;
 import com.kapp.kappcore.search.support.model.condition.UpdateCondition;
 import com.kapp.kappcore.search.support.model.param.SearchParam;
@@ -34,7 +34,7 @@ public interface KappDockUpdater {
 
     void update(ExtSearchRequest extSearchRequest, Consumer<Object> consumer);
 
-    default SearchCollector<BulkResponse, SearchResult<UpdateBody>> updateCollector() {
+    default SearchCallBack<BulkResponse, SearchResult<UpdateBody>> updateCallback() {
         return (response) -> {
             SearchResult<UpdateBody> searchResult = new SearchResult<>();
             UpdateBody ub = new UpdateBody();
