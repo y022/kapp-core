@@ -2,10 +2,10 @@ package com.kapp.kappcore;
 
 import com.kapp.kappcore.entity.FileDownloadInfo;
 import com.kapp.kappcore.entity.FileUploadInfo;
-import org.csource.common.MyException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * Author:Heping
@@ -17,4 +17,8 @@ public abstract class AbstractFileOperator {
     public abstract FileUploadInfo upload(InputStream inputStream, String fileName, String extra);
 
     public abstract FileDownloadInfo download(FileUploadInfo fileInf) throws IOException;
+
+    protected String getFileId() {
+        return UUID.randomUUID().toString();
+    }
 }

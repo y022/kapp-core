@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.hutool.extra.spring.SpringUtil
+com.kapp.kappcore.configuration.FastDfsAutoConfiguration

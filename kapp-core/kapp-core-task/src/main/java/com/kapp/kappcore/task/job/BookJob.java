@@ -32,7 +32,7 @@ public class BookJob {
     private static final AtomicReferenceFieldUpdater<BookJob, String> counter = AtomicReferenceFieldUpdater.newUpdater(BookJob.class, String.class, "idCursor");
     private final AsyncTaskExecutor asyncTaskExecutor;
 
-    @Scheduled(fixedRate = 3000)
+//    @Scheduled(fixedRate = 3000)
     public void produce() {
         List<Book> books = bookMapper.select(5000, counter.get(this));
         books.parallelStream().forEach(book -> {

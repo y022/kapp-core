@@ -7,11 +7,13 @@ import org.csource.fastdfs.StorageServer;
 import org.csource.fastdfs.TrackerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.FileNotFoundException;
 
 /**
  * Author:Heping
@@ -19,13 +21,16 @@ import org.springframework.core.io.ClassPathResource;
  */
 @Configuration
 @ConditionalOnClass(value = {StorageClient.class, StorageServer.class})
-@ConditionalOnProperty(name = "fastdfs.enabled", havingValue = "true")
 public class FastDfsAutoConfiguration {
     private static final Logger log = LoggerFactory.getLogger(FastDfsAutoConfiguration.class);
+    private static final String FAST_DFS_CONFIG_FILE = "fastdfs.properties";
 
     @Bean
     public FastDfsClient fastDfsClient() throws Exception {
-        ClassPathResource classPathResource = new ClassPathResource("fastdfs.conf");
+        ClassPathResource classPathResource = new ClassPathResource(FAST_DFS_CONFIG_FILE);
+        if (!classPathResource.exists()) {
+            throw new FileNotFoundException(FAST_DFS_CONFIG_FILE);
+        }
         try {
             ClientGlobal.init(classPathResource.getPath());
             StorageClient sc = new StorageClient(new TrackerClient().getTrackerServer());
@@ -35,13 +40,5 @@ public class FastDfsAutoConfiguration {
             throw e;
         }
     }
-
-
-//    public static void main(String[] args) throws Exception {
-//        FastDfsAutoConfiguration fastDfsAutoConfiguration = new FastDfsAutoConfiguration();
-//        FastDfsClient fastDfsClient = fastDfsAutoConfiguration.fastDfsClient();
-//        FileInputStream fileInputStream = new FileInputStream("C:\\doucment\\Book\\小说\\霸天武魂.txt");
-//        FileInfo upload = fastDfsClient.upload(fileInputStream, "霸天武魂.txt");
-//    }
 
 }
