@@ -22,7 +22,7 @@ import java.util.Set;
 public class UpdateCondition extends AbstractCondition {
 
     /**
-     * default bulk Update
+     * default use bulk Update
      */
     private final boolean bulkUpdate = true;
     /**
