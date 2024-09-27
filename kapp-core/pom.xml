@@ -16,6 +16,7 @@
         <module>kapp-core-task</module>
         <module>kapp-core-support</module>
         <module>kapp-core-search</module>
+        <module>kapp-core-file</module>
     </modules>
 
     <properties>
