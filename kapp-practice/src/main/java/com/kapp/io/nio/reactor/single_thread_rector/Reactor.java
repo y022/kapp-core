@@ -7,7 +7,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.locks.LockSupport;
 
 /**
  * Author:Heping
@@ -47,15 +46,12 @@ public class Reactor implements Runnable {
                 Set<SelectionKey> selectionKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iterable = selectionKeys.iterator();
                 while (iterable.hasNext()) {
-                    // 对事连接件进行分发
-                    dispatch(iterable.next());
+                    eventDispatch(iterable.next());
                     iterable.remove();
                 }
             } catch (IOException e) {
                 System.err.println("reactor failed:" + e);
             }
-            LockSupport.parkNanos(1000 * 1000 * 1000);
-
         }
     }
 
@@ -64,7 +60,7 @@ public class Reactor implements Runnable {
      *
      * @param selectionKey key
      */
-    private void dispatch(SelectionKey selectionKey) {
+    private void eventDispatch(SelectionKey selectionKey) {
         Runnable attachment = (Runnable) selectionKey.attachment();
         if (attachment != null) {
             attachment.run();

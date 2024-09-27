@@ -16,6 +16,8 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 /**
  * Author:Heping
@@ -52,4 +54,21 @@ public class TimingTaskExecutor {
             log.error("task handle error", e);
         }
     }
+
+    @Scheduled(initialDelay = 1000, fixedDelay = 2000*10)
+    public void schedule_1() {
+        log.info("schedule_1 task start...");
+        LockSupport.parkNanos(TimeUnit.NANOSECONDS.convert(1, TimeUnit.MINUTES));
+        log.info("schedule_1 task end...");
+    }
+
+    @Scheduled(initialDelay = 1000, fixedRate = 2000*10)
+    public void schedule_2() {
+        log.info("schedule_2 task start...");
+        LockSupport.parkNanos(TimeUnit.NANOSECONDS.convert(1, TimeUnit.MINUTES));
+        log.info("schedule_2 task end...");
+    }
+
+
+
 }

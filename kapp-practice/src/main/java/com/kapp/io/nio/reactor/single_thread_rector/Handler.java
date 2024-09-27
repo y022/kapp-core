@@ -1,6 +1,5 @@
 package com.kapp.io.nio.reactor.single_thread_rector;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
@@ -10,7 +9,7 @@ import java.nio.channels.SocketChannel;
  */
 
 public class Handler implements Runnable {
-
+    private final ByteBuffer by = ByteBuffer.allocate(10240);
     private final SocketChannel clientSocketChannel;
 
     public Handler(SocketChannel clientSocketChannel) {
@@ -19,15 +18,15 @@ public class Handler implements Runnable {
 
     @Override
     public void run() {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
         try {
+            by.clear();
             // 读取数据，在Nio下，此处不会阻塞
-            int read = clientSocketChannel.read(byteBuffer);
-            if (read <= 0) {
+            int read = clientSocketChannel.read(by);
+            if (read < 0) {
                 clientSocketChannel.close();
-            } else {
-                System.out.println(new String(byteBuffer.array()));
-                byteBuffer.clear();
+            } else if (read > 0) {
+                by.flip();
+                System.out.println(new String(by.array(), 0, read));
             }
         } catch (Throwable e1) {
             try {
@@ -36,7 +35,5 @@ public class Handler implements Runnable {
                 System.err.println(e2);
             }
         }
-
-
     }
 }

@@ -48,7 +48,7 @@ public class NioClientImpl implements NioClient {
     public boolean openSession(int port) {
         try {
             channel = SocketChannel.open();
-            if (channel.connect(new InetSocketAddress(10000))) {
+            if (channel.connect(new InetSocketAddress(8080))) {
                 send(ownId);
             }
             return true;
