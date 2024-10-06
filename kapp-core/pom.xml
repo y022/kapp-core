@@ -17,6 +17,7 @@
         <module>kapp-core-support</module>
         <module>kapp-core-search</module>
         <module>kapp-core-file</module>
+        <module>kapp-job</module>
     </modules>
 
     <properties>

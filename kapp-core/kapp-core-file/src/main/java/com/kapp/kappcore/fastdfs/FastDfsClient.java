@@ -34,10 +34,12 @@ public class FastDfsClient extends AbstractFileOperator {
             String fileId = getFileId();
             fileUploadInfo.setFileId(fileId);
             fileUploadInfo.setFileName(fileName);
+            fileUploadInfo.setFileStorePath(res[1]);
+            fileUploadInfo.setFileSystem("fastdfs");
+            return fileUploadInfo;
         } catch (MyException e) {
             throw new IOException(e);
         }
-        return null;
     }
 
     @Override

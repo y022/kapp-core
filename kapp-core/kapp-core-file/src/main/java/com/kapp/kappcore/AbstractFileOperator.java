@@ -16,7 +16,7 @@ public abstract class AbstractFileOperator {
 
     public abstract FileUploadInfo upload(InputStream inputStream, String fileName, String extra);
 
-    public abstract FileDownloadInfo download(FileUploadInfo fileInf) throws IOException;
+    public abstract FileDownloadInfo download(FileUploadInfo fileInfo) throws IOException;
 
     protected String getFileId() {
         return UUID.randomUUID().toString();
