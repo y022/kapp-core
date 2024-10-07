@@ -20,7 +20,7 @@ import java.io.FileNotFoundException;
  * Date: 2024/9/27 18:58
  */
 @Configuration
-//@ConditionalOnClass(value = {StorageClient.class, StorageServer.class})
+@ConditionalOnClass(value = {StorageClient.class, StorageServer.class})
 public class FastDfsAutoConfiguration {
     private static final Logger log = LoggerFactory.getLogger(FastDfsAutoConfiguration.class);
     private static final String FAST_DFS_CONFIG_FILE = "fastdfs.properties";

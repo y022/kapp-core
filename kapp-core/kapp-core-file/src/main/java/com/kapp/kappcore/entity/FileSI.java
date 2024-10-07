@@ -7,7 +7,7 @@ import lombok.Data;
  * Date: 2024/9/27 19:18
  */
 @Data
-public class FileUploadInfo {
+public class FileSI {
     private String fileId;
     private String fileName;
     private String fileSize;

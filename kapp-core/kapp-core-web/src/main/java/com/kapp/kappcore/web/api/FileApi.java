@@ -1,6 +1,6 @@
 package com.kapp.kappcore.web.api;
 
-import com.kapp.kappcore.entity.FileUploadInfo;
+import com.kapp.kappcore.entity.FileSI;
 import com.kapp.kappcore.fastdfs.FastDfsClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class FileApi {
     private final FastDfsClient fastDfsClient;
 
     @PostMapping("/upload")
-    public FileUploadInfo uploadFile(@RequestParam("file") MultipartFile file) {
+    public FileSI uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             InputStream inputStream = file.getInputStream();
             return fastDfsClient.upload(inputStream, file.getOriginalFilename());
